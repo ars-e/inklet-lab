@@ -113,15 +113,30 @@
 
       <div class="grid">
        {% for post in collections.posts %}
-    <article class="card" data-type="{{ post.data.category | lower }}" data-title="{{ post.data.title }}" data-href="{{ post.url | url }}" role="link" tabindex="0">
-      <div class="thumb badge-{{ post.data.category | lower }}" aria-hidden="true"></div>
-      <div class="body">
-        <span class="label {{ post.data.category | lower }}"><span class="dot"></span> {{ post.data.category }}</span>
-        <h3><a href="{{ post.url | url }}">{{ post.data.title }}</a></h3>
-        <div class="meta">{{ post.data.read_time }} · {{ post.data.dek | truncate(40) }}</div>
+  {% set hasImg = post.data.cover_image %}
+  <article class="card {% if not hasImg %}no-thumb{% endif %}"
+           data-type="{{ post.data.category | lower }}"
+           data-title="{{ post.data.title }}"
+           data-href="{{ post.url | url }}"
+           role="link" tabindex="0">
+
+    {% if hasImg %}
+      <div class="thumb">
+        <img src="{{ post.data.cover_image }}"
+             alt="{{ post.data.cover_image_alt or post.data.title }}"
+             loading="lazy" />
       </div>
-    </article>
-  {% endfor %}
+    {% endif %}
+
+    <div class="body {% if not hasImg %}no-thumb{% endif %}">
+      <span class="label {{ post.data.category | lower }}"><span class="dot"></span> {{ post.data.category }}</span>
+      <h3><a href="{{ post.url | url }}">{{ post.data.title }}</a></h3>
+      <div class="meta">{{ post.data.read_time }} · {{ post.data.dek | truncate(60) }}</div>
+    </div>
+  </article>
+{% endfor %}
+
+
 
       </div>
 
