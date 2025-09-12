@@ -1,5 +1,13 @@
 {% set nextProject = collections.projects | getNextCollectionItem(page) %}
 {% set previousProject = collections.projects | getPreviousCollectionItem(page) %}
+{# safety shims so filters like | join never crash #}
+{% set tags = tags or [] %}
+{% set roles = roles or [] %}
+{% set tools = tools or [] %}
+{% set categories = categories or [] %}
+{% set services = services or [] %}
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
