@@ -1,0 +1,16 @@
+[
+  {
+    "card_id": "PETI009",
+    "title": "Mango Metrics — PDF Case",
+    "client": "The Agri-Journal",
+    "image": "https://picsum.photos/1200/600?random=22",  
+    "image_alt": "Mango charts and crate label",
+    "url": "/assets/pdfs/mango-metrics.pdf",     
+    "tags": ["projects", "pdf", "viz"],
+    "year": 2024,
+    "date": "2024-07-01",                         
+    "status": "Published",
+    "featured": false,                             
+    "isPdf": true                                
+  }
+]

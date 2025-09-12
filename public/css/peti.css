@@ -575,4 +575,14 @@
             border: 2px solid #ff4d4f;
         }
 
+        .pdf-badge{
+            position:absolute; top:.5rem; right:.5rem;
+            font: 700 10px/1 var(--mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+            background:#111; color:#fff; padding:.15rem .35rem; border-radius:4px;
+            letter-spacing:.04em;
+        }
+        
+        .project-card{ position:relative; }
+
+
         
