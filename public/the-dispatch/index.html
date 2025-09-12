@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Dispatch — Inklet Lab</title>
+
+  <!-- Type -->
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,700&family=Libre+Franklin:wght@400;600;800&family=Fira+Code:wght@400;600&family=Shrikhand&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/dispatch.css">
+
+
+</head>
+<body>
+  <div class="frame">
+    <div class="container nav" role="navigation" aria-label="Primary">
+      <div class="brand">Inklet <em>Lab</em> <small style="font-weight:600;color:var(--ink-2);opacity:.7;">· 14.4.1891 · Vol. I Part. 8</small></div>
+      <ul>
+        <li><a href="/front-page/">Front Page</a></li>
+        <li><a href="/the-dispatch/" aria-current="page">The Dispatch</a></li>
+        <li><a href="/peti/">Peti</a></li>
+        <li><a href="/the-balcony/">The Balcony</a></li>
+        <li><a href="/dump-and-discover/">Dump & Discover</a></li>
+        <li><a href="/etcetera/">etcetra</a></li>
+        <li><a href="/the-point/">The Point</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <section class="masthead">
+    <div class="container wrap">
+      <div>
+        <div class="flag">The Dispatch</div>
+        <div class="kicker">// Essays · Math · Code · Opinion</div>
+        <p class="dek">Editorial pulp collage for dense ideas: technical deep-dives, math-and-plot explainers, and cultural criticism. Think <em>newspaper authority</em> x <em>pulp audacity</em> x <em>studio-wall collage</em>.</p>
+      </div>
+
+      <figure class="chart-card" aria-label="quirky chart">
+        <svg class="scribble-chart" viewBox="0 0 320 180" role="img" aria-label="An unnecessary chart">
+          <defs>
+            <pattern id="mini-dots" width="6" height="6" patternUnits="userSpaceOnUse">
+              <circle cx="1.5" cy="1.5" r="0.6" fill="#000" opacity=".06"/>
+            </pattern>
+            <filter id="wiggle">
+              <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="1" result="n"/>
+              <feDisplacementMap in="SourceGraphic" in2="n" scale="1"/>
+            </filter>
+          </defs>
+          <rect x="0" y="0" width="320" height="180" fill="url(#mini-dots)" />
+          <path d="M28 12 L26 170 M20 160 L300 158" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" fill="none" filter="url(#wiggle)"/>
+          <g stroke="#000" stroke-width="1.2" opacity=".5" filter="url(#wiggle)">
+            <path d="M26 132 h-6M26 104 h-6M26 76 h-6M26 48 h-6"/>
+            <path d="M64 158 v6M108 158 v6M152 158 v6M196 158 v6M240 158 v6M284 158 v6"/>
+          </g>
+          <path d="M32 142 C 60 110, 70 130, 88 120 S 128 78, 148 96 S 190 158, 212 120 S 262 80, 288 90" fill="none" stroke="#e7382b" stroke-width="3.2" stroke-linecap="round" />
+          <path d="M32 148 C 62 136, 86 142, 112 130 S 170 98, 204 112 S 258 132, 292 126" fill="none" stroke="#2a66ff" stroke-width="2.4" stroke-dasharray="4 6" opacity=".9"/>
+          <g transform="translate(210,118) rotate(-12)">
+            <circle r="10" fill="#ffb703" opacity=".95"/>
+            <path d="M0-13 L2-4 L12-4 L3 2 L6 12 L0 6 L-6 12 L-3 2 L-12-4 L-2-4 Z" fill="#000" opacity=".12"/>
+          </g>
+          <text x="274" y="174" font-family="Fira Code, monospace" font-size="10" fill="#333">time →</text>
+          <text x="218" y="108" font-family="Libre Franklin, sans-serif" font-size="11" font-weight="700" fill="#111">inconclusive spike</text>
+          <path d="M230 112 Q 222 118 214 118" stroke="#111" stroke-width="1.4" fill="none"/>
+        </svg>
+        <figcaption>This chart was deemed unnecessary. It remains anyway.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Filters -->
+  <div class="filters">
+    <div class="container bar">
+      <strong style="font-family:'Playfair Display', serif;">Browse:</strong>
+      <input type="search" placeholder="Search essays, code, opinions…" aria-label="Search Dispatch" />
+
+      <!-- chips row -->
+      <div class="chips" id="chips">
+        <a class="chip active" data-type="all" href="#">All</a>
+        <a class="chip" data-type="technical" data-variant="tech" href="#">Technical</a>
+        <a class="chip" data-type="opinion"  data-variant="pulp" href="#">Opinion</a>
+        <a class="chip" data-type="editorial" href="#">Editorial</a>
+        <a class="chip" data-type="noir" href="#">Noir</a>
+        <a class="chip" data-type="sci" href="#">Retro Sci-Fi</a>
+        <!-- add as many new types as you want… -->
+      </div>
+
+      <div class="chips-more-wrap" id="chipsWrap">
+        <button class="chips-more" id="chipsMore" aria-expanded="false" aria-haspopup="menu" aria-controls="chipsMenu">More ▾</button>
+        <div class="chips-menu" id="chipsMenu" role="menu"></div>
+      </div>
+
+      <span style="margin-left:auto"></span>
+      <label style="font-weight:700;">Sort:</label>
+      <select id="sortSel" aria-label="Sort">
+        <option value="recent">Recent</option>
+        <option value="alpha">A → Z</option>
+      </select>
+
+      <label style="font-weight:700;">Length:</label>
+      <select id="lenSel" aria-label="Reading length">
+        <option value="all">All</option>
+        <option value="short">≤ 6 min</option>
+        <option value="long">≥ 7 min</option>
+      </select>
+      <strong id="resCount" style="font-family:'Fira Code',monospace;">(6)</strong>
+    </div>
+  </div>
+
+  <main class="preview">
+    <div class="container">
+      <p id="emptyState" style="display:none; font-weight:700; padding:1rem; border:1px dashed #0003; border-radius:10px;">No matches. Try a different filter or clear search.</p>
+
+      <div class="grid">
+        <article class="card" data-type="technical" data-title="Eigenvalues, Power Laws, and Why Your Plot Lies Python Inline Math">
+          <div class="thumb badge-tech" aria-hidden="true"></div>
+          <div class="body"><span class="label tech"><span class="dot g"></span> Technical</span><h3><a href="#">Eigenvalues, Power Laws, and Why Your Plot Lies</a></h3><div class="meta">12 min read · Python · Inline Math</div></div>
+        </article>
+
+        <article class="card" data-type="opinion" data-title="The Spectacles of Certainty media criticism graphs">
+          <div class="thumb badge-pulp" aria-hidden="true"></div>
+          <div class="body"><span class="label opinion"><span class="dot" style="background:var(--pulp);"></span> Opinion</span><h3><a href="#">The Spectacles of Certainty: When Graphs Pretend to Be God</a></h3><div class="meta">5 min read · media criticism</div></div>
+        </article>
+
+        <article class="card" data-type="editorial" data-title="Evidence Policy Field Note governance data">
+          <div class="thumb" aria-hidden="true"></div>
+          <div class="body"><span class="label editorial"><span class="dot" style="background:var(--civic);"></span> Editorial</span><h3><a href="#">What Counts as Evidence in Policy? A Field Note</a></h3><div class="meta">8 min read · data & governance</div></div>
+        </article>
+
+        <article class="card" data-type="opinion" data-title="Halftones and Halos design notes heat without noise">
+          <div class="thumb badge-pulp" aria-hidden="true"></div>
+          <div class="body"><span class="label opinion"><span class="dot" style="background:var(--pulp);"></span> Pulp Essay</span><h3><a href="#">Halftones & Halos: Designing for Heat Without Noise</a></h3><div class="meta">7 min read · design notes</div></div>
+        </article>
+
+        <article class="card" data-type="noir" data-title="Debugging in the Dark noir systems failure">
+          <div class="thumb badge-noir" aria-hidden="true"></div>
+          <div class="body"><span class="label noir"><span class="dot" style="background:#333;"></span> Noir</span><h3><a href="#">Debugging in the Dark</a></h3><div class="meta">7 min read · failure & systems</div></div>
+        </article>
+
+        <article class="card" data-type="sci" data-title="When AI Dreamed of Rockets retro sci-fi">
+          <div class="thumb badge-sci" aria-hidden="true"></div>
+          <div class="body"><span class="label sci"><span class="dot" style="background:var(--sci);"></span> Retro Sci-Fi</span><h3><a href="#">When AI Dreamed of Rockets</a></h3><div class="meta">10 min read · speculative notes</div></div>
+        </article>
+      </div>
+
+      <button id="loadMore" class="cta-more" aria-label="Load more writings">Load more</button>
+
+    </div>
+  </main>
+
+  <!-- Continuous Billboard Rail -->
+  <section class="ad-rail-billboard" aria-label="sponsored poster rail">
+    <div class="bulb-row">
+      <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
+      <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
+    </div>
+    <div class="rail">
+      <figure class="ad torn"><img src="/assets/img/the-dispatch/hilmore_grand.png" alt="Hilmore Grand Hotels — Belong Everywhere" loading="lazy"></figure>
+      <figure class="ad fold"><img src="/assets/img/the-dispatch/kodex-carousel.png" alt="Kodex Carousel — Memories don’t fade. They turn." loading="lazy"></figure>
+      <!-- <figure class="ad"><img src="assets/the-dispatch/img/velvet_strike.png" alt="Velvet Strike — Your ritual, perfected" loading="lazy"></figure> -->
+      <figure class="ad torn"><img src="/assets/img/the-dispatch/gully_cola_.png" alt="Gully Cola — The Streets Are Ours" loading="lazy"></figure>
+      <figure class="ad fold"><img src="/assets/img/the-dispatch/chevelle_motors.png" alt="Chevelle Motors — Look at you staring" loading="lazy"></figure>
+
+      <!-- duplicates for seamless loop -->
+      <figure class="ad torn"><img src="/assets/img/the-dispatch/hilmore_grand.png" alt="" loading="lazy"></figure>
+      <figure class="ad fold"><img src="/assets/img/the-dispatch/kodex-carousel.png" alt="" loading="lazy"></figure>
+      <!-- <figure class="ad"><img src="assets/the-dispatch/img/velvet_strike.png" alt="" loading="lazy"></figure> -->
+      <figure class="ad torn"><img src="/assets/img/the-dispatch/gully_cola_.png" alt="" loading="lazy"></figure>
+      <figure class="ad fold"><img src="/assets/img/the-dispatch/chevelle_motors.png" alt="" loading="lazy"></figure>
+    </div>
+    <div class="bulb-row">
+      <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
+      <div class="bulb"></div><div class="bulb"></div><div class="bulb"></div><div class="bulb"></div><div class="bulb"></div>
+    </div>
+  </section>
+
+  <!-- Zine strip -->
+  <section class="zine" aria-label="zine strip">
+    <div class="container">
+      <div class="tag">typed-notes/2025-φ</div>
+      <div class="tag">dispatch/fieldwork</div>
+      <div class="tag">pulp-covers</div>
+      <div class="tag">editorial-cartoons</div>
+      <div class="tag">math-sketches</div>
+      <div class="tag">book-margins</div>
+    </div>
+  </section>
+
+  <footer class="container">
+    <div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center; justify-content:space-between;">
+      <div>© <span id="y"></span> Inklet Lab · The Dispatch</div>
+      <div style="font-family:'Fira Code', monospace; font-size:.95rem;">v0.3 • editorial-pulp-grunge</div>
+    </div>
+  </footer>
+
+  <button id="toTop" aria-label="Back to top">↑</button>
+
+<script src="/js/dispatch.js" defer></script>
+
+</body>
+</html>

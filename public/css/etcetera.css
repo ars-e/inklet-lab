@@ -1,0 +1,17 @@
+ /* This is our core design system in a tiny bit of CSS */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* A subtle, faint grid to give structure, inspired by the "Less, but better" image. */
+            background-color: #FDFDFD;
+            background-image:
+                linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+            background-size: 2rem 2rem;
+            color: #1a1a1a;
+            scroll-behavior: smooth; /* For smooth scrolling */
+        }
+
+        /* A little flourish for our main title */
+        .tracking-tighter-plus {
+            letter-spacing: -0.075em;
+        }

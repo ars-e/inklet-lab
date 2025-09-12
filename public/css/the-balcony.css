@@ -1,0 +1,136 @@
+:root{
+    --bg:#000;
+    /* SUPER STAR blue palette */
+    --on:#0b5fff;   /* bulb base */
+    --glow1:#7fb0ff;
+    --glow2:#3c86ff;
+    --glow3:#1a4dff;
+
+    /* sizing bounds */
+    --dot-min:8;
+    --dot-max:24;
+
+    /* layout gaps as multiples of dot */
+    --gap-x:0.75;
+    --gap-y:0.85;
+  }
+
+  @media (max-width: 520px){
+  :root{
+    --dot-min:2;     /* allow tiny bulbs */
+    --gap-x:0.45;    /* tighter column gap */
+    --gap-y:0.60;    /* tighter row gap */
+  }
+  .wrap{ padding:4vh 4vw; }
+  .hero{ gap:12px; }
+}
+
+  html,body{height:100%;margin:0;background:var(--bg);color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;}
+  .wrap{min-height:100%;display:grid;place-items:center;padding:8vh 5vw;}
+  .hero{display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;max-width:1200px;}
+  canvas{width:100%;height:auto;display:block;max-width:1200px;}
+
+  /* Tagline */
+  .tagline{
+    font-family:"Playfair Display", serif;
+    font-size:clamp(14px, 2.4vw, 20px);
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:ivory;
+    text-align:center;
+    opacity:0;
+    transform:translateY(10px);
+    transition:opacity .6s ease, transform .6s ease;
+  }
+  .tagline.show{ opacity:1; transform:translateY(0); }
+
+  /* Pretitle (clickable) */
+  .pretitle{
+    font-family:"Playfair Display", serif;
+    font-size:clamp(12px, 1.8vw, 18px);
+    color:ivory;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    text-decoration:none;
+    cursor:pointer;
+    position:relative;
+    opacity:0;
+    transform:translateY(-10px);
+    transition:opacity .6s ease, transform .6s ease, color .3s ease, text-shadow .3s ease;
+  }
+  .pretitle.show{ opacity:1; transform:translateY(0); }
+
+  /* Soft light sweep — toned down (Chrome perf) */
+  .pretitle::before{
+    content:"";
+    position:absolute;
+    inset:-0.25em;
+    pointer-events:none;
+    background:linear-gradient(75deg, transparent 0%, rgba(255,255,220,.35) 48%, rgba(255,255,220,.35) 52%, transparent 100%);
+    /* mix-blend-mode:screen;  <-- removed for perf */
+    transform:translateX(-120%);
+    animation:pretitle-sweep 5.5s ease-in-out .8s infinite;
+    opacity:.35;
+  }
+  @keyframes pretitle-sweep{
+    0%{transform:translateX(-120%);}
+    50%,100%{transform:translateX(120%);}
+  }
+
+  /* Mini marquee baseline */
+  .pretitle::after{
+    content:"";
+    position:absolute;
+    left:0; right:0;
+    bottom:-0.42em;
+    height:6px;
+    background:radial-gradient(circle at 2px 50%, rgba(127,176,255,.95) 0 2px, rgba(127,176,255,0) 3px) repeat-x;
+    background-size:18px 6px;
+    filter:drop-shadow(0 0 6px #3c86ff);
+    opacity:.78;
+    animation:pretitle-chase 7s linear infinite;
+  }
+  @keyframes pretitle-chase{
+    from{background-position:0 0;}
+    to{background-position:18px 0;}
+  }
+  .pretitle:hover::after{ animation-duration:3.5s; opacity:.9; }
+  .pretitle:hover::before{ animation-duration:3.2s; opacity:.55; }
+
+  /* Coming Soon */
+  .comingsoon{
+    margin-top:2.5em;
+    font-family:"Playfair Display", serif;
+    font-size:clamp(14px, 2vw, 22px);
+    color:ivory;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    opacity:0;
+    transform:translateY(10px);
+    transition:opacity .6s ease, transform .6s ease;
+  }
+  .comingsoon.show{ opacity:1; transform:translateY(0); }
+
+  /* Go Back Home button */
+  .homebtn{
+    margin-top:1.5em;
+    padding:0.6em 1.4em;
+    font-family:"Playfair Display", serif;
+    font-size:clamp(14px, 2vw, 20px);
+    color:ivory;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    text-decoration:none;
+    border:2px solid ivory;
+    border-radius:40px;
+    cursor:pointer;
+    opacity:0;
+    transform:translateY(12px);
+    transition:opacity .6s ease, transform .6s ease, background .3s ease, color .3s ease, box-shadow .3s ease;
+  }
+  .homebtn.show{ opacity:1; transform:translateY(0); }
+  .homebtn:hover{ background:ivory; color:#000; box-shadow:0 0 12px #7fb0ff, 0 0 18px #3c86ff, 0 0 24px #1a4dff; }
+
+  @media (prefers-reduced-motion: reduce){
+    .pretitle::before, .pretitle::after{ animation:none; }
+  }
