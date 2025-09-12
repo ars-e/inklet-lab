@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "eleventy --serve",
+    "build": "eleventy",
+    "start": "eleventy --serve"
   },
   "keywords": [],
   "author": "",
@@ -129,5 +132,7 @@
     "unpipe": "^1.0.0",
     "urlpattern-polyfill": "^10.1.0",
     "ws": "^8.18.3"
-  }
+  },
+  "engines": { "node": ">=18.0.0" }
+
 }
