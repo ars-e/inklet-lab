@@ -12,7 +12,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hind:wght@700&family=IBM+Plex+Mono:wght@400;700&family=Playfair+Display:wght@700&family=Noto+Nastaliq+Urdu:wght@700&family=VT323&family=Libre+Barcode+39+Text&family=Teko:wght@700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="/css/peti.css">
-
 </head>
 
 <body class="font-mono antialiased text-ink">
@@ -39,7 +38,6 @@
     <div class="main-content-wrapper">
         <header class="w-full p-4 md:p-8">
             <div class="stamp-layout">
-                
                 <div class="stamp-info-line">
                     <span>Inklet Lab Practice</span>
                     <span>◆</span>
@@ -73,33 +71,35 @@
                     <span>◆</span>
                     <span>Hyderabad, IN</span>
                 </div>
-
             </div>
         </header>
 
         <main class="p-4 md:p-8">
+            {# Featured project — comes from collection "featuredProjects" in .eleventy.js #}
+            {% set featured = collections.featuredProjects | first %}
+            {% if featured %}
             <section class="feature-case">
-                <div class="feature-wrapper">
-                    <figure class="feature-art">
-                        <img src="https://picsum.photos/1200/700?random=22" alt="featured article visual" class="stylized-image">
-                    </figure>
-                    <div class="feature-copy">
-                        <div class="feature-band">PETI / FEATURED</div>
-                        <h2 class="feature-title">Mango Metrics — A Price & Climate Story</h2>
-                        <p class="feature-dek">A crate-label narrative on agri trade, volatility, and adaptation—told with brutalist charts, playful stickers, and field notes.</p>
-                        <ul class="feature-meta">
-                            <li class="chip">Econometrics</li>
-                            <li class="chip">Story</li>
-                            <li class="chip">Viz</li>
-                            <li class="chip">India</li>
-                        </ul>
-                        <div class="feature-cta">
-                            <a class="cta-btn" href="#">Open PETI →</a>
-                        </div>
-                    </div>
+              <div class="feature-wrapper">
+                <figure class="feature-art">
+                  <img src="{{ featured.data.image }}" alt="{{ featured.data.image_alt }}" class="stylized-image">
+                </figure>
+                <div class="feature-copy">
+                  <div class="feature-band">PETI / FEATURED</div>
+                  <h2 class="feature-title">{{ featured.data.title }}</h2>
+                  <p class="feature-dek">{{ featured.data.dek }}</p>
+                  <ul class="feature-meta">
+                    {% for tag in featured.data.tags or [] %}
+                      <li class="chip">{{ tag }}</li>
+                    {% endfor %}
+                  </ul>
+                  <div class="feature-cta">
+                    <a class="cta-btn" href="{{ featured.url }}">Open PETI →</a>
+                  </div>
                 </div>
+              </div>
             </section>
-            
+            {% endif %}
+
             <div class="control-deck">
                 <input type="text" id="search-input" placeholder="Search projects..." class="w-full md:w-auto">
                 <div class="flex-grow text-center flex flex-wrap gap-2 justify-center">
@@ -111,38 +111,26 @@
             </div>
 
             <div class="project-grid">
-                <article class="project-card" style="--card-hover-color: #38bdf8;" data-title="Hyperlocal Delivery App" data-tags='["branding", "ui/ux"]'>
-                    <img src="https://picsum.photos/400/300?random=1" alt="Project Image" class="stylized-image object-cover h-40 w-full">
-                    <div class="card-header p-2"><span class="font-pixel text-sm">NO. 001</span><span class="card-barcode">*PETI001*</span></div>
-                    <div class="p-4 relative z-10 card-body">
-                        <h3 class="font-sans text-3xl uppercase card-title mb-4">Hyperlocal Delivery App</h3>
-                        <div class="card-specs font-pixel text-xs"><p>CLIENT: KwikDrop</p><p>TAGS: BRANDING, UI/UX</p><p>DATE: 22.12.21</p></div>
+              {% for project in collections.projects %}
+                {% if not project.data.featured %}
+                <article class="project-card" data-title="{{ project.data.title }}">
+                  <img src="{{ project.data.image }}" alt="{{ project.data.image_alt }}" class="stylized-image object-cover h-40 w-full">
+                  <div class="card-header p-2">
+                    <span class="font-pixel text-sm">{{ project.data.card_id or '—' }}</span>
+                    <span class="card-barcode">*{{ project.data.card_id or '—' }}*</span>
+                  </div>
+                  <div class="p-4 relative z-10 card-body">
+                    <h3 class="font-sans text-3xl uppercase card-title mb-4">{{ project.data.title }}</h3>
+                    <div class="card-specs font-pixel text-xs">
+                      <p>CLIENT: {{ project.data.client or '—' }}</p>
+                      <p>TAGS: {{ (project.data.tags or []) | join(", ") }}</p>
+                      <p>DATE: {{ project.data.year or '—' }}</p>
                     </div>
+                  </div>
+                  <a href="{{ project.url }}" class="stretched-link" aria-label="Open {{ project.data.title }}"></a>
                 </article>
-                <article class="project-card" style="--card-hover-color: #4ade80;" data-title="Nostalgia Arcade Website" data-tags='["web"]'>
-                    <img src="https://picsum.photos/400/300?random=2" alt="Project Image" class="stylized-image object-cover h-40 w-full">
-                     <div class="card-header p-2"><span class="font-pixel text-sm">NO. 002</span><span class="card-barcode">*PETI002*</span></div>
-                    <div class="p-4 relative z-10 card-body">
-                        <h3 class="font-sans text-3xl uppercase card-title mb-4">Nostalgia Arcade Website</h3>
-                        <div class="card-specs font-pixel text-xs"><p>CLIENT: Retro Replay</p><p>TAGS: WEB</p><p>DATE: 15.10.21</p></div>
-                    </div>
-                </article>
-                <article class="project-card" style="--card-hover-color: #f87171;" data-title="Truck Art Posters" data-tags='["print"]'>
-                    <img src="https://picsum.photos/400/300?random=3" alt="Project Image" class="stylized-image object-cover h-40 w-full">
-                    <div class="card-header p-2"><span class="font-pixel text-sm">NO. 003</span><span class="card-barcode">*PETI003*</span></div>
-                    <div class="p-4 relative z-10 card-body">
-                        <h3 class="font-sans text-3xl uppercase card-title mb-4">Truck Art Posters</h3>
-                        <div class="card-specs font-pixel text-xs"><p>CLIENT: Self-Initiated</p><p>TAGS: PRINT, ILLUSTRATION</p><p>DATE: 01.09.21</p></div>
-                    </div>
-                </article>
-                <article class="project-card" style="--card-hover-color: #fbbf24;" data-title="Artisanal Mango Box" data-tags='["branding", "print"]'>
-                    <img src="https://picsum.photos/400/300?random=4" alt="Project Image" class="stylized-image object-cover h-40 w-full">
-                    <div class="card-header p-2"><span class="font-pixel text-sm">NO. 004</span><span class="card-barcode">*PETI004*</span></div>
-                    <div class="p-4 relative z-10 card-body">
-                        <h3 class="font-sans text-3xl uppercase card-title mb-4">Artisanal Mango Box</h3>
-                        <div class="card-specs font-pixel text-xs"><p>CLIENT: Aamra</p><p>TAGS: BRANDING, PRINT</p><p>DATE: 18.05.22</p></div>
-                    </div>
-                </article>
+                {% endif %}
+              {% endfor %}
             </div>
 
             <div class="pagination-controls">
@@ -186,11 +174,9 @@
                 </div>
             </div>
         </footer>
-
     </div>
 
-  <script src="/js/peti.js" defer></script>
 
+    <script src="/js/peti.js" defer></script>
 </body>
 </html>
-

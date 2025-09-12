@@ -1,103 +1,109 @@
-    document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('search-input');
-            const filterBtns = document.querySelectorAll('.filter-btn');
-            const allProjectCards = Array.from(document.querySelectorAll('.project-card'));
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            const pageInfo = document.getElementById('page-info');
+document.addEventListener('DOMContentLoaded', () => {
+  // === Filtering + Pagination ===
+  const searchInput = document.getElementById('search-input');
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const allProjectCards = Array.from(document.querySelectorAll('.project-card'));
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const pageInfo = document.getElementById('page-info');
 
-            let currentPage = 1;
-            const itemsPerPage = 4; // Or any number you prefer
-            let filteredCards = allProjectCards;
+  let currentPage = 1;
+  const itemsPerPage = 4;
+  let filteredCards = allProjectCards;
 
-            function displayPage() {
-                const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
-                pageInfo.textContent = `PAGE ${currentPage} / ${totalPages || 1}`;
-                
-                prevBtn.disabled = currentPage === 1;
-                nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+  function displayPage() {
+    const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
+    pageInfo.textContent = `PAGE ${currentPage} / ${totalPages || 1}`;
 
-                const start = (currentPage - 1) * itemsPerPage;
-                const end = start + itemsPerPage;
-                
-                allProjectCards.forEach(card => card.classList.add('hidden'));
-                filteredCards.slice(start, end).forEach(card => card.classList.remove('hidden'));
-            }
-            
-            function applyFilters() {
-                const searchTerm = searchInput.value.toLowerCase();
-                const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+    prevBtn.disabled = currentPage === 1;
+    nextBtn.disabled = currentPage === totalPages || totalPages === 0;
 
-                filteredCards = allProjectCards.filter(card => {
-                    const title = card.dataset.title.toLowerCase();
-                    const tags = JSON.parse(card.dataset.tags);
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
 
-                    const titleMatch = title.includes(searchTerm);
-                    const filterMatch = activeFilter === 'all' || tags.includes(activeFilter) || tags.some(tag => tag.includes(activeFilter));
+    allProjectCards.forEach(card => card.classList.add('hidden'));
+    filteredCards.slice(start, end).forEach(card => card.classList.remove('hidden'));
+  }
 
-                    return titleMatch && filterMatch;
-                });
-                currentPage = 1;
-                displayPage();
-            }
+  function applyFilters() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
 
-            searchInput.addEventListener('input', applyFilters);
+    filteredCards = allProjectCards.filter(card => {
+      const title = (card.dataset.title || "").toLowerCase();
+      let tags = [];
+      try { tags = JSON.parse(card.dataset.tags); } catch (e) {}
+      const titleMatch = title.includes(searchTerm);
+      const filterMatch =
+        activeFilter === 'all' ||
+        tags.includes(activeFilter) ||
+        tags.some(tag => tag.toLowerCase().includes(activeFilter));
+      return titleMatch && filterMatch;
+    });
+    currentPage = 1;
+    displayPage();
+  }
 
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    filterBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    applyFilters();
-                });
-            });
+  searchInput?.addEventListener('input', applyFilters);
 
-            prevBtn.addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    displayPage();
-                }
-            });
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
+    });
+  });
 
-            nextBtn.addEventListener('click', () => {
-                const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    displayPage();
-                }
-            });
+  prevBtn?.addEventListener('click', () => {
+    if (currentPage > 1) {
+      currentPage--;
+      displayPage();
+    }
+  });
 
-            applyFilters();
+  nextBtn?.addEventListener('click', () => {
+    const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
+    if (currentPage < totalPages) {
+      currentPage++;
+      displayPage();
+    }
+  });
 
-            // Set footer year
-            document.getElementById('footer-year').textContent = new Date().getFullYear();
+  applyFilters();
 
-            // --- Custom Cursor Logic ---
-            const cursorDot = document.querySelector('.cursor-dot');
-            const interactiveElements = document.querySelectorAll('a, button, .project-card');
+  // === Footer year ===
+  const footerYear = document.getElementById('footer-year');
+  if (footerYear) footerYear.textContent = new Date().getFullYear();
 
-            window.addEventListener('mousemove', (e) => {
-                cursorDot.style.left = `${e.clientX}px`;
-                cursorDot.style.top = `${e.clientY}px`;
-            });
+  // === Custom Cursor ===
+  const cursorDot = document.querySelector('.cursor-dot');
+  if (cursorDot) {
+    window.addEventListener('mousemove', (e) => {
+      cursorDot.style.left = `${e.clientX}px`;
+      cursorDot.style.top = `${e.clientY}px`;
+      cursorDot.style.opacity = "1"; // ensure visible
+    });
 
-            interactiveElements.forEach(el => {
-                el.addEventListener('mouseenter', () => cursorDot.classList.add('grow'));
-                el.addEventListener('mouseleave', () => cursorDot.classList.remove('grow'));
-            });
+    const interactiveElements = document.querySelectorAll('a, button, .project-card, .filter-btn, .cta-btn');
+    interactiveElements.forEach(el => {
+      el.addEventListener('mouseenter', () => cursorDot.classList.add('grow'));
+      el.addEventListener('mouseleave', () => cursorDot.classList.remove('grow'));
+    });
+  }
+});
 
-        });
+// === Nav hover/focus pop colors (outside DOMContentLoaded is fine too) ===
+document.addEventListener('DOMContentLoaded', () => {
+  const navLinks = document.querySelectorAll('.vertical-nav-list a');
+  const popPalette = ['#ff4d4f', '#ffb703', '#3dd5f3', '#22c55e', '#ec4899', '#60a5fa'];
 
-        // === NAV color-pop on hover/focus ===
-        const navLinks = document.querySelectorAll('.vertical-nav-list a');
-        const popPalette = ['#ff4d4f', '#ffb703', '#3dd5f3', '#22c55e', '#ec4899', '#60a5fa'];
+  function setRandomPopColor(el) {
+    const c = popPalette[Math.floor(Math.random() * popPalette.length)];
+    el.style.setProperty('--pop-color', c);
+  }
 
-        function setRandomPopColor(el){
-          const c = popPalette[Math.floor(Math.random() * popPalette.length)];
-          el.style.setProperty('--pop-color', c);
-        }
-
-        navLinks.forEach(link => {
-          link.addEventListener('mouseenter', () => setRandomPopColor(link));
-          link.addEventListener('focus', () => setRandomPopColor(link)); // keyboard nav
-        });
-
+  navLinks.forEach(link => {
+    link.addEventListener('mouseenter', () => setRandomPopColor(link));
+    link.addEventListener('focus', () => setRandomPopColor(link));
+  });
+});

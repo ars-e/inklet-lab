@@ -9,4 +9,4 @@ cover_image_alt: "A pair of glasses resting on an open book"
 date: 2025-08-22 
 tags: ["posts"]
 ---
-Content for the article goes here. This piece would explore how media simplifies complex topicss
+Content for the article goes here. This piece would explore how media simplifies complex topics

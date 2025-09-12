@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Eigenvalues and Power Laws — The Dispatch</title>
+
+  <!-- Type -->
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,700&family=Libre+Franklin:wght@400;600;800&family=Fira+Code:wght@400;600&family=Shrikhand&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  
+  <!-- KaTeX for Math Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" xintegrity="sha384-n8MVd4RsNIU0KOVEMVIARPKZGH0rxEsxFP9veNvTuiIBG4fWJd0OCpWn7MKEsyxt" crossorigin="anonymous">
+  
+  <!-- Prism.js for Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" xintegrity="sha512-mIs9kKbaw6JutVRFHcmLsvGQbDZFiaMUBTRLsRgacrqHUYeeYIObvStJNcGTG/KEOg78PWwLNUqUzthe6+0sRA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+  <style>
+    /* --- [1] CORE STYLES --- */
+    :root {
+      --ink: #101011; --ink-2: #3a3a3a; --paper: #f6f1e4; --panel: #ffffff;
+      --rule: #0f0f10; --accent: #0b4f6c; --pop: #e7382b; --pulp: #ffb703;
+      --civic: #2a66ff; --noir: #111111; --sci: #19c7d1;
+      --radius: 14px; --gap: 1.25rem; --container: 1200px;
+    }
+    body::after {
+      content: ""; position: fixed; inset: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
+      background-size: 300px 300px; mix-blend-mode: multiply; opacity: .6; z-index: -1;
+    }
+    *, *::before, *::after{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0; color:var(--ink); background:var(--paper);
+      font-family: 'Libre Franklin', system-ui, -apple-system, sans-serif;
+      line-height:1.55; font-size:16px; position:relative;
+    }
+    a{ color:inherit; text-decoration:none; }
+    img{ max-width:100%; display:block; }
+    .container{ width:min(100%, var(--container)); margin-inline:auto; padding-inline: clamp(1rem, 4vw, 2rem); position:relative; z-index:1; }
+    .frame{ position:sticky; top:0; z-index:50; border-bottom:4px solid var(--pop); background:color-mix(in srgb, var(--paper) 92%, #fff 8%); backdrop-filter:saturate(120%) blur(6px);}
+    .nav{ display:flex; align-items:center; gap:1rem; padding-block:.6rem; }
+    .brand{ font-family:'Playfair Display', 'Source Serif 4', serif; font-weight:700; letter-spacing:.5px; font-size:1.35rem; }
+    .brand em{ font-family:'Shrikhand', cursive; font-style:normal; font-weight:400; letter-spacing:.5px; }
+    .nav ul{ list-style:none; margin:0 0 0 auto; padding:0; display:flex; flex-wrap:wrap; gap:.5rem; }
+    .nav a{ padding:.45rem .7rem; border:1px solid #00000018; border-radius:999px; font-weight:700; font-size:.86rem; background:#fff; transition:transform .15s ease, box-shadow .15s ease, background .15s ease; }
+    .nav a:hover{ transform: translateY(-1px) rotate(-1deg); box-shadow:0 6px 12px rgba(0,0,0,.08); background:color-mix(in srgb, var(--pulp) 18%, #fff 82%); }
+    .nav a[aria-current="page"]{ border-color: var(--civic); box-shadow:0 0 0 3px color-mix(in srgb, var(--civic) 25%, transparent); }
+
+    /* --- [2] ARTICLE STYLES --- */
+    .article-reader { padding-block: clamp(1.5rem, 5vw, 3rem); }
+    .article-layout { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+    @media (min-width: 1024px) { .article-layout { grid-template-columns: 240px 1fr; gap: 3rem; } }
+    
+    /* Article Header */
+    .article-header { max-width: 75ch; margin-bottom: 2.5rem; text-align: left; }
+    .article-header .meta-info { display: flex; justify-content: flex-start; align-items: center; gap: .75rem; font-family: 'Fira Code', monospace; font-size: .85rem; color: var(--ink-2); margin-bottom: 1rem; }
+    .article-header .label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: .25rem .6rem; border-radius: 999px; background: color-mix(in srgb, var(--civic) 12%, #fff 88%); border: 1px solid color-mix(in srgb, var(--civic) 35%, #0000); color: var(--civic); }
+    .article-title { font-family: 'Source Serif 4', serif; font-size: clamp(2.2rem, 6vw, 3.2rem); line-height: 1.1; font-weight: 700; margin: 0 0 .5rem; }
+    .article-dek { font-size: clamp(1.1rem, 3vw, 1.25rem); color: var(--ink-2); max-width: 60ch; margin: 0; line-height: 1.5; }
+
+    /* Cover Image */
+    .cover-image { margin: 0 0 2rem 0; width: 100%; }
+    .cover-image img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius); border: 1px solid #0000001a; box-shadow: 0 8px 18px #00000010; cursor: zoom-in; }
+
+    /* Main Prose Body */
+    .prose { background: var(--panel); padding: clamp(1.5rem, 5vw, 4rem); border: 1px solid #0000001a; border-radius: var(--radius); box-shadow: 0 10px 24px #00000012; position: relative; }
+    .prose::before { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E"); mix-blend-mode: multiply; opacity: .3; }
+    .prose > :first-child { margin-top: 0; } .prose > :last-child { margin-bottom: 0; }
+    .prose p, .prose li { font-family: 'Source Serif 4', serif; font-size: 1.1rem; line-height: 1.7; margin-bottom: 1.25rem; max-width: 65ch; }
+    .prose h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin: 2.5rem 0 1rem; border-bottom: 2px solid #00000018; padding-bottom: .25rem; max-width: 65ch; }
+    .prose h3 { font-family: 'Libre Franklin', sans-serif; font-weight: 800; font-size: 1.4rem; margin: 2rem 0 1rem; max-width: 65ch; }
+    .prose a { text-decoration: underline; text-decoration-color: var(--pop); text-decoration-thickness: 2px; text-underline-offset: 2px; transition: background .2s ease; }
+    .prose a:hover { background: color-mix(in srgb, var(--pulp) 25%, transparent); }
+    .prose blockquote { margin: 1.5rem 0; padding: 1rem 1.25rem; border-left: 5px solid var(--civic); background: color-mix(in srgb, var(--paper) 40%, transparent); font-style: italic; font-size: 1.15rem; box-shadow: 4px 4px 0 #0000000a; max-width: 60ch; }
+    .prose figure { margin: 2rem 0; max-width: 65ch; }
+    .prose figure.wide { max-width: 90ch; margin: 2.5rem auto; width: calc(100% + 8rem); transform: translateX(-4rem); }
+    .prose figcaption { text-align: center; font-size: .9rem; color: var(--ink-2); margin-top: .5rem; font-family: 'Libre Franklin', sans-serif; }
+    .prose img { border-radius: calc(var(--radius) / 2); border: 1px solid #0000001a; box-shadow: 0 8px 18px #00000010; cursor: zoom-in; }
+    .prose pre[class*="language-"] { margin: 1.5rem 0; max-width: 65ch; border-radius: 8px; border: 1px solid #00000022; font-size: .95rem; }
+    .prose code[class*="language-"] { font-size: .9em; }
+    .prose .katex-display { overflow-x: auto; overflow-y: hidden; padding: .5rem 0; }
+
+    /* --- [3] TOC --- */
+    .toc-container { position: sticky; top: 100px; align-self: start; max-height: calc(100vh - 120px); overflow-y: auto; display: none; }
+    @media (min-width: 1024px) { .toc-container { display: block; } }
+    .toc-container h3 { font-family: 'Fira Code', monospace; font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; margin: 0 0 1rem; }
+    .toc-links { list-style: none; padding: 0; margin: 0; border-left: 2px solid #0000001a; }
+    .toc-link a { display: block; padding: .4rem 1rem; font-size: .9rem; font-weight: 600; color: var(--ink-2); transition: all .2s ease; border-left: 2px solid transparent; margin-left: -2px; }
+    .toc-link a:hover { background: #00000008; color: var(--ink); }
+    .toc-link.active a { color: var(--civic); background: color-mix(in srgb, var(--civic) 8%, transparent); border-left-color: var(--civic); }
+
+    /* --- [4] Reading Progress Bar --- */
+    .progress-container { width: 100%; height: 4px; background: transparent; position: absolute; bottom: -4px; left: 0; }
+    .progress-bar { height: 4px; background: var(--civic); width: 0%; }
+    
+    /* --- [5] Copy Code Button --- */
+    .prose pre[class*="language-"] { position: relative; }
+    .copy-code-button { position: absolute; top: .8rem; right: .8rem; padding: .3rem .6rem; font-family: 'Fira Code', monospace; font-size: .75rem; font-weight: 600; color: #fff; background: #ffffff22; border: 1px solid #ffffff33; border-radius: 6px; cursor: pointer; opacity: 0; transition: opacity .2s ease; }
+    .prose pre[class*="language-"]:hover .copy-code-button { opacity: 1; }
+    
+    /* --- [6] Image Lightbox --- */
+    .lightbox-overlay { position: fixed; inset: 0; background: rgba(16, 16, 17, 0.9); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility .3s ease; }
+    .lightbox-overlay.show { opacity: 1; visibility: visible; }
+    .lightbox-content { position: relative; max-width: 90vw; max-height: 90vh; }
+    .lightbox-content img { border-radius: var(--radius); }
+    .lightbox-close { position: absolute; top: -40px; right: 0; width: 32px; height: 32px; background: #fff; color: var(--ink); border: none; border-radius: 50%; font-size: 1.5rem; line-height: 32px; cursor: pointer; }
+
+    /* --- [7] NEW: Social Share --- */
+    .social-share { margin-top: 1.5rem; display: flex; align-items: center; gap: .75rem; font-family: 'Libre Franklin', sans-serif; font-weight: 600; color: var(--ink-2); border-top: 1px solid #0000001a; padding-top: 1.5rem; }
+    .social-share a { display: inline-flex; justify-content: center; align-items: center; width: 36px; height: 36px; background: #0000000a; border-radius: 50%; transition: background .2s ease, transform .2s ease; }
+    .social-share a:hover { background: #00000014; transform: translateY(-2px); }
+    .social-share svg { width: 18px; height: 18px; fill: var(--ink-2); }
+
+    /* --- [8] NEW: Related Articles --- */
+    .related-articles-section { padding-block: clamp(2rem, 6vw, 4rem); margin-top: 2rem; border-top: 1px dashed #00000026; background: color-mix(in srgb, var(--panel) 50%, transparent); }
+    .related-articles-section h2 { font-family: 'Playfair Display', serif; font-size: 2rem; text-align: center; margin: 0 auto 2rem; max-width: 600px; border-bottom: 2px solid #00000018; padding-bottom: .5rem; }
+    .related-articles-section .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+    .related-articles-section .card { background:var(--panel); border:1px solid #00000022; border-radius: var(--radius); overflow:hidden; display:flex; flex-direction:column; position:relative; box-shadow: 0 10px 22px rgba(0,0,0,.06); transition: transform .22s ease, box-shadow .22s ease; }
+    .related-articles-section .card:hover{ transform: translateY(-6px) rotate(-1deg); box-shadow:0 16px 28px rgba(0,0,0,.18); }
+    .related-articles-section .card .thumb{ aspect-ratio: 16/9; border-bottom:1px solid #00000018; background-color: #f2eadb; background-position: center; background-size: cover; }
+    .related-articles-section .card .body{ padding:1rem 1rem 1.1rem; }
+    .related-articles-section .card .label{ display:inline-flex; align-items:center; gap:.4rem; font-size:.75rem; font-weight:900; text-transform:uppercase; letter-spacing:.08em; }
+    .related-articles-section .card h3{ font: 700 1.1rem/1.2 'Source Serif 4', serif; margin:.45rem 0 .25rem; }
+    .related-articles-section .card .meta{ color:var(--ink-2); font-size:.9rem; }
+    /* Color labels for cards */
+    .related-articles-section .card .label.opinion { color: #8f3d00; }
+    .related-articles-section .card .label.noir { color: var(--noir); }
+    .related-articles-section .card .label.sci { color: var(--sci); }
+
+
+    /* --- [9] RE-USED & RESPONSIVE --- */
+    footer { padding: 2.2rem 1rem 4rem; color: var(--ink-2); border-top: 1px dashed #00000026; }
+    #toTop { position: fixed; right: 1rem; bottom: 1rem; z-index: 60; width: 42px; height: 42px; border-radius: 999px; border: 1px solid #0002; background: #fff; box-shadow: 0 10px 22px rgba(0,0,0,.15); font-weight: 900; cursor: pointer; opacity: 0; transform: translateY(10px); transition: opacity .2s ease, transform .2s ease; }
+    #toTop.show { opacity: 1; transform: translateY(0); }
+    @media (max-width: 768px) { .prose figure.wide { width: 100%; transform: translateX(0); } .prose { padding: clamp(1rem, 4vw, 2rem); } .nav ul { display: none; } }
+  </style>
+
+</head>
+<body>
+  <!-- Navigation Frame with Progress Bar -->
+  <div class="frame">
+    <div class="container nav" role="navigation" aria-label="Primary">
+      <div class="brand">Inklet <em>Lab</em></div>
+      <ul>
+        <li><a href="#">Front Page</a></li>
+        <li><a href="#" aria-current="page">The Dispatch</a></li>
+        <li><a href="#">Peti</a></li>
+        <li><a href="#">The Balcony</a></li>
+        <li><a href="#">etcetra</a></li>
+      </ul>
+    </div>
+    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+  </div>
+
+  <!-- Main Article Content -->
+  <main class="article-reader">
+    <div class="container">
+        <div class="article-layout">
+            <aside class="toc-container">
+                <h3>On this page</h3>
+                <ul id="toc-links" class="toc-links"></ul>
+            </aside>
+
+            <div>
+                <header class="article-header">
+                  <figure class="cover-image">
+                    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop" alt="A team working together at a desk with laptops and papers">
+                  </figure>
+                  <div class="meta-info">
+                    <span class="label tech">Technical</span>
+                    <span>Sep 12, 2025 · 12 min read</span>
+                  </div>
+                  <h1 class="article-title">Eigenvalues, Power Laws, and Why Your Plot Lies</h1>
+                  <p class="article-dek">A deep dive into the mathematical assumptions behind common data visualizations and how they can mislead us.</p>
+                  
+                  <!-- NEW: Social Share Section -->
+                  <div class="social-share" id="socialShare">
+                      <span>Share:</span>
+                      <a href="#" data-service="twitter" aria-label="Share on Twitter" title="Share on Twitter">
+                          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                      </a>
+                      <a href="#" data-service="facebook" aria-label="Share on Facebook" title="Share on Facebook">
+                          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4z"></path></svg>
+                      </a>
+                      <a href="#" data-service="linkedin" aria-label="Share on LinkedIn" title="Share on LinkedIn">
+                          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 21.5h-5v-13h5v13zM4 6.5C2.5 6.5 1.5 5.5 1.5 4s1-2.5 2.5-2.5c1.5 0 2.5 1 2.5 2.5s-1 2.5-2.5 2.5zm11.5 6c-1 0-2 1-2 2v7h-5v-13h5V10s1.6-1.5 4-1.5c3 0 5 2.2 5 6.3v6.7h-5v-7c0-1-1-2-2-2z"></path></svg>
+                      </a>
+                      <a href="#" data-service="copy" aria-label="Copy link" title="Copy link">
+                          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 12.1c0-.4.3-.8.8-.8s.8.3.8.8c0 .4-.3.8-.8.8s-.8-.4-.8-.8zm4.5 0c0-.4.3-.8.8-.8s.8.3.8.8c0 .4-.3.8-.8.8s-.8-.4-.8-.8zm3.7 0c0-.4.3-.8.8-.8s.8.3.8.8c0 .4-.3.8-.8.8s-.8-.4-.8-.8zM21 4H3C2 4 1 5 1 6v13c0 1.1.9 2 2 2h18c1 0 2-1 2-2V6c0-1-1-2-2-2zM8 20H4V7h4v13zm6 0h-4V7h4v13zm6 0h-4V7h4v13z"></path></svg>
+                      </a>
+                  </div>
+                </header>
+
+                <article class="prose">
+                  <p>This is the opening paragraph. It sets the stage for the entire piece. Good prose is about clarity, rhythm, and flow. The goal is to make reading effortless, even when the topic is dense.</p>
+
+                  <figure class="wide">
+                    <img src="https://images.unsplash.com/photo-1599249301320-36911de5ce62?q=80&w=1974&auto=format&fit=crop" alt="Abstract data visualization of glowing network lines">
+                    <figcaption>Visualizations are interpretations, not objective truths. Click the image to see a larger version.</figcaption>
+                  </figure>
+
+                  <h2 id="section-1">Sub-heading for a New Section</h2>
+                  <p>Headings help structure the document. You can also include <code>inline code</code> for variable names or short snippets, like `matrix.eigen()`.</p>
+                  <p>For mathematical notation, we use KaTeX. Inline math like $A\mathbf{v} = \lambda\mathbf{v}$ flows with the text. For more complex, display-style equations, we can use a block: $$ SVD(A) = U \Sigma V^T $$ </p>
+                  
+                  <blockquote> This is a blockquote. It's perfect for highlighting a key quote or an important takeaway, drawing the reader's eye. </blockquote>
+
+                  <h2 id="section-2">Code Blocks & Syntax Highlighting</h2>
+                  <p>For technical articles, clear code blocks are essential. This template now uses Prism.js for beautiful syntax highlighting. Hover over the block and click the button to copy the code.</p>
+
+                  <pre><code class="language-python"># A Python code example
+import numpy as np
+
+def get_eigen(matrix):
+  """
+  Calculates eigenvalues and eigenvectors for a square matrix.
+  """
+  if matrix.shape[0] != matrix.shape[1]:
+    raise ValueError("Only square matrices have eigenvalues.")
+  
+  eigenvalues, eigenvectors = np.linalg.eig(matrix)
+  return eigenvalues, eigenvectors
+
+A = np.array([[2, -1], [4, -3]])
+vals, vecs = get_eigen(A)
+
+print(f"Eigenvalues: {vals}")</code></pre>
+
+                  <p>Finally, you can wrap up your thoughts in a concluding section. A strong conclusion summarizes the key points and leaves the reader with a lasting impression or a call to action.</p>
+                </article>
+            </div>
+        </div>
+    </div>
+  </main>
+
+  <!-- NEW: Related Articles Section -->
+  <section class="related-articles-section">
+      <div class="container">
+        <h2>Further Reading</h2>
+        <div class="grid">
+          <article class="card">
+            <div class="thumb" style="background-image: url('https://images.unsplash.com/photo-1550537612-9852e8a715f5?q=80&w=2070&auto=format&fit=crop')"></div>
+            <div class="body">
+              <span class="label opinion">Opinion</span>
+              <h3><a href="#">The Spectacles of Certainty</a></h3>
+              <div class="meta">5 min read · media criticism</div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="thumb" style="background-image: url('https://images.unsplash.com/photo-1526498460520-4c246339dcc4?q=80&w=2070&auto=format&fit=crop')"></div>
+            <div class="body">
+              <span class="label noir">Noir</span>
+              <h3><a href="#">Debugging in the Dark</a></h3>
+              <div class="meta">7 min read · failure & systems</div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="thumb" style="background-image: url('https://images.unsplash.com/photo-1639799223012-39c4d24113f9?q=80&w=1932&auto=format&fit=crop')"></div>
+            <div class="body">
+              <span class="label sci">Retro Sci-Fi</span>
+              <h3><a href="#">When AI Dreamed of Rockets</a></h3>
+              <div class="meta">10 min read · speculative notes</div>
+            </div>
+          </article>
+        </div>
+      </div>
+  </section>
+
+
+  <!-- Re-used Footer -->
+  <footer class="container">
+    <div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center; justify-content:space-between;">
+      <div>© <span id="y"></span> Inklet Lab · The Dispatch</div>
+      <div style="font-family:'Fira Code', monospace; font-size:.95rem;">v0.6 • engagement-ready</div>
+    </div>
+  </footer>
+
+  <!-- Re-used "Back to Top" Button -->
+  <button id="toTop" aria-label="Back to top">↑</button>
+
+  <!-- Lightbox Structure -->
+  <div class="lightbox-overlay" id="lightboxOverlay">
+    <div class="lightbox-content">
+      <img src="" alt="Enlarged view" id="lightboxImage">
+      <button class="lightbox-close" id="lightboxClose">&times;</button>
+    </div>
+  </div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" xintegrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzYCACeUdcgtQLQR4CEqoeX4G4MDRi3Q4A" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" xintegrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" xintegrity="sha512-9khQRAUBYEJDCDVP2AigFENFrGAuminKOVDSTENADWUX/GwsMYTGTsObd59DKhZJRIevcN3VroEUjparcb5A/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" xintegrity="sha512-S_2_LMwTMWLFOx5Iqxdt5JzT5+rH3fUqujTX8_xyVPgSGBXwfL3cWbCo0UTjDpb2X29rS/Gnt2uS5Kk/wf2wKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // --- Render Math ---
+  renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false} ] });
+
+  // --- Footer Year ---
+  document.getElementById('y').textContent = new Date().getFullYear();
+
+  // --- Back to top button ---
+  const toTop = document.getElementById('toTop');
+  window.addEventListener('scroll', () => toTop.classList.toggle('show', window.scrollY > 600));
+  toTop.addEventListener('click', () => window.scrollTo({top: 0, behavior: 'smooth'}));
+
+  // --- Reading Progress Bar ---
+  const progressBar = document.getElementById('progressBar');
+  window.addEventListener('scroll', () => {
+    const totalHeight = document.body.scrollHeight - window.innerHeight;
+    progressBar.style.width = `${(window.scrollY / totalHeight) * 100}%`;
+  });
+
+  // --- Table of Contents Logic ---
+  const tocContainer = document.getElementById('toc-links');
+  const headings = Array.from(document.querySelectorAll('.prose h2'));
+  if (tocContainer && headings.length) {
+    headings.forEach(h => {
+      const a = document.createElement('a');
+      a.textContent = h.textContent;
+      a.href = `#${h.id}`;
+      const li = document.createElement('li');
+      li.className = 'toc-link';
+      li.appendChild(a);
+      tocContainer.appendChild(li);
+    });
+    
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const link = tocContainer.querySelector(`a[href="#${entry.target.id}"]`);
+        if (link && entry.isIntersecting) {
+          tocContainer.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
+          link.parentElement.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px', threshold: 0.7 });
+    headings.forEach(h => observer.observe(h));
+  }
+
+  // --- Copy Code Button Logic ---
+  document.querySelectorAll('.prose pre').forEach(pre => {
+    const button = document.createElement('button');
+    button.className = 'copy-code-button';
+    button.textContent = 'Copy';
+    pre.appendChild(button);
+    button.addEventListener('click', () => {
+      const code = pre.querySelector('code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        button.textContent = 'Copied!';
+        setTimeout(() => button.textContent = 'Copy', 2000);
+      });
+    });
+  });
+
+  // --- Image Lightbox Logic ---
+  const lightboxOverlay = document.getElementById('lightboxOverlay');
+  const lightboxImage = document.getElementById('lightboxImage');
+  const lightboxClose = document.getElementById('lightboxClose');
+  document.querySelectorAll('.prose img, .cover-image img').forEach(img => {
+    img.addEventListener('click', () => {
+      lightboxImage.src = img.src;
+      lightboxOverlay.classList.add('show');
+    });
+  });
+  const closeLightbox = () => lightboxOverlay.classList.remove('show');
+  lightboxOverlay.addEventListener('click', e => e.target === lightboxOverlay && closeLightbox());
+  lightboxClose.addEventListener('click', closeLightbox);
+  
+  // --- Social Sharing Logic ---
+  const socialShare = document.getElementById('socialShare');
+  if (socialShare) {
+    socialShare.addEventListener('click', function(e) {
+      const link = e.target.closest('a');
+      if (!link) return;
+
+      e.preventDefault();
+      
+      const service = link.dataset.service;
+      const url = window.location.href;
+      const title = document.title;
+      let shareUrl = '';
+
+      if (service === 'twitter') {
+        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+      } else if (service === 'facebook') {
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+      } else if (service === 'linkedin') {
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+      } else if (service === 'copy') {
+        navigator.clipboard.writeText(url).then(() => {
+          if(!link.dataset.originalTitle) {
+            link.dataset.originalTitle = link.title;
+          }
+          link.title = 'Copied!';
+          setTimeout(() => link.title = link.dataset.originalTitle, 2000);
+        });
+        return;
+      }
+      
+      if(shareUrl) {
+          window.open(shareUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
+      }
+    });
+  }
+
+});
+</script>
+
+</body>
+</html>
+
