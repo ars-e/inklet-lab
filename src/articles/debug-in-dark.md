@@ -1,5 +1,5 @@
 ---
-layout: layouts/article-template.njk 
+layout: "article-template.njk"
 title: "Debugging in the Dark" 
 dek: "A personal story about tracking down a critical bug in a legacy system, and the lessons learned about failure and resilience." 
 category: "Noir" 

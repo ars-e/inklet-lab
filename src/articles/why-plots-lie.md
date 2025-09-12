@@ -1,5 +1,5 @@
 ---
-layout: "layouts/article-template.njk"
+layout: "article-template.njk"
 title: "Eigenvalues, Power Laws, and Why Your Plot Lies"
 dek: "A deep dive into the mathematical assumptions behind common data visualizations and how they can mislead us."
 category: "Technical"

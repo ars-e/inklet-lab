@@ -1,5 +1,5 @@
 ---
-layout: layouts/article-template.njk 
+layout: "article-template.njk"
 title: "The Spectacles of Certainty" 
 dek: "How media narratives shape our perception of complex issues, often sacrificing nuance for the sake of a clean story" 
 category: "Opinion" 

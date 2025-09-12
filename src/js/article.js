@@ -171,23 +171,5 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// after your existing DOMContentLoaded logic in article.js
-document.querySelectorAll('.related-articles-section .card').forEach(card => {
-  const link = card.querySelector('a[href]');
-  if (!link) return;
 
-  card.style.cursor = 'pointer';
 
-  card.addEventListener('click', (e) => {
-    // avoid double navigating when clicking the title <a>
-    if (e.target.closest('a')) return;
-    window.location.assign(link.getAttribute('href'));
-  });
-
-  card.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      link.click();
-    }
-  });
-});

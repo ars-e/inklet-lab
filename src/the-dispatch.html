@@ -113,11 +113,11 @@
 
       <div class="grid">
        {% for post in collections.posts %}
-    <article class="card" data-type="{{ post.data.category | lower }}" data-title="{{ post.data.title }}">
+    <article class="card" data-type="{{ post.data.category | lower }}" data-title="{{ post.data.title }}" data-href="{{ post.url | url }}" role="link" tabindex="0">
       <div class="thumb badge-{{ post.data.category | lower }}" aria-hidden="true"></div>
       <div class="body">
         <span class="label {{ post.data.category | lower }}"><span class="dot"></span> {{ post.data.category }}</span>
-        <h3><a href="{{ post.url }}">{{ post.data.title }}</a></h3>
+        <h3><a href="{{ post.url | url }}">{{ post.data.title }}</a></h3>
         <div class="meta">{{ post.data.read_time }} · {{ post.data.dek | truncate(40) }}</div>
       </div>
     </article>
@@ -177,7 +177,8 @@
 
   <button id="toTop" aria-label="Back to top">↑</button>
 
-<script src="/js/dispatch.js" defer></script>
+<script src="{{ '/js/dispatch.js' | url }}" defer></script>
+
 
 </body>
 </html>

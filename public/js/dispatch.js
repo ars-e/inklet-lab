@@ -257,3 +257,24 @@
 
     layoutChipsFixed();
   })();
+
+  document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.grid .card').forEach(card => {
+    const href = card.getAttribute('data-href');
+    if (!href) return;
+
+    card.style.cursor = 'pointer';
+
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('a')) return; // let inner links behave normally
+      window.location.assign(href);
+    });
+
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        window.location.assign(href);
+      }
+    });
+  });
+});

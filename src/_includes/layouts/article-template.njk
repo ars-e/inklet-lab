@@ -1,126 +1,172 @@
+{% set pageTitle = title or page.fileSlug | title %}
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{ title }} — The Dispatch</title>
 
+  <title>{{ pageTitle }} — The Dispatch</title>
+  <meta name="description" content="{{ dek | striptags | truncate(160) }}">
+  <meta name="generator" content="Eleventy">
+
+  <!-- Preconnects for font performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Type -->
   <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,700&family=Libre+Franklin:wght@400;600;800&family=Fira+Code:wght@400;600&family=Shrikhand&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0KOVEMVIARPKZGH0rxEsxFP9veNvTuiIBG4fWJd0OCpWn7MKEsyxt" crossorigin="anonymous">
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" integrity="sha512-mIs9kKbaw6JutVRFHcmLsvGQbDZFiaMUBTRLsRgacrqHUYeeYIObvStJNcGTG/KEOg78PWwLNUqUzthe6+0sRA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  
+
+  <!-- KaTeX + Prism themes -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Your CSS -->
   <link rel="stylesheet" href="/css/article.css">
 </head>
 <body>
-  <div class="frame">
-    <div class="container nav" role="navigation" aria-label="Primary">
-      <div class="brand">Inklet <em>Lab</em></div>
-      <ul>
-        <li><a href="#">Front Page</a></li>
-        <li><a href="#" aria-current="page">The Dispatch</a></li>
-        <li><a href="#">Peti</a></li>
-        <li><a href="#">The Balcony</a></li>
-        <li><a href="#">etcetra</a></li>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="frame">
+    <nav class="container nav" aria-label="Primary">
+      <div class="brand" aria-label="Inklet Lab">Inklet <em>Lab</em></div>
+      <ul class="nav-list">
+        <li><a href="/front-page/" {% if page.url == '/front-page/' %}aria-current="page"{% endif %}>Front Page</a></li>
+        <li><a href="/the-dispatch/" {% if page.url | slice(0, 14) == '/the-dispatch/' %}aria-current="page"{% endif %}>The Dispatch</a></li>
+        <li><a href="/peti/" {% if page.url | slice(0, 6) == '/peti/' %}aria-current="page"{% endif %}>Peti</a></li>
+        <li><a href="/the-balcony/" {% if page.url | slice(0, 12) == '/the-balcony/' %}aria-current="page"{% endif %}>The Balcony</a></li>
+        <li><a href="/etcetera/" {% if page.url | slice(0, 10) == '/etcetera/' %}aria-current="page"{% endif %}>Etcetera</a></li>
       </ul>
+    </nav>
+
+    <div class="progress-container" aria-hidden="true">
+      <div class="progress-bar" id="progressBar"></div>
     </div>
-    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
-  </div>
+  </header>
 
-  <main class="article-reader">
+  <main id="main" class="article-reader" tabindex="-1">
     <div class="container">
-        <div class="article-layout">
-            <aside class="toc-container">
-                <h3>On this page</h3>
-                <ul id="toc-links" class="toc-links"></ul>
-            </aside>
+      <div class="article-layout">
+        <!-- Table of contents -->
+        <aside class="toc-container">
+          <h2 class="toc-heading">On this page</h2>
+          <ul id="toc-links" class="toc-links"></ul>
+        </aside>
 
-            <article>
-                <header class="article-header">
-                  <figure class="cover-image">
-                    <img src="{{ coverImage }}" alt="{{ coverAlt }}">
-                  </figure>
-                  <div class="meta-info">
-                    <span class="label tech">{{ category }}</span>
-                    <span>{{ date }} · {{ readTime }}</span>
-                  </div>
-                  <h1 class="article-title">{{ title }}</h1>
-                  <p class="article-dek">{{ dek }}</p>
-                  
-                  <div class="social-share" id="socialShare">
-                      <span>Share:</span>
-                      <a href="#" data-service="twitter" aria-label="Share on Twitter" title="Share on Twitter">
-                          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
-                      </a>
-                      <a href="#" data-service="facebook" aria-label="Share on Facebook" title="Share on Facebook">
-                          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4z"></path></svg>
-                      </a>
-                      <a href="#" data-service="linkedin" aria-label="Share on LinkedIn" title="Share on LinkedIn">
-                          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 21.5h-5v-13h5v13zM4 6.5C2.5 6.5 1.5 5.5 1.5 4s1-2.5 2.5-2.5c1.5 0 2.5 1 2.5 2.5s-1 2.5-2.5 2.5zm11.5 6c-1 0-2 1-2 2v7h-5v-13h5V10s1.6-1.5 4-1.5c3 0 5 2.2 5 6.3v6.7h-5v-7c0-1-1-2-2-2z"></path></svg>
-                      </a>
-                      <a href="#" data-service="copy" aria-label="Copy link" title="Copy link">
-                          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 12.1c0-.4.3-.8.8-.8s.8.3.8.8c0 .4-.3.8-.8.8s-.8-.4-.8-.8zm4.5 0c0-.4.3-.8.8-.8s.8.3.8.8c0 .4-.3.8-.8.8s-.8-.4-.8-.8zm3.7 0c0-.4.3-.8.8-.8s.8.3.8.8c0 .4-.3.8-.8.8s-.8-.4-.8-.8zM21 4H3C2 4 1 5 1 6v13c0 1.1.9 2 2 2h18c1 0 2-1 2-2V6c0-1-1-2-2-2zM8 20H4V7h4v13zm6 0h-4V7h4v13zm6 0h-4V7h4v13z"></path></svg>
-                      </a>
-                  </div>
-                </header>
+        <!-- Article -->
+        <article class="article">
+          <header class="article-header">
+            {% if coverImage %}
+            <figure class="cover-image">
+              <img src="{{ coverImage }}" alt="{{ coverAlt | default(title) }}" loading="lazy" decoding="async">
+            </figure>
+            {% endif %}
 
-                <div class="prose">
-                  {{ content | safe }}
-                </div>
-            </article>
+            <div class="meta-info">
+              {% if category %}<span class="label {{ category | lower }}">{{ category }}</span>{% endif %}
+              {% if date or readTime %}<span class="meta-dot">{{ date }}{% if date and readTime %} · {% endif %}{{ readTime }}</span>{% endif %}
+            </div>
 
-            <aside class="sidenotes-container" id="sidenotesContainer"></aside>
-        </div>
+            <h1 class="article-title">{{ title }}</h1>
+            {% if dek %}<p class="article-dek">{{ dek }}</p>{% endif %}
+
+            <!-- Social share -->
+            <div class="social-share" id="socialShare" aria-label="Share this article">
+              <span class="share-label">Share:</span>
+              <a
+                href="https://twitter.com/intent/tweet?url={{ site.url }}{{ page.url | url }}&text={{ title | urlencode }}"
+                target="_blank" rel="noopener"
+                aria-label="Share on X (Twitter)" title="Share on X (Twitter)">
+                <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zM17.083 19.77h1.833L7.084 4.126H5.117z"></path></svg>
+              </a>
+              <a
+                href="https://www.facebook.com/sharer/sharer.php?u={{ site.url }}{{ page.url | url }}"
+                target="_blank" rel="noopener"
+                aria-label="Share on Facebook" title="Share on Facebook">
+                <svg viewBox="0 0 24 24"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4z"></path></svg>
+              </a>
+              <a
+                href="https://www.linkedin.com/shareArticle?mini=true&url={{ site.url }}{{ page.url | url }}&title={{ title | urlencode }}"
+                target="_blank" rel="noopener"
+                aria-label="Share on LinkedIn" title="Share on LinkedIn">
+                <svg viewBox="0 0 24 24"><path d="M6.5 21.5h-5v-13h5v13zM4 6.5C2.5 6.5 1.5 5.5 1.5 4s1-2.5 2.5-2.5c1.5 0 2.5 1 2.5 2.5s-1 2.5-2.5 2.5zm11.5 6c-1 0-2 1-2 2v7h-5v-13h5V10s1.6-1.5 4-1.5c3 0 5 2.2 5 6.3v6.7h-5v-7c0-1-1-2-2-2z"></path></svg>
+              </a>
+              <button class="share-copy" data-service="copy" type="button" aria-label="Copy link" title="Copy link">
+                <svg viewBox="0 0 24 24"><path d="M8 12.1c0-.4.3-.8.8-.8s.8.3.8.8c0 .4-.3.8-.8.8s-.8-.4-.8-.8zm4.5 0c0-.4.3-.8.8-.8s.8.3.8.8c0 .4-.3.8-.8.8s-.8-.4-.8-.8zm3.7 0c0-.4.3-.8.8-.8s.8.3.8.8c0 .4-.3.8-.8.8s-.8-.4-.8-.8zM21 4H3C2 4 1 5 1 6v13c0 1.1.9 2 2 2h18c1 0 2-1 2-2V6c0-1-1-2-2-2zM8 20H4V7h4v13zm6 0h-4V7h4v13zm6 0h-4V7h4v13z"></path></svg>
+              </button>
+            </div>
+          </header>
+
+          <div class="prose">
+            {{ content | safe }}
+          </div>
+        </article>
+
+        <!-- Sidenotes -->
+        <aside class="sidenotes-container" id="sidenotesContainer" aria-label="Sidenotes"></aside>
+      </div>
     </div>
   </main>
 
-{# inside article-template.njk #}
-<section class="related-articles-section">
-  <h2>Further reading</h2>
-  <div class="grid">
-    {% set related = collections.posts | relatedPosts(page.url) %}
-    {% for post in related %}
-      <article class="card" role="link" tabindex="0">
-        <a class="thumb"
-           href="{{ post.url }}"
-           style="background-image:url('{{ post.data.cover_image }}')"
-           aria-label="{{ post.data.title }}"></a>
+  <!-- Further reading -->
+  <section class="related-articles-section" aria-labelledby="related-heading">
+    <div class="container">
+      <h2 id="related-heading">Further reading</h2>
+      <div class="grid">
+        {% set related = collections.posts | relatedPosts(page.url) %}
+        {% for post in related %}
+          <a class="card" href="{{ post.url }}" aria-label="{{ post.data.title }}">
+            <div class="thumb" style="background-image:url('{{ post.data.cover_image }}')"></div>
+            <div class="body">
+              {% if post.data.category %}
+                <span class="label {{ post.data.category | lower }}">
+                  <span class="dot" aria-hidden="true"></span> {{ post.data.category }}
+                </span>
+              {% endif %}
+              <h3 class="card-title">{{ post.data.title }}</h3>
+              <div class="meta">
+                {{ post.data.read_time }}{% if post.data.read_time and post.data.dek %} · {% endif %}{{ post.data.dek | truncate(64) }}
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
 
-        <div class="body">
-          <span class="label {{ post.data.category | lower }}">
-            <span class="dot"></span> {{ post.data.category }}
-          </span>
-          <h3><a href="{{ post.url }}">{{ post.data.title }}</a></h3>
-          <div class="meta">{{ post.data.read_time }} · {{ post.data.dek | truncate(64) }}</div>
-        </div>
-      </article>
-    {% endfor %}
-  </div>
-</section>
-
-
-  <footer class="container">
-    <div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center; justify-content:space-between;">
+  <footer class="site-footer">
+    <div class="container footer-inner">
       <div>© <span id="y"></span> Inklet Lab · The Dispatch</div>
-      <div style="font-family:'Fira Code', monospace; font-size:.95rem;">v0.8 • modular</div>
+      <div class="build-meta">v0.8 • modular</div>
     </div>
   </footer>
 
-  <button id="toTop" aria-label="Back to top">↑</button>
+  <button id="toTop" class="to-top" type="button" aria-label="Back to top">↑</button>
 
-  <div class="lightbox-overlay" id="lightboxOverlay">
-    <div class="lightbox-content">
-      <img src="" alt="Enlarged view" id="lightboxImage">
-      <button class="lightbox-close" id="lightboxClose">&times;</button>
+  <!-- Lightbox -->
+  <div class="lightbox-overlay" id="lightboxOverlay" hidden>
+    <div class="lightbox-content" role="dialog" aria-modal="true" aria-label="Image preview">
+      <img src="" alt="" id="lightboxImage" loading="eager">
+      <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close">&times;</button>
     </div>
   </div>
 
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzYCACeUdcgtQLQR4CEqoeX4G4MDRi3Q4A" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" integrity="sha512-9khQRAUBYEJDCDVP2AigFENFrGAuminKOVDSTENADWUX/GwsMYTGTsObd59DKhZJRIevcN3VroEUjparcb5A/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" integrity="sha512-S_2_LMwTMWLFOx5Iqxdt5JzT5+rH3fUqujTX8_xyVPgSGBXwfL3cWbCo0UTjDpb2X29rS/Gnt2uS5Kk/wf2wKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="/js/article.js" defer></script>
+  <!-- JS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script defer src="/js/article.js"></script>
 
+  <script>
+    // Year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Share copy
+    document.querySelector('.share-copy')?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText('{{ site.url }}{{ page.url | url }}');
+      } catch(e){ console.warn('Copy failed', e); }
+    });
+  </script>
 </body>
 </html>
