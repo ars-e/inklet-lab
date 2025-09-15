@@ -1,107 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>The Point</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/the-point.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Point</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/the-point.css">
 
 </head>
-<body>
+<body class="antialiased custom-cursor-active">
+    
+    <div id="custom-cursor"></div>
+    <div id="oblio"></div>
+    <div id="scroll-progress-bar">
+        <div id="scroll-progress-indicator"></div>
+    </div>
+    <div class="shape shape1"></div>
+    <div class="shape shape2"></div>
 
-<div class="watermark">THE<br>POINT</div>
+    <nav id="site-nav" class="fixed top-0 left-0 right-0 z-20">
+        <div class="container mx-auto px-6 py-8 flex justify-between items-center text-xl">
+            <div class="nav-brand"><a href="#">Inklet Lab</a></div>
+            <div class="nav-links hidden md:flex space-x-8">
+                <a href="#">Work</a><a href="#">Lab</a><a href="#epilogue">Contact</a>
+            </div>
+            <button id="mobile-nav-toggle" class="md-hidden">MENU</button>
+        </div>
+    </nav>
+    <div id="mobile-menu">
+        <a href="#">Work</a><a href="#">Lab</a><a href="#epilogue">Contact</a>
+    </div>
 
-<div class="wrap">
-  <p class="brand">inklet lab</p>
-  <h1>The Point</h1>
-  <p class="kicker">About · Now · What this site is · Contact & Socials — a single, living reference page.</p>
-  <div class="rule"></div>
+    <main class="container mx-auto px-6 py-12 md:py-20 max-w-5xl relative z-10">
 
-  <nav class="nav" aria-label="Site">
-    <a href="/front-page/">Front Page</a>
-    <a href="/the-dispatch/">The Dispatch</a>
-    <a href="/peti/">Peti</a>
-    <a href="/the-balcony/">The Balcony</a>
-    <a href="/dump-and-discover/">Dump &amp; Discover</a>
-    <a href="/etcetera/">etcetera</a>
-    <a class="active" href="/the-point/">The Point</a>
-  </nav>
+        <header class="main-header mb-24 md:mb-32">
+            <h1 id="main-title">What's The Point?</h1>
+            <div id="scroll-down-indicator">
+                <svg class="w-8 h-8 text-gray-700/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </div>
+        </header>
 
-  <div class="grid">
-    <!-- sticky mini index -->
-    <aside class="index" aria-label="Page index">
-      <h3>Index</h3>
-      <a href="#s1">01 · About (10s)</a>
-      <a href="#s2">02 · About (10m)</a>
-      <a href="#s3">03 · About (Text)</a>
-      <a href="#s4">04 · What is this page</a>
-      <a href="#s5">05 · What I’m doing now</a>
-      <a href="#s6">06 · Contact</a>
-      <a href="#s7">07 · Socials</a>
-    </aside>
+        <article class="narrative-text">
 
-    <!-- content -->
-    <main>
-      <section id="s1" class="sec">
-        <span class="label">Dossier</span>
-        <h2>01: About Me (10 seconds)</h2>
-        <p>I build clear, useful systems at the edge of design, code, and research. Curious by default, rigorous by habit, playful on purpose.</p>
-      </section>
+            <section class="page-description chapter text-center max-w-3xl mx-auto">
+                <p class="text-xl italic text-gray-700/80">
+                    This is a living document, a story, and an experiment. It’s an attempt to capture a journey that doesn’t fit neatly into a resumé, and to plant the seeds for a lab where ideas can grow. Welcome to The Point.
+                </p>
+            </section>
+            
+            <section id="chapter-1" class="chapter">
+                <h2 class="chapter-title">A Fable</h2>
+                <div class="chapter-content">
+                    <p>You know the fable of the Land of Point? Where everyone and everything had to have a point. It was the rule.</p>
+                    <p>Except for one kid, Oblio. He was pointless. Round-headed. For a while, I felt like Oblio, trying to find my place in a world of sharp angles, linear careers, and clean definitions.</p>
+                </div>
+            </section>
+            
+            <section id="chapter-2" class="chapter">
+                <h2 class="chapter-title">The Path</h2>
+                <div class="chapter-content">
+                    <p>My journey was drawn by hand, not a ruler. It started with code, but the neatest code is useless if it doesn't serve a human need. That question pulled me into the complex machinery of society—the 
+                    <span class="footnote">Indian Civil Services<sup>1</sup><span class="footnote-content">Often called the 'steel frame' of India, it's the permanent bureaucracy responsible for the administration of the country. A deep dive into systems at a national scale.</span></span>.</p>
+                    <p>Studying policy was learning about <span class="highlight">why</span> things work. But I was still missing the bridge between the power of tech and the complexity of people. That bridge was economics. It gave me the language of incentives, behavior, and choice—the hidden grammar that underpins both code and communities.</p>
+                </div>
+            </section>
+            
+            <section id="chapter-3" class="chapter">
+                <h2 class="chapter-title">The Place</h2>
+                <div class="chapter-content">
+                    <p>So, what is <span class="brand-font italic">Inklet Lab</span>? It’s two things. A <span class="highlight">Personal Map Room</span> to chart my own journey, and a <span class="highlight">Public Workshop</span> to share the results. This lab has a few different rooms; here’s a map to help you get around:</p>
+                    
+                    <!-- --- UPDATED: Flippable Cards Section --- -->
+                    <div class="poi-card-deck-container">
+                        <div class="poi-card-deck">
+                            <div class="poi-card">
+                                <div class="poi-card-inner">
+                                    <div class="poi-card-front">
+                                        <h3>The Dispatch</h3>
+                                        <p>(Click to flip)</p>
+                                    </div>
+                                    <div class="poi-card-back">
+                                        <p>Long-form essays, code tutorials, and explorations into the messy process of building things.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="poi-card">
+                                <div class="poi-card-inner">
+                                    <div class="poi-card-front">
+                                        <h3>Peti [पेटी]</h3>
+                                        <p>(Click to flip)</p>
+                                    </div>
+                                    <div class="poi-card-back">
+                                        <p>A treasure box of finished projects, interactive data visualizations, and case studies.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="poi-card">
+                                <div class="poi-card-inner">
+                                    <div class="poi-card-front">
+                                        <h3>The Balcony</h3>
+                                        <p>(Click to flip)</p>
+                                    </div>
+                                    <div class="poi-card-back">
+                                        <p>A space for reflection. Book reviews, film critiques, and thoughts on the work of others.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="poi-card">
+                                <div class="poi-card-inner">
+                                    <div class="poi-card-front">
+                                        <h3>Etcetera</h3>
+                                        <p>(Click to flip)</p>
+                                    </div>
+                                    <div class="poi-card-back">
+                                        <p>A collection of stray thoughts, interesting links, and half-formed ideas that don't yet have a home.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- --- End of Updated Section --- -->
 
-      <section id="s2" class="sec">
-        <span class="label">Story</span>
-        <h2>02: About Me (10 minutes)</h2>
-        <p>[Longer narrative bio — journey, principles, selected work. Keep paragraphs short; use <a class="inline" href="#">inline links</a> to deeper pages.]</p>
-        <div class="callout">Tip — treat this like a magazine column: keep to 60–70 characters per line for easy reading.</div>
-      </section>
+                </div>
+            </section>
+            
+            <section id="chapter-4" class="chapter">
+                <h2 class="chapter-title">The Why</h2>
+                <div class="chapter-content">
+                    <p>After my master's, I tried to write a LinkedIn bio. The labels felt like this:</p>
+                    <p class="text-xl italic my-8">
+                        <span class="bio-line" style="animation-delay: 0s;">"Software Developer who gets monetary policy?"<span class="strikethrough"></span></span><br>
+                        <span class="bio-line" style="animation-delay: 1s;">"Economist who can build an app?"<span class="strikethrough" style="animation-delay: 1.5s;"></span></span>
+                    </p>
+                    <p>A CV tells you <span class="highlight">what</span>. It doesn't tell you <span class="highlight">why</span>. I built this site to hold the whole story—the rough drafts, the wrong turns, and the half-formed ideas.</p>
+                </div>
+            </section>
+            
+            <section id="chapter-5" class="chapter">
+                <h2 class="chapter-title">The Now</h2>
+                <div class="chapter-content">
+                    <p>Every map has a place where the known world ends. This is mine, for now. I'm charting a course through <a href="#">[Your Current Project/Focus]</a>, exploring the wilds of <a href="#">[A Topic You're Learning]</a>, and finding my way with <a href="#">[A Book/Film/Piece of media]</a>.</p>
+                    <p>The map is always being redrawn. The destination is never fixed. That’s the adventure.</p>
+                </div>
+            </section>
 
-      <section id="s3" class="sec">
-        <span class="label">Profile</span>
-        <h2>03: About Me (Text)</h2>
-        <ul class="clean">
-          <li>• Design: systems, editorial, interaction</li>
-          <li>• Code: JS/TS, Python, data viz</li>
-          <li>• Research: econ/dev, behavioural, policy</li>
-        </ul>
-      </section>
+            <section id="epilogue" class="epilogue">
+                <h2 class="text-5xl md:text-6xl font-bold mb-6">An Invitation</h2>
+                <p class="mb-8 text-lg">If this resonates—if you're a fellow traveler, a builder, or just curious—I'd love to hear from you.</p>
+                <p class="mb-12 text-lg font-bold" style="color: var(--accent-color);">Tell me about your Pointless Forest.</p>
+                <div class="epilogue-links flex flex-col md:flex-row justify-center items-center space-y-8 md:space-y-0 md:space-x-12">
+                    <a href="[Your LinkedIn URL]" target="_blank" rel="noopener noreferrer">LINKEDIN</a>
+                    <a href="[Your GitHub URL]" target="_blank" rel="noopener noreferrer">GITHUB</a>
+                    <a href="mailto:[your.email@example.com]">EMAIL</a>
+                </div>
+            </section>
 
-      <section id="s4" class="sec">
-        <span class="label">Context</span>
-        <h2>04: What is this page?</h2>
-        <p>“The Point” is a living index: who I am, what I’m doing, and where to go next. It’s the quickest way to understand me and get in touch.</p>
-      </section>
-
-      <section id="s5" class="sec">
-        <span class="label">Now</span>
-        <h2>05: What I’m doing now</h2>
-        <p>Currently working on [Project/Role]. Exploring [Topic]. Reading “[Book]”. Updated monthly.</p>
-      </section>
-
-      <section id="s6" class="sec">
-        <span class="label">Reach</span>
-        <h2>06: Contact</h2>
-        <p>Email: <a class="inline" href="mailto:hello@example.com">hello@example.com</a></p>
-        <p>For faster routing, use subject line: <em>“THE POINT — &lt;topic&gt;”</em>.</p>
-      </section>
-
-      <section id="s7" class="sec">
-        <span class="label">Directory</span>
-        <h2>07: Socials</h2>
-        <ul class="clean">
-          <li><a class="inline" href="#" target="_blank" rel="noopener">LinkedIn</a></li>
-          <li><a class="inline" href="#" target="_blank" rel="noopener">GitHub</a></li>
-          <li><a class="inline" href="#" target="_blank" rel="noopener">Instagram</a></li>
-        </ul>
-      </section>
+        </article>
     </main>
-  </div>
 
-  <footer>© 2025 · The Point · set in Inter + Source Code Pro</footer>
-</div>
+    <footer class="text-center py-8 text-sm text-gray-700/50">
+        <p>&copy; 2024 Your Name. Inspired by a fable and built with curiosity.</p>
+    </footer>
+
+  <script src="/js/the-point.js" defer></script>
 
 </body>
 </html>
+
+

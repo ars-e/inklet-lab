@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Point</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDF8F0; /* A warm, parchment-like color */
+        }
+        h1, h2, h3 {
+            font-family: 'Lora', serif;
+        }
+        .story-text {
+            font-family: 'Lora', serif;
+            font-size: 1.125rem;
+            line-height: 1.75;
+            color: #4B3F35; /* A soft, earthy brown */
+        }
+        .highlight-arrow {
+            display: inline-block;
+            position: relative;
+        }
+        .highlight-arrow::after {
+            content: '→';
+            position: absolute;
+            right: -1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #D97706; /* A warm, amber color */
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased">
+
+    <!-- Main Content -->
+    <div class="container mx-auto max-w-4xl px-6 py-12 md:py-20">
+
+        <!-- Header -->
+        <header class="text-center mb-12 md:mb-16">
+            <h1 class="text-4xl md:text-6xl font-bold text-amber-800 tracking-tight">The Point</h1>
+            <p class="mt-4 text-lg text-gray-600">...is a journey, not just a destination.</p>
+        </header>
+
+        <!-- The Fable Begins -->
+        <section class="mb-12 md:mb-16">
+            <p class="story-text">
+                Have you ever heard the fable of the Land of Point? Everyone and everything there had a point on the top of their heads. Well, almost everyone. There was a boy named Oblio, and he was round-headed. He didn't have a point. For a while, I felt a bit like Oblio, navigating a world where everyone else seemed to have their "point" figured out—a clear-cut career, a linear path, a single, sharp definition of who they were.
+            </p>
+            <p class="story-text mt-6">
+                This website is my story of embracing the roundness. It’s a glimpse beyond the polished CV or the curated social media grid. It's a space to explore the winding path that led me here and to share the ideas that are still taking shape. It’s my own version of the Pointless Forest, where everything, in its own way, has a point after all.
+            </p>
+        </section>
+
+        <!-- Who I Am -->
+        <section class="mb-12 md:mb-16 bg-white/60 p-8 rounded-xl shadow-sm border border-gray-200">
+            <h2 class="text-3xl font-bold text-amber-700 mb-4">Who I Am: The Person Behind the Path</h2>
+            <div class="space-y-4 text-gray-700 leading-relaxed">
+                <p>
+                    At my core, I'm a builder, a storyteller, and an endlessly curious soul. My journey hasn't been a straight line, but a collection of dots I'm only now beginning to connect. I've been a [Your Previous Role/Field, e.g., software developer], a [Another Role, e.g., freelance writer], and a [Hobby/Passion, e.g., passionate photographer]. Each experience felt distinct at the time, but looking back, they were all teaching me the same thing: how to look at the world, deconstruct problems, and put the pieces together in new and interesting ways.
+                </p>
+                <p>
+                    I thrive on understanding how things work—whether it's a piece of code, a business strategy, or a human story. This curiosity has led me down unexpected roads, and I’ve learned that the most interesting discoveries happen in the spaces between defined roles.
+                </p>
+            </div>
+        </section>
+
+        <!-- What I'm Doing Now -->
+        <section class="mb-12 md:mb-16">
+            <h2 class="text-3xl font-bold text-center text-amber-700 mb-8">What I'm Doing Now: The Current Chapter</h2>
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="story-text">
+                    <p>
+                        Right now, I'm focused on synthesizing my experiences. My days are a mix of [Your Main Activity, e.g., building user-centric web applications], exploring [An Interest, e.g., the intersection of AI and creativity], and dedicating time to a little experiment I call <span class="font-bold text-amber-800">Inklet Lab</span>.
+                    </p>
+                    <p class="mt-4">
+                        This phase of my life is less about finding a single "point" and more about building a compass. It's about learning to navigate by a set of principles—curiosity, creation, connection—rather than aiming for a fixed destination. It's an active process of building, writing, and connecting with others who are on similar journeys.
+                    </p>
+                </div>
+                <div class="flex justify-center">
+                     <svg class="w-48 h-48 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V7.618a1 1 0 011.447-.894L9 9m0 11V9m0 11a2 2 0 012 2h2a2 2 0 012-2v-3a2 2 0 00-2-2h-2a2 2 0 00-2 2v3zm0 0l-3-3m0 0l3-3m-3 3h12a2 2 0 002-2V9a2 2 0 00-2-2h-3m-12 0l3 3m0 0l3 3"></path></svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- What this website is all about -->
+        <section class="bg-amber-50/50 p-8 rounded-xl shadow-sm border border-amber-200">
+            <h2 class="text-3xl font-bold text-amber-700 mb-4">This Website & Inklet Lab: A Tinder for Ideas</h2>
+            <div class="space-y-4 text-gray-700 leading-relaxed">
+                <p>
+                    So, what is this place? Think of it as a personal laboratory. It's my public notebook, my portfolio of experiments, and a standing invitation for conversation. It exists because a resume can't capture the 'why' behind the work, and a LinkedIn profile doesn't have room for half-formed thoughts and audacious dreams.
+                </p>
+                <p class="font-bold text-amber-800 mt-6">This brings us to Inklet Lab.</p>
+                <p>
+                    Inklet Lab is the most exciting, and least defined, part of this journey. The vision is to build an ecosystem for ideas to meet, a sort of 'Tinder for collaboration.' A place where a stray thought from a writer could spark a project for a designer, or a problem posed by an entrepreneur could be solved by a developer who just happens to stumble upon it.
+                </p>
+                <p>
+                    Right now, it's just a seedling—an idea I'm nurturing through this website. I'm experimenting, iterating, and figuring it out as I go. Until it grows into that larger vision, this site serves its first purpose: a personal space for connection and creation. A home base for a round-headed traveler in a world full of points.
+                </p>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="text-center mt-16 text-gray-500">
+            <p>Inspired by a fable. Built with curiosity.</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>

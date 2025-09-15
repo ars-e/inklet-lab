@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>What's The Point? — Inklet Lab</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Caveat:wght@700&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* THE POINT - REIMAGINED CSS
+           Inspired by fables, 70s animation, and hand-drawn maps.
+        */
+
+        /* --- [1] ROOT & FONT SETUP --- */
+        :root {
+          --paper: #fdfaf3;
+          --ink: #2c2a27;
+          --ink-light: #6b645c;
+          --accent: #e57715; /* A warm, friendly orange */
+          --highlight: #fde8c3; /* A soft yellow for backgrounds */
+          --stroke: #c8beb0;
+          
+          --font-story: 'Lora', serif;
+          --font-heading: 'Gaegu', cursive;
+          --font-kicker: 'Caveat', cursive;
+        }
+
+        * {
+          box-sizing: border-box;
+        }
+
+        body {
+          margin: 0;
+          background-color: var(--paper);
+          color: var(--ink);
+          font-family: var(--font-story);
+          font-size: 1.1rem;
+          line-height: 1.7;
+          -webkit-font-smoothing: antialiased;
+        }
+        
+        /* --- [NEW] SITE HEADER & NAV --- */
+        .site-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 2rem;
+            background: rgba(253, 250, 243, 0.85); /* var(--paper) with transparency */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--stroke);
+            z-index: 100;
+        }
+        .site-brand {
+            font-family: var(--font-kicker);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ink);
+            text-decoration: none;
+        }
+        .site-nav {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .site-nav a {
+            font-family: var(--font-story);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--ink-light);
+            text-decoration: none;
+            position: relative;
+            padding-bottom: 4px;
+        }
+        .site-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+        .site-nav a:hover::after,
+        .site-nav a.active::after {
+            width: 100%;
+        }
+        .site-nav a.active {
+            color: var(--ink);
+        }
+
+        /* --- [2] STORYBOOK CONTAINER & CHAPTERS --- */
+        .storybook-container {
+          max-width: 700px;
+          margin: 0 auto;
+          padding: clamp(6rem, 12vw, 10rem) 2rem clamp(2rem, 8vw, 6rem) 2rem; /* Adjusted top padding */
+        }
+
+        .story-chapter,
+        .intro-chapter {
+          margin-bottom: 3rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+
+        /* --- [3] TYPOGRAPHY & HEADINGS --- */
+        h1 {
+          font-family: var(--font-heading);
+          font-size: clamp(3rem, 10vw, 4.5rem);
+          color: var(--accent);
+          margin: 1rem 0 0.5rem;
+          line-height: 1;
+          font-weight: 700;
+        }
+
+        .chapter-title {
+          font-family: var(--font-heading);
+          font-size: clamp(2rem, 8vw, 2.8rem);
+          margin: 0 0 1.5rem;
+          font-weight: 700;
+          position: relative;
+          padding-bottom: 0.5rem;
+        }
+        /* A little underline flourish for chapter titles */
+        .chapter-title::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 50px;
+          height: 3px;
+          background: var(--accent);
+          opacity: 0.4;
+        }
+
+        .kicker {
+          font-family: var(--font-kicker);
+          font-size: 1.5rem;
+          color: var(--ink-light);
+          margin: 0;
+          line-height: 1.4;
+        }
+
+        p {
+          max-width: 65ch;
+          margin: 0 0 1.25rem 0;
+        }
+
+        strong {
+          font-weight: 700;
+        }
+
+        /* --- [4] ILLUSTRATIVE ELEMENTS --- */
+        .signpost-svg {
+          color: var(--stroke);
+          margin-bottom: 1rem;
+        }
+
+        .path-divider {
+          width: 100px;
+          height: 20px;
+          color: var(--stroke);
+          margin: -1rem auto 3rem;
+        }
+
+        /* --- [5] SPECIFIC COMPONENT STYLES --- */
+
+        /* The dual-purpose section */
+        .dual-purpose {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+          width: 100%;
+          margin-top: 1rem;
+          text-align: left;
+        }
+        @media (min-width: 600px) {
+          .dual-purpose {
+            grid-template-columns: 1fr 1fr;
+          }
+        }
+        .purpose-card {
+          background-color: var(--highlight);
+          border: 2px solid var(--stroke);
+          border-radius: 8px;
+          padding: 1.25rem;
+        }
+        .purpose-card h3 {
+          font-family: var(--font-heading);
+          font-size: 1.5rem;
+          margin: 0 0 0.5rem;
+          font-weight: 700;
+        }
+        .purpose-card p {
+          font-size: 1rem;
+          line-height: 1.6;
+          margin: 0;
+          color: var(--ink-light);
+        }
+
+        /* The map-like navigation */
+        .map-nav {
+          width: 100%;
+          margin-top: 1rem;
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+        .map-nav a {
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+          align-items: center;
+          gap: 1rem;
+          padding: 1rem;
+          background: white;
+          border: 2px solid var(--stroke);
+          border-radius: 8px;
+          text-decoration: none;
+          color: var(--ink);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .map-nav a:hover {
+          transform: translateY(-3px) scale(1.02);
+          box-shadow: 0 8px 15px rgba(0,0,0,0.07);
+          border-color: var(--accent);
+        }
+        .map-nav strong {
+          text-align: right;
+          font-family: var(--font-heading);
+          font-size: 1.4rem;
+        }
+        .map-nav span {
+          color: var(--accent);
+          font-weight: bold;
+        }
+        .map-nav em {
+          text-align: left;
+          font-style: normal;
+          color: var(--ink-light);
+          font-size: 0.95rem;
+        }
+
+        /* Contact & Socials */
+        .contact-links {
+          margin-top: 1.5rem;
+        }
+        .contact-button {
+          display: inline-block;
+          background-color: var(--accent);
+          color: var(--paper);
+          font-family: var(--font-heading);
+          font-weight: 700;
+          font-size: 1.3rem;
+          padding: 0.75rem 1.5rem;
+          border-radius: 50px;
+          text-decoration: none;
+          transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+        .contact-button:hover {
+          transform: scale(1.05);
+          background-color: #d16a12;
+        }
+        .socials {
+          margin-top: 1.5rem;
+          color: var(--ink-light);
+        }
+        .socials a {
+          color: var(--ink-light);
+          text-decoration: none;
+          border-bottom: 2px dotted var(--stroke);
+        }
+        .socials a:hover {
+          color: var(--accent);
+          border-bottom-color: var(--accent);
+        }
+        .socials span {
+          margin: 0 0.5rem;
+        }
+
+        /* --- [6] FOOTER --- */
+        .storybook-footer {
+          text-align: center;
+          margin-top: 4rem;
+          padding-top: 2rem;
+          border-top: 2px dashed var(--stroke);
+        }
+        .storybook-footer p {
+          font-size: 0.9rem;
+          color: var(--ink-light);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <a href="#" class="site-brand">Inklet Lab</a>
+        <nav class="site-nav">
+            <a href="#">The Dispatch</a>
+            <a href="#">Peti</a>
+            <a href="#">The Balcony</a>
+            <a href="#">etcetera</a>
+            <a href="#" class="active">The Point</a>
+        </nav>
+    </header>
+
+    <div class="storybook-container">
+
+        <!-- Chapter 1: The Introduction -->
+        <header class="intro-chapter">
+            <!-- Simple SVG Illustration of a signpost -->
+            <svg class="signpost-svg" width="80" height="100" viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M38 98V2M38 12L78 2L60 12L78 22L38 12Z" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h1>What's The Point?</h1>
+            <p class="kicker">
+                Everything has a point, or so they say. This little corner of the internet is mine. It's a place to introduce myself, my work, and a peculiar idea called <strong>Inklet Lab</strong>. You've arrived at the start of the path.
+            </p>
+        </header>
+
+        <!-- A visual path to guide the user down the page -->
+        <svg class="path-divider" viewBox="0 0 100 20" preserveAspectRatio="none"><path d="M0 10 Q 25 20, 50 10 T 100 10" stroke="currentColor" stroke-dasharray="4 4" fill="none" stroke-width="2"/></svg>
+
+        <!-- Chapter 2: The Narrator (About Me) -->
+        <section class="story-chapter" id="about-me">
+            <h2 class="chapter-title">The Point of Me</h2>
+            <p>I build clear, useful systems where design, code, and research meet. I'm curious by default, rigorous by habit, and playful on purpose.</p>
+            <p>But that's the short version. The longer story is a winding one, starting with a fascination with old maps and leading through trails of economic policy, data visualization, and web development. The guiding principle has always been to find the simple, human truth in complex systems. This website is a reflection of that journey.</p>
+        </section>
+
+        <!-- Chapter 3: The Lab (About the Website) -->
+        <section class="story-chapter" id="about-lab">
+            <h2 class="chapter-title">The Point of This Place</h2>
+            <p>So, what is <strong>Inklet Lab</strong>? It's two things at once:</p>
+            <div class="dual-purpose">
+                <div class="purpose-card">
+                    <h3>A Personal Compass</h3>
+                    <p>It's my personal website—a living document that shows my work and thinking beyond a CV or a LinkedIn profile. It's a glimpse into how I connect the dots.</p>
+                </div>
+                <div class="purpose-card">
+                    <h3>A Public Laboratory</h3>
+                    <p>It's an experiment in building an ecosystem. A nursery for fledgling ideas, a place for projects to meet and cross-pollinate. Think of it as a "tinder for concepts." The idea isn't fully formed, and that's the point. We'll build it as we go.</p>
+                </div>
+            </div>
+        </section>
+        
+        <svg class="path-divider" viewBox="0 0 100 20" preserveAspectRatio="none"><path d="M0 10 Q 25 0, 50 10 T 100 10" stroke="currentColor" stroke-dasharray="4 4" fill="none" stroke-width="2"/></svg>
+
+
+        <!-- Chapter 4: The Map (Site Navigation) -->
+        <section class="story-chapter" id="the-map">
+            <h2 class="chapter-title">Points of Interest</h2>
+            <p>This lab has a few different rooms. Here’s a map to help you get around:</p>
+            <nav class="map-nav">
+                <a href="#">
+                    <strong>The Dispatch</strong>
+                    <span>→</span>
+                    <em>Stories & technical deep-dives.</em>
+                </a>
+                <a href="#">
+                    <strong>Peti [पेटी]</strong>
+                    <span>→</span>
+                    <em>A crate of case studies & visual experiments.</em>
+                </a>
+                <a href="#">
+                    <strong>The Balcony</strong>
+                    <span>→</span>
+                    <em>Reviews, critiques, and things I'm watching.</em>
+                </a>
+                 <a href="#">
+                    <strong>etcetera</strong>
+                    <span>→</span>
+                    <em>Miscellaneous thoughts and marginalia.</em>
+                </a>
+            </nav>
+        </section>
+
+        <!-- Chapter 5: The Horizon (Now & Contact) -->
+        <section class="story-chapter" id="now-contact">
+             <h2 class="chapter-title">The Point... For Now</h2>
+            <p>The map is still being drawn. Currently, I'm working on [Your Project/Role], exploring [Your Topic], and reading "[A Book You're Reading]".</p>
+            <p>If any of this resonates, I'd love to hear from you. The best journeys are rarely taken alone.</p>
+            <div class="contact-links">
+                <a href="mailto:hello@example.com" class="contact-button">Send a Letter (Email)</a>
+                <div class="socials">
+                    <a href="#">LinkedIn</a>
+                    <span>/</span>
+                    <a href="#">GitHub</a>
+                </div>
+            </div>
+        </section>
+
+        <footer class="storybook-footer">
+            <p>Inklet Lab is a work in progress · © 2025</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
+
