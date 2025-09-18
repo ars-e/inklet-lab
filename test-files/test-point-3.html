@@ -1,40 +1,677 @@
-// Flippable POI Cards with lazy preview (image by default)
-document.querySelectorAll('.poi-card').forEach(card => {
-  const link = card.querySelector('.preview-link');
-  const href = card.dataset.href;
-  const previewSrc = card.dataset.preview;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Point</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #FDF6E3; /* Warm Parchment */
+            --text-color: #2c2c2c; /* Dark Charcoal */
+            --accent-color: #E53E3E; /* Energetic Red */
+            --primary-font: 'Lora', serif;
+            --heading-font: 'Anton', sans-serif;
+        }
 
-  // Flip card (ignore clicks on the preview)
-  card.addEventListener('click', (e) => {
-    if (e.target.closest('.preview-link')) return;
-    card.classList.toggle('is-flipped');
+        ::selection { background-color: var(--accent-color); color: var(--bg-color); }
+        
+        body.custom-cursor-active { cursor: none; }
 
-    // Lazy load preview once (image) or swap to iframe if you want live view
-    if (card.classList.contains('is-flipped') && link && !link.dataset.loaded) {
-      const img = new Image();
-      img.alt = '';
-      img.loading = 'lazy';
-      img.src = previewSrc;
-      img.onerror = () => { link.style.background = 'linear-gradient(180deg,#2f2f2f,#1e1e1e)'; };
-      link.appendChild(img);
-      link.dataset.loaded = '1';
-    }
-  });
+        .custom-cursor-active a,
+        .custom-cursor-active button,
+        .custom-cursor-active .progress-marker {
+            cursor: none;
+        }
+        
+        #custom-cursor {
+            display: none; position: fixed; width: 20px; height: 20px;
+            background-color: var(--accent-color); border-radius: 50%;
+            pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
+            transition: transform 0.15s ease-out, width 0.2s ease, height 0.2s ease;
+        }
+        #custom-cursor.hovering { transform: translate(-50%, -50%) scale(1.5); }
+        @media (min-width: 1024px) { body.custom-cursor-active #custom-cursor { display: block; } }
 
-  // Click preview → go to page (don’t trigger flip)
-  if (link && href) {
-    link.href = href;
-    link.addEventListener('click', (e) => e.stopPropagation());
-  }
-});
+        body {
+            font-family: var(--primary-font);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
 
-/* If you prefer live page in the back:
-   Replace the Image() block with:
-   const frame = document.createElement('iframe');
-   frame.src = href;
-   frame.title = 'Preview';
-   frame.loading = 'lazy';
-   frame.sandbox = 'allow-same-origin allow-scripts';
-   link.appendChild(frame);
-   link.dataset.loaded = '1';
-*/
+        h1, h2, h3, .brand-font {
+            font-family: var(--heading-font); letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-color);
+        }
+
+        #site-nav { mix-blend-mode: difference; }
+        #site-nav a {
+            font-family: var(--heading-font); letter-spacing: 0.05em; text-transform: uppercase;
+            color: var(--bg-color); transition: color 0.2s ease-in-out;
+        }
+        
+        #oblio {
+            position: fixed; top: 50%; left: 20px; width: 40px; height: 40px;
+            background-color: var(--accent-color); border-radius: 50%; z-index: 1000;
+            transition: transform 0.1s linear; will-change: transform;
+        }
+        @media (max-width: 1024px) { #oblio { display: none; } }
+
+        /* --- UPDATED: Scroll Bar / Table of Contents --- */
+        #scroll-progress-bar {
+            position: fixed; top: 0; left: 38px; width: 4px; height: 100vh;
+            z-index: 1001; pointer-events: none;
+        }
+        #scroll-progress-indicator {
+            width: 100%; height: 0; background-color: var(--accent-color);
+            transition: height 0.1s linear;
+        }
+        .progress-marker {
+            position: absolute; left: 50%; width: 14px; height: 14px;
+            background-color: var(--bg-color); border: 2px solid var(--accent-color);
+            border-radius: 50%; transform: translateX(-50%);
+            pointer-events: all; /* Make markers clickable */
+            transition: transform 0.2s ease;
+        }
+        .progress-marker:hover {
+            transform: translateX(-50%) scale(1.4);
+        }
+
+        .progress-label {
+            position: absolute;
+            left: 35px; /* Position next to the marker */
+            transform: translateY(-50%);
+            color: var(--accent-color);
+            font-family: var(--heading-font);
+            font-size: 1rem;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            opacity: 1; /* Always visible */
+            visibility: visible; /* Always visible */
+            pointer-events: none; /* Don't intercept clicks */
+        }
+
+        @media (max-width: 1024px) { #scroll-progress-bar { display: none; } }
+
+        /* --- UPDATED: Chapter Spacing & Typography --- */
+        .chapter {
+            margin-bottom: 10rem; /* Reduced from 16rem */
+            position: relative; opacity: 0; transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .chapter.is-visible { opacity: 1; transform: translateY(0); }
+        
+        .page-description {
+            margin-bottom: 10rem; /* Reduced from 12rem */
+        }
+
+        .chapter-title { 
+            font-size: 5rem; 
+            line-height: 1; 
+            margin-bottom: 3rem; /* Increased slightly for better separation */
+            color: var(--accent-color); 
+            text-align: center;
+        }
+        @media (min-width: 768px) { .chapter-title { font-size: 7rem; } }
+
+        .chapter-content {
+            max-width: clamp(58ch, 65vw, 72ch);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .chapter-content p {
+            line-height: 1.75; /* Further tightening for better rhythm */
+            margin-bottom: 1.5rem;
+            font-size: 1.15rem; /* Slightly larger for easier reading */
+            letter-spacing: 0.01em; /* Subtle spacing for serif readability */
+        }
+        .chapter-content a { color: var(--accent-color); text-decoration: none; font-weight: bold; background-image: linear-gradient(to top, rgba(229, 62, 62, 0.2) 0%, rgba(229, 62, 62, 0.2) 100%); transition: background-size 0.3s ease; }
+        .chapter-content a:hover { background-image: linear-gradient(to top, rgba(229, 62, 62, 0.4) 0%, rgba(229, 62, 62, 0.4) 100%); }
+        .highlight { background-color: rgba(229, 62, 62, 0.1); padding: 0.1rem 0.4rem; border-radius: 4px; }
+        
+        .main-header { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; }
+        .main-header h1 { font-size: 8rem; line-height: 1; max-width: 10ch; position: relative; z-index: 1; display: flex; flex-wrap: wrap; justify-content: center; }
+        @media (min-width: 768px) { .main-header h1 { font-size: 12rem; } }
+        .main-header h1 span { display: inline-block; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .main-header h1:hover span { transform: translateY(-10px) rotate(5deg); }
+        .main-header h1 span:hover { transform: translateY(-25px) rotate(-10deg) scale(1.1); color: var(--accent-color); }
+
+       #scroll-down-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 1;
+            animation: bounce-strong 1.5s infinite;
+            text-align: center;
+            z-index: 10;
+        }
+        #scroll-down-indicator .scroll-hint {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: var(--heading-font);
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            letter-spacing: 0.05em;
+        }
+
+        @keyframes bounce-strong {
+            0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
+            40% { transform: translate(-50%, -25px); }
+            60% { transform: translate(-50%, -12px); }
+        }
+
+        #scroll-down-indicator.is-hidden {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+        }
+
+        .shape { position: absolute; background-color: var(--accent-color); opacity: 0.1; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; animation: morph 8s ease-in-out infinite; z-index: 0; transition: transform 0.5s ease-out; }
+        .shape1 { width: 400px; height: 400px; top: 10vh; left: 10vw; animation-delay: 1s; }
+        .shape2 { width: 300px; height: 300px; bottom: 20vh; right: 15vw; }
+        @keyframes morph { 0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; transform: rotate(0deg) scale(1); } 50% { border-radius: 60% 40% 30% 70% / 70% 60% 40% 30%; transform: rotate(180deg) scale(1.1); } 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; transform: rotate(360deg) scale(1); } }
+
+        .epilogue { text-align: center; padding: 6rem 0; border-top: 2px solid rgba(0,0,0,0.1); }
+        .epilogue-links a { font-family: var(--heading-font); font-size: 2.5rem; margin: 0 1rem; text-decoration: none; color: var(--text-color); position: relative; transition: color 0.3s ease; }
+        .epilogue-links a:hover { color: var(--accent-color); }
+        .epilogue-links a::after { content: ''; position: absolute; width: 100%; height: 3px; background: var(--accent-color); bottom: -5px; left: 0; transform: scaleX(0); transform-origin: bottom right; transition: transform 0.3s ease-out; }
+        .epilogue-links a:hover::after { transform: scaleX(1); transform-origin: bottom left; }
+
+        #mobile-nav-toggle { display: none; z-index: 9999; }
+        #mobile-menu { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 9998; display: flex; flex-direction: column; align-items: center; justify-content: center; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
+        #mobile-menu.is-open { transform: translateX(0); }
+        #mobile-menu a { font-family: var(--heading-font); font-size: 3rem; color: var(--text-color); margin: 1rem 0; }
+        @media (max-width: 768px) { #site-nav .nav-links { display: none; } #mobile-nav-toggle { display: block; } }
+
+        .bio-line { display: inline-block; position: relative; opacity: 0; animation: fadeIn 0.5s forwards; }
+        .bio-line .strikethrough { position: absolute; top: 50%; left: 0; width: 100%; height: 3px; background-color: var(--accent-color); transform: scaleX(0); transform-origin: left; animation: strike 0.5s 0.5s forwards; }
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes strike { to { transform: scaleX(1); } }
+
+        .footnote { position: relative; display: inline-block; }
+        .footnote sup { font-size: 0.8em; vertical-align: super; color: var(--accent-color); cursor: pointer; }
+        .footnote-content { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); width: 250px; background: var(--text-color); color: var(--bg-color); padding: 1rem; border-radius: 8px; font-size: 0.9rem; line-height: 1.5; opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0.2s; z-index: 10; }
+        .footnote:hover .footnote-content { opacity: 1; visibility: visible; }
+
+        /* --- Flippable Cards Layout --- */
+        .poi-card-deck-container {
+            width: 100%;
+            margin-top: 6rem;
+        }
+        .poi-card-deck {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap; /* Default for mobile */
+            justify-content: center; /* Default for mobile */
+            perspective: 1500px;
+        }
+
+        /* Single-line scrollable view for larger screens */
+        @media (min-width: 1024px) {
+            .poi-card-deck {
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding: 1rem 1rem 2rem 1rem; /* Space for scrollbar and breathing room */
+                margin-left: -1rem; /* Offset padding */
+                margin-right: -1rem; /* Offset padding */
+            }
+            /* Custom scrollbar for a better look */
+            .poi-card-deck::-webkit-scrollbar { height: 8px; }
+            .poi-card-deck::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 4px; }
+            .poi-card-deck::-webkit-scrollbar-thumb { background: rgba(44, 44, 44, 0.2); border-radius: 4px; }
+            .poi-card-deck::-webkit-scrollbar-thumb:hover { background: rgba(44, 44, 44, 0.4); }
+        }
+        
+        .poi-card {
+            width: 240px;
+            height: 340px;
+            cursor: none;
+            background-color: transparent;
+            flex-shrink: 0; /* Prevent cards from shrinking */
+        }
+        .poi-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-style: preserve-3d;
+        }
+        .poi-card.is-flipped .poi-card-inner {
+            transform: rotateY(180deg);
+        }
+        .poi-card-front,
+        .poi-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; /* Safari */
+            backface-visibility: hidden;
+            border: 2px solid rgba(44, 44, 44, 0.5);
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .poi-card-front { background-color: rgba(0,0,0,0.02); }
+        .poi-card-back {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            transform: rotateY(180deg);
+        }
+        .poi-card-front h3 {
+            font-size: 2.25rem;
+            line-height: 1.1;
+            color: var(--accent-color);
+        }
+        .poi-card-front p {
+            font-family: var(--primary-font);
+            margin-top: 0.5rem;
+            color: var(--text-color);
+            opacity: 0.6;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .poi-card-back p {
+            font-family: var(--primary-font);
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+         @media (max-width: 1024px) {
+            .poi-card-deck { gap: 1.5rem; }
+            .poi-card { width: 280px; }
+        }
+         @media (max-width: 640px) {
+            .poi-card { width: 100%; max-width: 320px; }
+        }
+
+        .pull{
+            margin: 2rem 0;
+            padding: 1rem 0;
+            font-style: italic;
+            font-size: 1.15rem;
+            border-top: 2px solid rgba(44,44,44,.12);
+            border-bottom: 2px solid rgba(44,44,44,.12);
+            text-align: center;
+        }
+
+        .margin-note{
+            margin: 1rem 0;
+            padding: .75rem 1rem;
+            border-left: 4px solid var(--accent-color);
+            background: color-mix(in srgb, var(--accent-color) 8%, var(--bg-color));
+            border-radius: .5rem;
+            font-size: .98rem;
+        }
+        @media (min-width: 1024px){
+            .margin-note{
+                float: right;
+                width: 36%;
+                margin: .25rem 0 1rem 1.25rem;
+            }
+        }
+
+        .callout{
+            margin: 1.75rem 0;
+            padding: 1rem 1.25rem;
+            border-left: 6px solid var(--accent-color);
+            background: color-mix(in srgb, var(--accent-color) 10%, var(--bg-color));
+            border-radius: .5rem;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+        .callout a{ font-weight: 700; }
+
+    </style>
+</head>
+<body class="antialiased custom-cursor-active">
+    
+    <div id="custom-cursor"></div>
+    <div id="oblio"></div>
+
+    <!-- The Scroll Bar now serves as the Table of Contents container -->
+    <div id="scroll-progress-bar">
+        <div id="scroll-progress-indicator"></div>
+        <!-- Markers and Labels will be dynamically added here by JavaScript -->
+    </div>
+
+    <div class="shape shape1"></div>
+    <div class="shape shape2"></div>
+
+    <nav id="site-nav" class="fixed top-0 left-0 right-0 z-20">
+        <div class="container mx-auto px-6 py-8 flex justify-between items-center text-xl">
+            <div class="nav-brand"><a href="#">Inklet Lab</a></div>
+            <div class="nav-links hidden md:flex space-x-8">
+                <a href="/">Front Page</a>
+                <a href="/the-dispatch/">The Dispatch</a>
+                <a href="/peti/">Peti</a>
+                <a href="/the-balcony/">The Balcony</a>
+                <a href="/dump-and-discover/">Dump & Discover</a>
+                <a href="/etcetera/">etcetra</a>
+                <a href="/the-point/" aria-current= "page">The Point</a>
+            </div>
+            <button id="mobile-nav-toggle" class="md-hidden">MENU</button>
+        </div>
+    </nav>
+    <div id="mobile-menu">
+        <a href="/">Front Page</a>
+        <a href="/the-dispatch/">The Dispatch</a>
+        <a href="/peti/">Peti</a>
+        <a href="/the-balcony/">The Balcony</a>
+        <a href="/dump-and-discover/">Dump & Discover</a>
+        <a href="/etcetera/">etcetra</a>
+        <a href="/the-point/" aria-current= "page">The Point</a>
+    </div>
+
+    <main class="container mx-auto px-6 py-12 md:py-20 max-w-5xl relative z-10">
+
+        <header class="main-header mb-24 md:mb-32">
+            <h1 id="main-title">What's The Point?</h1>
+            <div id="scroll-down-indicator">
+              <div class="scroll-hint">
+                <span>Scroll</span>
+                <svg class="w-10 h-10 text-[var(--accent-color)]" fill="none" stroke="currentColor"
+                  viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                    d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </div>
+        </header>
+
+        <article class="narrative-text">
+
+            <section class="page-description chapter text-center max-w-3xl mx-auto">
+                <p class="text-xl italic text-gray-700/80">
+                    This is where I sketch the outline of things. Who I am, what I’m doing now, what this website is, and the idea of Inklet Lab. It’s the context and the compass, the thread tying the other pages together, a working note that shifts as I do. That’s the point of <em>The Point</em>: to keep the story alive while it’s still being written.
+                </p>
+            </section>
+            
+            <section id="chapter-1" class="chapter">
+                <h2 class="chapter-title">The Point of Origin</h2>
+                <div class="chapter-content">
+                    <p>I can’t tell my story without first telling you another story.</p>
+                    <p>We need to talk about <a href="https://en.wikipedia.org/wiki/The_Point!" target="_blank" rel="noopener noreferrer">The Point!</a>, an animated film based on <a href="https://en.wikipedia.org/wiki/Harry_Nilsson" target="_blank" rel="noopener noreferrer">Harry Nilsson’s</a> concept album. The story is simple: in a land where everyone must have a literal point on their head, and where everything must have a “point,” a round-headed boy named Oblio is banished for being “pointless.” Sent into the Pointless Forest with his dog, Arrow, he discovers that everything has a point even there...just not always the one that fits a template.</p>
+                    <aside class="callout" role="note" aria-label="Related reading">
+                      <!-- <strong></strong> -->
+                      If you would like to explore more about the film, checkout this thoughtful peice on it: <a href="https://wearethemutants.com/2018/05/14/whats-the-point-the-forgotten-genius-of-harry-nilsson/" target="_blank" rel="noopener noreferrer">What’s ‘The Point!’?: The Forgotten Genius of Harry Nilsson</a>
+                    </aside>
+                    <p>Because it mirrors the way I have moved through life, not without purpose but without forcing a single fixed definition too early. Like Oblio, I have found meaning in my winding path: in following questions, in carrying ideas across different worlds, in acquiring new skills, and in shaping my point through time and practice. Without this simple parable as a key, the story of who I am, and what Inklet Lab is and is becoming, cannot be fully understood. </p>
+                </div>
+            </section>
+            
+            <section id="chapter-2" class="chapter">
+                <h2 class="chapter-title">The Point of Me</h2>
+                <div class="chapter-content">
+                    <p>My journey was drawn by hand, not a ruler. It started with code, but the neatest code is useless if it doesn't serve a human need. That question pulled me into the complex machinery of society—the 
+                    <span class="footnote">Indian Civil Services<sup>1</sup><span class="footnote-content">Often called the 'steel frame' of India, it's the permanent bureaucracy responsible for the administration of the country. A deep dive into systems at a national scale.</span></span>.</p>
+                    <p>Studying policy was learning about <span class="highlight">why</span> things work. But I was still missing the bridge between the power of tech and the complexity of people. That bridge was economics. It gave me the language of incentives, behavior, and choice—the hidden grammar that underpins both code and communities.</p>
+                </div>
+            </section>
+            
+            <section id="chapter-3" class="chapter">
+                <h2 class="chapter-title">The Place</h2>
+                <div class="chapter-content">
+                    <p>So, what is <span class="brand-font italic">Inklet Lab</span>? It’s two things. A <span class="highlight">Personal Map Room</span> to chart my own journey, and a <span class="highlight">Public Workshop</span> to share the results. This lab has a few different rooms; here’s a map to help you get around:</p>
+                    
+                    <div class="poi-card-deck-container">
+                        <div class="poi-card-deck">
+                            <div class="poi-card">
+                                <div class="poi-card-inner">
+                                    <div class="poi-card-front">
+                                        <h3>The Dispatch</h3>
+                                        <p>(Click to flip)</p>
+                                    </div>
+                                    <div class="poi-card-back">
+                                        <p>Long-form essays, code tutorials, and explorations into the messy process of building things.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="poi-card">
+                                <div class="poi-card-inner">
+                                    <div class="poi-card-front">
+                                        <h3>Peti [पेटी]</h3>
+                                        <p>(Click to flip)</p>
+                                    </div>
+                                    <div class="poi-card-back">
+                                        <p>A treasure box of finished projects, interactive data visualizations, and case studies.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="poi-card">
+                                <div class="poi-card-inner">
+                                    <div class="poi-card-front">
+                                        <h3>The Balcony</h3>
+                                        <p>(Click to flip)</p>
+                                    </div>
+                                    <div class="poi-card-back">
+                                        <p>A space for reflection. Book reviews, film critiques, and thoughts on the work of others.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="poi-card">
+                                <div class="poi-card-inner">
+                                    <div class="poi-card-front">
+                                        <h3>Etcetera</h3>
+                                        <p>(Click to flip)</p>
+                                    </div>
+                                    <div class="poi-card-back">
+                                        <p>A collection of stray thoughts, interesting links, and half-formed ideas that don't yet have a home.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="chapter-4" class="chapter">
+                <h2 class="chapter-title">The Why</h2>
+                <div class="chapter-content">
+                    <p>After my master's, I tried to write a LinkedIn bio. The labels felt like this:</p>
+                    <p class="text-xl italic my-8">
+                        <span class="bio-line" style="animation-delay: 0s;">"Software Developer who gets monetary policy?"<span class="strikethrough"></span></span><br>
+                        <span class="bio-line" style="animation-delay: 1s;">"Economist who can build an app?"<span class="strikethrough" style="animation-delay: 1.5s;"></span></span>
+                    </p>
+                    <p>A CV tells you <span class="highlight">what</span>. It doesn't tell you <span class="highlight">why</span>. I built this site to hold the whole story—the rough drafts, the wrong turns, and the half-formed ideas.</p>
+                </div>
+            </section>
+            
+            <section id="chapter-5" class="chapter">
+                <h2 class="chapter-title">The Now</h2>
+                <div class="chapter-content">
+                    <p>Every map has a place where the known world ends. This is mine, for now. I'm charting a course through <a href="#">[Your Current Project/Focus]</a>, exploring the wilds of <a href="#">[A Topic You're Learning]</a>, and finding my way with <a href="#">[A Book/Film/Piece of media]</a>.</p>
+                    <p>The map is always being redrawn. The destination is never fixed. That’s the adventure.</p>
+                </div>
+            </section>
+
+            <section id="epilogue" class="epilogue">
+                <h2 class="text-5xl md:text-6xl font-bold mb-6">An Invitation</h2>
+                <p class="mb-8 text-lg">If this resonates—if you're a fellow traveler, a builder, or just curious—I'd love to hear from you.</p>
+                <p class="mb-12 text-lg font-bold" style="color: var(--accent-color);">Tell me about your Pointless Forest.</p>
+                <div class="epilogue-links flex flex-col md:flex-row justify-center items-center space-y-8 md:space-y-0 md:space-x-12">
+                    <a href="[Your LinkedIn URL]" target="_blank" rel="noopener noreferrer">LINKEDIN</a>
+                    <a href="[Your GitHub URL]" target="_blank" rel="noopener noreferrer">GITHUB</a>
+                    <a href="mailto:[your.email@example.com]">EMAIL</a>
+                </div>
+            </section>
+
+        </article>
+    </main>
+
+    <footer class="text-center py-8 text-sm text-gray-700/50">
+        <p>&copy; 2024 Your Name. Inspired by a fable and built with curiosity.</p>
+    </footer>
+
+ <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Interactive Header
+        const title = document.getElementById('main-title');
+        if (title) {
+            const text = title.innerText;
+            title.innerHTML = '';
+            text.split('').forEach(char => {
+                const span = document.createElement('span');
+                span.textContent = char === ' ' ? '\u00A0' : char;
+                title.appendChild(span);
+            });
+        }
+
+        // 2. Custom Cursor
+        const cursor = document.getElementById('custom-cursor');
+        if (cursor) {
+            window.addEventListener('mousemove', e => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+            document.querySelectorAll('a, button, .poi-card, .progress-marker').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+            });
+        }
+        
+        // 3. Scroll Follower & Parallax
+        const oblio = document.getElementById('oblio');
+        const shapes = document.querySelectorAll('.shape');
+        const progressIndicator = document.getElementById('scroll-progress-indicator');
+        const scrollIndicator = document.getElementById('scroll-down-indicator');
+
+        // 4. Scroll Progress Bar & Table of Contents
+        const progressBar = document.getElementById('scroll-progress-bar');
+        const chapterSections = document.querySelectorAll('.chapter');
+        
+        function setupProgressBar() {
+            if(progressBar) {
+                // Clear existing markers and labels before recalculating
+                progressBar.innerHTML = '<div id="scroll-progress-indicator"></div>'; // Keep the indicator div
+                
+                chapterSections.forEach(chapter => {
+                    const chapterTitleEl = chapter.querySelector('.chapter-title');
+
+                    // If a chapter title exists, create a marker for it in the TOC
+                    if (chapterTitleEl) {
+                        const chapterTop = chapter.offsetTop;
+                        const totalHeight = document.body.scrollHeight - window.innerHeight;
+
+                        if (totalHeight > 0) {
+                            const percentPosition = (chapterTop / totalHeight) * 100;
+
+                            // Create the marker (the dot)
+                            const marker = document.createElement('div');
+                            marker.className = 'progress-marker';
+                            marker.style.top = `${percentPosition}%`;
+                            
+                            // Add click event to scroll to the chapter
+                            marker.addEventListener('click', () => {
+                                window.scrollTo({
+                                    top: chapterTop,
+                                    behavior: 'smooth'
+                                });
+                            });
+                            
+                            // Create the label (the chapter title)
+                            const label = document.createElement('div');
+                            label.className = 'progress-label';
+                            label.style.top = `${percentPosition}%`;
+                            label.textContent = chapterTitleEl.textContent;
+
+                            progressBar.appendChild(marker);
+                            progressBar.appendChild(label);
+                        }
+                    }
+                });
+                
+                // Re-initialize the progressIndicator since we cleared the parent
+                const newProgressIndicator = document.getElementById('scroll-progress-indicator');
+                // We need to re-apply the current scroll progress to the new indicator
+                const scrollY = window.scrollY;
+                const totalHeight = document.body.scrollHeight - window.innerHeight;
+                const progress = totalHeight > 0 ? (scrollY / totalHeight) * 100 : 0;
+                if(newProgressIndicator) newProgressIndicator.style.height = `${progress}%`;
+            }
+        }
+        
+        // Initial setup
+        setupProgressBar();
+        // Debounced resize to avoid performance issues
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(setupProgressBar, 100);
+        });
+
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const totalHeight = document.body.scrollHeight - window.innerHeight;
+            const progress = totalHeight > 0 ? (scrollY / totalHeight) * 100 : 0;
+            const currentProgressIndicator = document.getElementById('scroll-progress-indicator');
+
+            if (oblio) {
+                const rotation = scrollY / 5;
+                const scale = 1 + Math.sin(scrollY / 100) * 0.1;
+                oblio.style.transform = `translateY(-50%) rotate(${rotation}deg) scale(${scale})`;
+            }
+            
+            shapes.forEach((shape, index) => {
+                const speed = index === 0 ? 0.2 : 0.1;
+                shape.style.transform = `translateY(${scrollY * speed}px)`;
+            });
+
+            if (currentProgressIndicator) {
+                currentProgressIndicator.style.height = `${progress}%`;
+            }
+
+            if (scrollIndicator) {
+                if (scrollY > 50) {
+                    scrollIndicator.classList.add('is-hidden');
+                } else {
+                    scrollIndicator.classList.remove('is-hidden');
+                }
+            }
+        });
+
+        // 5. Chapter Reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, { rootMargin: '0px', threshold: 0.2 });
+        document.querySelectorAll('.chapter').forEach(chapter => observer.observe(chapter));
+
+        // 6. Mobile Menu
+        const mobileToggle = document.getElementById('mobile-nav-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if(mobileToggle && mobileMenu) {
+            mobileToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('is-open');
+            });
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => mobileMenu.classList.remove('is-open'));
+            });
+        }
+        
+        // 7. Flippable POI Cards
+        document.querySelectorAll('.poi-card').forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('is-flipped');
+            });
+        });
+    });
+ </script>
+</body>
+</html>
+
