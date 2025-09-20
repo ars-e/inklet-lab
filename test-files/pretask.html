@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Urban Company • 24‑Hour Founder Plan — PDF‑Perfect</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ====================
+       SCREEN THEME (clean designer aesthetic)
+       ==================== */
+    :root{
+      --bg:#ffffff;
+      --ink:#111827;
+      --muted:#6B7280;
+      --accent:#1a5bff;
+      --line:#F3F4F6;
+      --card:#ffffff;
+      --shadow:0 10px 15px -3px rgba(0,0,0,.05),0 4px 6px -2px rgba(0,0,0,.05);
+      --radius:16px;
+    }
+    html,body{height:100%}
+    *{box-sizing:border-box}
+    body{
+      margin:0;background:var(--bg);color:var(--ink);
+      font:16px/1.6 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+      overflow-wrap: anywhere; /* prevent overflows on long tokens */
+      word-break: normal;
+      hyphens: auto;
+    }
+
+    /* ===== Top Bar ===== */
+    header{position:sticky;top:0;z-index:50;background:var(--card);border-bottom:1px solid var(--line)}
+    .bar{max-width:1280px;margin:0 auto;padding:16px 24px;display:flex;justify-content:space-between;align-items:center}
+    .brand{display:flex;gap:14px;align-items:center;text-decoration:none;color:inherit}
+    .logo{width:40px;height:40px;display:grid;place-items:center;border-radius:10px;background-color:var(--accent)}
+    .logo span{width:16px;height:16px;background:var(--card);display:block;border-radius:4px}
+    h1{font-size:18px;margin:0;line-height:1;font-weight:600}
+    @media(max-width:600px){h1{font-size:16px}}
+    .actions{display:flex;gap:12px}
+    .btn{appearance:none;background:var(--bg);border:1px solid #D1D5DB;color:var(--ink);padding:10px 20px;font-weight:600;cursor:pointer;border-radius:10px;transition:transform .2s ease,box-shadow .2s ease;font-size:14px}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,.08)}
+    .btn:active{transform:translateY(0)}
+    .btn.accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+    /* ===== Layout Wrapper ===== */
+    .wrap{max-width:1280px;margin:0 auto;padding:48px 24px 96px}
+
+    /* ===== Hero ===== */
+    .hero{text-align:center;max-width:768px;margin:32px auto 64px}
+    .tag{display:inline-block;background:rgba(26,91,255,.1);color:var(--accent);padding:8px 16px;font-weight:600;border-radius:30px;font-size:14px}
+    .hero h2{font-size:52px;line-height:1.1;margin:16px 0;text-wrap:balance;font-weight:700;letter-spacing:-.02em}
+    .lead{color:var(--muted);max-width:70ch;margin:0 auto;font-size:18px}
+    .lead strong{color:var(--ink);font-weight:600}
+
+    /* ===== Sections ===== */
+    .section{margin:64px 0}
+    .section>h2{font-size:32px;margin:0 0 24px;font-weight:700;text-align:center;letter-spacing:-.01em}
+
+    /* ===== Grid Cards ===== */
+    .grid{display:grid;grid-template-columns:1fr;gap:24px}
+    @media(min-width:900px){.grid{grid-template-columns:1fr 1fr 1fr}}
+    .card{background:var(--card);padding:28px;border-radius:var(--radius);box-shadow:var(--shadow)}
+    .card h3{margin:0 0 8px;font-size:18px;font-weight:600}
+    .card p{margin:0 0 12px;color:var(--muted);line-height:1.6}
+    .list{margin:.5rem 0 0 .5rem;padding:0;list-style-type:'✓'}
+    .list li{margin:.75rem 0;padding-left:1rem}
+    .list li strong{color:var(--ink)}
+
+    /* ===== Flowchart (SVG) ===== */
+    .flow{background:transparent;box-shadow:none;padding:24px 0}
+    .flow svg{max-width:100%;height:auto;display:block}
+    .blk{fill:var(--card);stroke:var(--line);stroke-width:1.5;filter:drop-shadow(0 4px 6px rgba(0,0,0,.05))}
+    .txt{font-weight:600;fill:var(--ink);font-family:'Inter',sans-serif}
+    .flow path{stroke:#9CA3AF}
+    #arr path{fill:#9CA3AF}
+    .sub-txt{font-size:12px;font-weight:500;fill:var(--muted)}
+
+    /* ===== Table Timeline ===== */
+    .table-wrap{overflow:auto;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:var(--radius)}
+    table{width:100%;border-collapse:collapse;background:var(--card)}
+    thead th{background:#F9FAFB;border-bottom:1px solid var(--line);text-align:left;padding:16px;text-transform:none;font-size:12px;color:var(--muted);letter-spacing:.05em}
+    td{padding:16px;border-bottom:1px solid var(--line);color:var(--muted);font-size:14px}
+    td:first-child{color:var(--ink);font-weight:500}
+    tbody tr:last-child td{border-bottom:0}
+
+    /* ===== Checklist Grid ===== */
+    .grid-2{display:grid;grid-template-columns:1fr;gap:24px}
+    @media(min-width:820px){.grid-2{grid-template-columns:1fr 1fr}}
+    .checklist li{display:flex;align-items:flex-start;gap:12px}
+    .checklist input[type="checkbox"]{accent-color:var(--accent);width:1.2em;height:1.2em;margin-top:.2em;cursor:pointer}
+    .checklist label{flex:1;color:var(--muted)}
+    .checklist input[type="checkbox"]:checked+label{color:var(--ink);text-decoration:line-through}
+
+    /* ===== Footer ===== */
+    .footer{margin-top:64px;color:var(--muted);border-top:1px solid var(--line);padding-top:32px;text-align:center;font-size:14px}
+
+    /* ================================
+       PRINT LAYOUT — stable page breaks
+       ================================ */
+    @page{ size:A4; margin:1.5cm; }
+
+    /* A lightweight print header for first page only */
+    .print-header{display:none}
+
+    @media print{
+      /* Disable sticky and interactive UI */
+      header,.actions,.logo,.btn{display:none !important}
+
+      /* First-page header */
+      .print-header{display:block !important;margin-bottom:12pt;border-bottom:1pt solid #000;padding-bottom:6pt}
+      .print-header h1{font:700 16pt/1.2 Inter,Arial,sans-serif;margin:0;color:#000}
+      .print-header small{color:#333}
+
+      html,body{background:#fff !important}
+      body{color:#000;font:11pt/1.45 Georgia,"Times New Roman",serif}
+
+      .wrap{max-width:100%;padding:0;margin:0}
+
+      /* Single column, predictable flow */
+      .grid,.grid-2{display:block !important}
+      .card{box-shadow:none !important;border:none !important;margin:0 0 14pt 0}
+
+      /* Type & composition */
+      h1,h2,h3{font-family:"Helvetica Neue",Arial,sans-serif;color:#000;margin:0 0 8pt 0}
+      .hero h2{font-size:22pt;margin:0 0 6pt 0;text-align:center}
+      .section>h2{font-size:16pt;text-align:center;border-bottom:1pt solid #000;padding-bottom:6pt;margin:18pt 0 10pt}
+      .card h3{font-size:12.5pt}
+      p,.lead,li{font-size:11pt;color:#222}
+      .lead{margin-top:6pt}
+      .tag{background:#eee !important;color:#000 !important;border:none !important;font-size:9pt;padding:2pt 6pt;border-radius:12pt}
+      blockquote{color:#000;font-style:italic;text-align:center;margin:8pt 0}
+
+      /* Keep logical chunks together */
+      .section,.card,table,.flow{break-inside:avoid;page-break-inside:avoid}
+      .hero, .hero h2, .lead{break-inside:avoid;}
+
+      /* Tables: repeat header, avoid row splits */
+      thead{display:table-header-group}
+      tfoot{display:table-footer-group}
+      tbody{display:table-row-group}
+      tr{page-break-inside:avoid}
+
+      /* Flowchart tweaks */
+      .flow .blk{stroke:#bbb;filter:none}
+      .flow svg{max-width:100%}
+
+      /* Remove visual fluff */
+      .table-wrap{border:1pt solid #ccc !important;box-shadow:none !important;border-radius:0}
+
+      /* Widows & orphans for nicer paragraphs */
+      p, li{orphans:3; widows:3}
+
+      /* Checklists become static */
+      .checklist input[type="checkbox"]{display:none}
+      .checklist li{padding-left:0}
+      .checklist li::before{content:"☐ ";margin-right:6pt}
+
+      /* Avoid accidental margin collapse at page top */
+      body * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="bar">
+      <a class="brand" href="#top" aria-label="Go to top">
+        <div class="logo" aria-hidden="true"><span></span></div>
+        <h1>Urban Company — 24‑Hour Plan</h1>
+      </a>
+      <div class="actions">
+        <button class="btn" id="printBtn">Export to PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- This shows only in print on the first page -->
+  <div class="print-header">
+    <h1>Urban Company — 24‑Hour Founder Plan</h1>
+    <small>Prepared by: Rauf • Date: <span id="printDate">—</span></small>
+  </div>
+
+  <main class="wrap" id="top" role="main">
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero-title">
+      <span class="tag">Founder for a day — Urban Company 24‑hour plan (Pre‑Task)</span>
+      <h2 id="hero-title">The Thesis</h2>
+      <p class="lead">Make Urban Company the easiest place for <strong>everything home</strong>, while keeping <strong>service partners motivated</strong>. Build loyalty with convenience; build reliability with partner success.</p>
+    </section>
+
+    <!-- FLOWCHART -->
+    <section class="section" aria-label="Strategy flow">
+      <h2 id="flow-title">Strategy at a Glance</h2>
+      <div class="flow">
+        <svg viewBox="0 0 980 300" role="img" aria-labelledby="flow-title flow-desc">
+          <title id="flow-title-svg">Strategy Flow</title>
+          <desc id="flow-desc">Thesis leads to three decisions which lead to outcomes.</desc>
+          <rect class="blk" x="36" y="28" rx="12" width="280" height="70"/>
+          <text class="txt" x="176" y="60" text-anchor="middle">CORE THESIS</text>
+          <text class="sub-txt" x="176" y="82" text-anchor="middle">One platform for home • Happy partners</text>
+          <defs>
+            <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" />
+            </marker>
+          </defs>
+          <path d="M316 63 H 400" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+          <path d="M316 63 C 360 128, 360 128, 400 148" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+          <path d="M316 63 C 360 213, 360 213, 400 233" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+          <rect class="blk" x="400" y="36" rx="12" width="230" height="54"/>
+          <text class="txt" x="515" y="68" text-anchor="middle">1) HOME 360</text>
+          <rect class="blk" x="400" y="121" rx="12" width="230" height="54"/>
+          <text class="txt" x="515" y="153" text-anchor="middle">2) PARTNERS & SPEED</text>
+          <rect class="blk" x="400" y="206" rx="12" width="230" height="54"/>
+          <text class="txt" x="515" y="238" text-anchor="middle">3) ONE TEAM CULTURE</text>
+          <path d="M630 63 H 760" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+          <path d="M630 148 H 760" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+          <path d="M630 233 H 760" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+          <rect class="blk" x="760" y="36" rx="12" width="170" height="54"/>
+          <text class="txt" x="845" y="60" text-anchor="middle">STICKINESS</text>
+          <text class="sub-txt" x="845" y="80" text-anchor="middle">Subs • Repeat use</text>
+          <rect class="blk" x="760" y="121" rx="12" width="170" height="54"/>
+          <text class="txt" x="845" y="145" text-anchor="middle">RELIABILITY</text>
+          <text class="sub-txt" x="845" y="165" text-anchor="middle">Fast & quality</text>
+          <rect class="blk" x="760" y="206" rx="12" width="170" height="54"/>
+          <text class="txt" x="845" y="230" text-anchor="middle">PRIDE & RETENTION</text>
+          <text class="sub-txt" x="845" y="250" text-anchor="middle">Partners + staff</text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- THREE DECISIONS -->
+    <section class="section" aria-labelledby="decisions-title">
+      <h2 id="decisions-title">Three Core Decisions</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>1) Strategic Vision — “Home 360”</h3>
+          <p>One‑stop platform for the home, starting with a targeted <em>subscription bundle</em> (e.g., cleaning + AC service + priority support).</p>
+          <ul class="list">
+            <li><strong>Why:</strong> All‑in‑one convenience drives higher LTV and creates a daily habit.</li>
+            <li><strong>Risk:</strong> Diluting brand focus. Mitigate with a small, data‑driven pilot program.</li>
+            <li><strong>24h Action:</strong> Form taskforce, define 1k‑user pilot, and set success metric (Target: 20% pilot adoption in 30 days).</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>2) Operations — Partner Success</h3>
+          <p>Dramatically improve partner earnings and support systems. Launch a dedicated <em>Instant Response Team</em> (IRT) in each key city.</p>
+          <ul class="list">
+            <li><strong>Why:</strong> Partner success is the engine for service quality; speed and reliability drive bookings.</li>
+            <li><strong>Risk:</strong> Higher short‑term cost. Mitigate with performance‑based IRT bonuses.</li>
+            <li><strong>24h Action:</strong> Host partner roundtable (focus on pay structure), shortlist IRT candidates, and draft standby rules.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>3) Culture — “One Team” Mentality</h3>
+          <p>Genuinely integrate partners into the company mission through shared goals, recognition, and immersion programs.</p>
+          <ul class="list">
+            <li><strong>Why:</strong> A shared sense of pride leads to faster issue resolution and higher retention for all.</li>
+            <li><strong>Risk:</strong> Can be seen as a PR stunt. Mitigate with authentic leadership participation.</li>
+            <li><strong>24h Action:</strong> Invite partners to the all‑hands, CEO to send note on shared mission, announce "Partner Heroes" award.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section class="section" aria-labelledby="plan-title">
+      <h2 id="plan-title">24‑Hour Action Plan</h2>
+      <p style="color:var(--muted);margin:-16px 0 20px;text-align:center">A schedule focused on listening, alignment, and decisive action.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Time</th><th>Action</th><th>Participants</th><th>Objective</th></tr></thead>
+          <tbody>
+            <tr><td>06:00–07:00</td><td>Dawn dashboard review</td><td>Self + Analyst</td><td>Start with facts</td></tr>
+            <tr><td>07:00–08:00</td><td>Leadership stand‑up</td><td>Exec Team</td><td>Align on day's goals</td></tr>
+            <tr><td>08:00–09:30</td><td>Ops check‑in & Partner roundtable</td><td>Ops Heads + Partners</td><td>Gather frontline truths</td></tr>
+            <tr><td>10:00–11:00</td><td>Product & Tech deep dive</td><td>CPO, CTO, PMs</td><td>Scope new features</td></tr>
+            <tr><td>11:00–12:00</td><td>Marketing & CX sync</td><td>CMO, CX Leads</td><td>Define the message</td></tr>
+            <tr><td>12:00–13:00</td><td>Working lunch sanity check</td><td>Advisors, CFO</td><td>Perform reality check</td></tr>
+            <tr><td>13:00–14:00</td><td>Decision lock & ownership</td><td>Leadership</td><td>Ensure accountability</td></tr>
+            <tr><td>14:00–15:00</td><td>Investor & board update</td><td>Key Investors</td><td>Secure strategic buy‑in</td></tr>
+            <tr><td>15:00–16:00</td><td>All‑hands: Vision & "One Team"</td><td>All Employees</td><td>Energize & provide clarity</td></tr>
+            <tr><td>16:00–17:00</td><td>PR & partner comms prep</td><td>PR, CMO</td><td>Own the narrative</td></tr>
+            <tr><td>17:00–18:00</td><td>Buffer for unforeseen issues</td><td>—</td><td>Maintain flexibility</td></tr>
+            <tr><td>18:00–19:00</td><td>Follow‑ups with initiative owners</td><td>Ops/Product/HR</td><td>Translate talk into tasks</td></tr>
+            <tr><td>19:00–20:00</td><td>Direct customer & partner calls</td><td>2–3 team members</td><td>Listen to the source</td></tr>
+            <tr><td>20:00–22:00</td><td>Draft one‑pager & OKRs</td><td>Solo</td><td>Codify decisions</td></tr>
+            <tr><td>22:00–23:00</td><td>Late shift pulse check</td><td>Support & Tech Leads</td><td>Close all loops</td></tr>
+            <tr><td>23:00–00:00</td><td>Personal reflection & Day 2 prep</td><td>Solo</td><td>Maintain momentum</td></tr>
+            <tr><td>00:00–06:00</td><td>Rest & standby</td><td>—</td><td>Recharge</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CHECKLIST -->
+    <section class="section" aria-labelledby="success-title">
+      <h2 id="success-title">Day‑1 Success Checklist</h2>
+      <div class="grid-2">
+        <article class="card">
+          <h3>Built</h3>
+          <ul class="list checklist">
+            <li><input type="checkbox" id="c1" /><label for="c1">Subscription pilot spec + price defined</label></li>
+            <li><input type="checkbox" id="c2" /><label for="c2">Owners & dates for initiatives locked</label></li>
+            <li><input type="checkbox" id="c3" /><label for="c3">IRT pilot city chosen and candidates shortlisted</label></li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Heard</h3>
+          <ul class="list checklist">
+            <li><input type="checkbox" id="c4" /><label for="c4">Partner roundtable: 5+ concrete fixes captured</label></li>
+            <li><input type="checkbox" id="c5" /><label for="c5">Two customer call summaries circulated</label></li>
+            <li><input type="checkbox" id="c6" /><label for="c6">Company‑wide note on vision sent and acknowledged</label></li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <p class="footer">This plan outlines a 24‑hour strategy focused on core principles and immediate, actionable steps.</p>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const printBtn = document.getElementById('printBtn');
+      const printDate = document.getElementById('printDate');
+      if (printDate) {
+        const d = new Date();
+        const pad = (n)=> String(n).padStart(2,'0');
+        printDate.textContent = `${pad(d.getDate())}-${pad(d.getMonth()+1)}-${d.getFullYear()}`;
+      }
+      if (printBtn) {
+        printBtn.addEventListener('click', () => window.print());
+      }
+    });
+  </script>
+</body>
+</html>
