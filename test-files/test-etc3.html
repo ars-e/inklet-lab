@@ -4,11 +4,61 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>etcetera/(&c.)</title>
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/etcetera.css">
+
+  <style>
+    :root{
+      --tile-radius:12px;
+      --shadow:0 10px 30px rgba(0,0,0,.08);
+      --shadow-dark:0 14px 38px rgba(0,0,0,.45);
+    }
+
+    body{
+      font-family:'Noto Sans',sans-serif;
+      background:#FDFDFD;
+      background-image:
+        linear-gradient(rgba(0,0,0,0.04) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,0,0,0.04) 1px,transparent 1px);
+      background-size:2rem 2rem;
+      color:#1a1a1a;
+      scroll-behavior:smooth;
+    }
+    .tracking-tighter-plus{letter-spacing:-0.075em}
+
+    /* Dark theme tweaks */
+    .dark body{
+      color:#e5e7eb;background:#0b0c10;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.06) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,0.06) 1px,transparent 1px);
+      background-size:2rem 2rem;
+    }
+    .dark a{color:#cbd5e1} .dark a:hover{color:#f8fafc}
+    .dark aside nav a{color:#94a3b8!important}
+    .dark aside nav a:hover{color:#e2e8f0!important}
+    .dark aside nav a.font-semibold{color:#f1f5f9!important}
+    .dark .text-gray-900{color:#e5e7eb!important}
+    .dark .text-gray-800{color:#e2e8f0!important}
+    .dark .text-gray-700,.dark .text-gray-600{color:#cbd5e1!important}
+    .dark .text-gray-500{color:#94a3b8!important}
+    .dark .text-gray-400{color:#64748b!important}
+
+    @keyframes roll { from{transform:translateY(0)} to{transform:translateY(-50%)} }
+    #thought-ticker{ animation:roll 40s linear infinite }
+    #thought-ticker:hover{ animation-play-state:paused }
+
+    /* Virtualize heavy sections */
+    main section{ content-visibility:auto; contain-intrinsic-size:800px }
+
+    /* Thought ticker pause for motion sensitive */
+    @media (prefers-reduced-motion: reduce){ #thought-ticker{ animation:none } }
+  </style>
+
   <script>
     // Theme pre-paint
     (function(){
@@ -24,6 +74,7 @@
 <body class="antialiased">
   <div class="max-w-7xl mx-auto px-6 md:px-12">
     <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-x-12">
+      <!-- ToC -->
       <aside class="hidden md:block md:col-span-1 lg:col-span-1 py-24">
         <div class="sticky top-24">
           <nav>
@@ -35,6 +86,7 @@
               <li><a href="#archive-finds" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Archive.org Finds</a></li>
             </ul>
           </nav>
+
           <div class="mt-12">
             <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400">Micro Notes</h3>
             <div class="mt-4 h-64 overflow-hidden">
@@ -43,7 +95,10 @@
           </div>
         </div>
       </aside>
+
+      <!-- Main -->
       <div class="md:col-span-3 lg:col-span-4 py-16 md:py-24">
+        <!-- Top bar -->
         <div class="flex justify-between items-center mb-20 md:mb-24">
           <button id="theme-toggle"
             class="fixed top-6 right-6 z-50 inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10
@@ -52,6 +107,7 @@
             aria-label="Toggle theme">
             <span aria-hidden="true" id="theme-icon">🌙</span>
           </button>
+
           <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Inklet Lab</a>
           <nav class="flex items-center space-x-6 md:space-x-8">
             <a href="/" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Front Page</a>
@@ -63,17 +119,23 @@
             <a href="/the-point/" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">The Point</a>
           </nav>
         </div>
+
+        <!-- Title -->
         <header class="flex flex-col md:flex-row md:items-baseline md:space-x-4">
           <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-gray-900">&c.</h1>
           <span class="mt-3 md:mt-0 text-sm font-medium text-gray-400 dark:text-gray-500 italic tracking-wide">
             Updated on <time datetime="2025-09-28T23:18+05:30">September 28, 2025, 11:18 PM IST</time>
           </span>
         </header>
+
+        <!-- Description -->
         <div class="mt-8 md:mt-12 text-base text-gray-600 max-w-3xl space-y-4">
           <p>The miscellaneous drawer: bookmarks, obsessions, grudges, trails, and tiny experiments. Part commonplace book, part public scratchpad.</p>
           <p>This is an ever-evolving page depending on what I am into at any point of time. TMI.</p>
         </div>
+
         <main class="mt-16 md:mt-24">
+          <!-- Bookmarks -->
           <section id="bookmarks" class="scroll-mt-20">
             <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">Bookmarks / Recommendations</h2>
             <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -115,6 +177,8 @@
               </div>
             </div>
           </section>
+
+          <!-- Loves / Hates -->
           <section id="loves-hates" class="mt-16 md:mt-24 scroll-mt-20">
             <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">Love / Hate</h2>
             <p class="mt-4 text-sm text-gray-600 max-w-xl">A running list of up to seven things that I love/hate on my mind at any given update.</p>
@@ -145,6 +209,8 @@
               </div>
             </div>
           </section>
+
+          <!-- Read / Watch / Listen -->
           <section id="rwl" class="mt-16 md:mt-24 scroll-mt-20">
             <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">Read / Watch / Listen</h2>
             <p class="mt-4 text-sm text-gray-600 max-w-xl">Not always what I’m on right now, but what I’d recommend you dive into.</p>
@@ -195,34 +261,44 @@
               </div>
             </div>
           </section>
+
+          <!-- Archive.org Finds -->
           <section id="archive-finds" class="mt-16 md:mt-24 scroll-mt-20">
             <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">Archive.org Finds</h2>
             <p class="mt-4 text-sm text-gray-600 max-w-xl">Discoveries from the Internet Archive.</p>
             <ul class="mt-6 space-y-4">
               <li>
                 <a href="https://archive.org/details/dli.MoI.films.003469" target="_blank" rel="noopener noreferrer" class="font-medium underline decoration-gray-300 hover:decoration-gray-900 text-sm">Moving Perspectives ( L. V. )</a>
-                </li>
+                <!-- <p class="text-xs text-gray-600 dark:text-gray-400">A 1967 Films Division documentary by Mrinal Sen, tracing Indian history from ancient times to the establishment of the Republic in 1950.</p> -->
+              </li>
               <li>
                 <a href="https://archive.org/details/dli.MoI.films.001153" target="_blank" rel="noopener noreferrer" class="font-medium underline decoration-gray-300 hover:decoration-gray-900 text-sm">Our Constitution</a>
-                </li>
+                <!-- <p class="text-xs text-gray-600 dark:text-gray-400">This 1950 documentary translates various clauses of India's Constitution to the screen, marking the country becoming a Sovereign Democratic Republic.</p> -->
+              </li>
               <li>
                 <a href="https://archive.org/details/filmindia194006unse" target="_blank" rel="noopener noreferrer" class="font-medium underline decoration-gray-300 hover:decoration-gray-900 text-sm">FilmIndia (1940)</a>
-                </li>
+                <!-- <p class="text-xs text-gray-600 dark:text-gray-400">A scanned volume of the FilmIndia magazine from 1940, offering a glimpse into the motion picture industry of the era.</p> -->
+              </li>
               <li>
                 <a href="https://archive.org/details/scan0002_20210725_1530" target="_blank" rel="noopener noreferrer" class="font-medium underline decoration-gray-300 hover:decoration-gray-900 text-sm">Awaara (1951) Songs Booklet</a>
-                </li>
+                <!-- <p class="text-xs text-gray-600 dark:text-gray-400">A scanned songs booklet for the classic 1951 Hindi film "Awaara", starring Raj Kapoor and Nargis.</p> -->
+              </li>
               <li>
                 <a href="https://archive.org/details/scan0001_202208" target="_blank" rel="noopener noreferrer" class="font-medium underline decoration-gray-300 hover:decoration-gray-900 text-sm">Azadi Ke Geet (Songs of Freedom)</a>
-                </li>
+                <!-- <p class="text-xs text-gray-600 dark:text-gray-400">A collection of patriotic songs, including 'Khoob Ladi Mardani', celebrating India's independence movement.</p> -->
+              </li>
               <li>
                 <a href="https://archive.org/details/in-search-of-guru-dutt-part-1" target="_blank" rel="noopener noreferrer" class="font-medium underline decoration-gray-300 hover:decoration-gray-900 text-sm">In Search Of Guru Dutt</a>
-                </li>
+                <!-- <p class="text-xs text-gray-600 dark:text-gray-400">A three-part documentary from 1989 on the life and work of the legendary Indian filmmaker Guru Dutt, produced by Channel 4.</p> -->
+              </li>
             </ul>
           </section>
         </main>
       </div>
     </div>
   </div>
+
+  <!-- Back to top -->
   <a id="back-to-top-button" href="#"
      class="fixed bottom-8 right-8 bg-white/50 backdrop-blur-sm p-2 rounded-full shadow-md text-gray-600
             hover:text-gray-900 hover:shadow-lg transition-all duration-300 opacity-0 pointer-events-none"
@@ -232,7 +308,9 @@
       <path d="M12 19V5M5 12l7-7 7 7"/>
     </svg>
   </a>
+
   <footer id="contact" class="mt-24 border-t border-black/10 dark:border-white/10 bg-white dark:bg-zinc-900">
+
     <div class="max-w-7xl mx-auto px-6 md:px-12 py-12">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
         <div>
@@ -273,6 +351,7 @@
           </nav>
         </div>
       </div>
+
       <div class="mt-10 pt-6 border-t border-black/10 dark:border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <p class="text-xs text-gray-500">© <span id="year"></span> Inklet Lab • Built with Eleventy, Tailwind, and a little stubbornness.</p>
         <div class="text-xs text-gray-500">
@@ -285,6 +364,219 @@
       </div>
     </div>
   </footer>
-  <script src="/js/etcetera.js"></script>
+
+  <script>
+    // Back-to-top + active ToC
+    const backToTopButton = document.getElementById('back-to-top-button');
+    const sections = document.querySelectorAll('main section[id]');
+    const navLinks = document.querySelectorAll('aside nav a');
+
+    const onScroll = () => {
+      // Back-to-top button visibility
+      if (window.scrollY > 300) {
+        backToTopButton.classList.remove('opacity-0', 'pointer-events-none');
+        backToTopButton.classList.add('opacity-100');
+      } else {
+        backToTopButton.classList.remove('opacity-100');
+        backToTopButton.classList.add('opacity-0', 'pointer-events-none');
+      }
+
+      // ToC highlighting logic
+      // Set a trigger point 150px from the top of the viewport to account for nav/header space and feel more natural.
+      const scrollPosition = window.scrollY + 150;
+      let currentSectionId = '';
+
+      sections.forEach(section => {
+        // If the top of the section is above our scroll position, it's a candidate for being the current section.
+        // As we loop, this will get updated to the last (lowest on the page) section that fits this criteria.
+        if (section.offsetTop <= scrollPosition) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      // Update the classes on the navigation links
+      navLinks.forEach(link => {
+        const target = link.getAttribute('href').substring(1);
+        if (target === currentSectionId) {
+          link.classList.add('text-gray-900', 'font-semibold');
+          link.classList.remove('text-gray-500', 'font-medium');
+        } else {
+          link.classList.remove('text-gray-900', 'font-semibold');
+          link.classList.add('text-gray-500', 'font-medium');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    // Run on document load to set the initial state correctly
+    document.addEventListener('DOMContentLoaded', onScroll);
+
+    // Theme toggle
+    (function () {
+      const btn = document.getElementById('theme-toggle');
+      const icon = document.getElementById('theme-icon');
+      if (!btn) return;
+      function setIcon(){
+        const isDark = document.documentElement.classList.contains('dark');
+        icon.textContent = isDark ? '☀️' : '🌙';
+      }
+      btn.addEventListener('click', () => {
+        const el = document.documentElement;
+        const isDark = el.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        setIcon();
+      });
+      setIcon();
+    })();
+
+    // Current year
+    (function(){ const el = document.getElementById('year'); if (el) el.textContent = new Date().getFullYear(); })();
+  </script>
+
+  <!-- Data + Renderers (Bookmarks + Thoughts) -->
+  <script>
+    const BOOKMARKS = {
+      'list-1': [
+        { title: 'Noahpinion (Noah Smith)', url: 'https://www.noahpinion.blog/', desc: 'Economics-first blog with tech/geopolitics detours.' },
+        { title: 'Mongabay India', url: 'https://india.mongabay.com/', desc: 'Environmental reporting and analysis focused on India.' },
+        { title: 'naked capitalism', url: 'https://www.nakedcapitalism.com/', desc: 'Sharp commentary on finance, economics, politics, power.' },
+        {title: 'EconLife',url:'https://econlife.com/',desc:'Accessible stories linking economics to everyday life.'},
+        {title: 'Stanford Encyclopedia of Philosophy',url:'https://plato.stanford.edu/index.html',desc:'Peer-reviewed, continually updated philosophy ref.'},
+        {title: 'हाकारा । hākārā',url:'https://hakara.in/',desc:'Bilingual journal for creative/critical expression.'},
+        {title: 'FiftyTwo',url:'https://fiftytwo.in/',desc:'Weekly essays from the subcontinent. (Hiatus)'},
+        {title:'UbuWeb',url:'https://ubuweb.com/',desc:'Avant-garde film, sound, ephemera.'},
+        {title:'Nassim Taleb',url:'https://nassimtaleb.org/',desc:'On uncertainty, risk, decision-making.'},
+        {title:'As We May Think',url:'https://worrydream.com/refs/Bush%20-%20As%20We%20Think%20(Life%20Magazine%209-10-1945).pdf',desc:'Proto-internet memex + trails.'},
+      ],
+      'list-2': [
+        { title: 'Hammock', url: 'https://www.hammockmag.com/', desc: 'Fiction & narrative non-fiction.' },
+        { title: 'Mumbai Paused', url: 'https://mumbaipaused.substack.com/', desc: 'Street-level observations.' },
+        { title: 'The Swaddle', url: 'https://www.theswaddle.com/', desc: 'Society and culture; publication + studio'},
+        {title: 'Sentiers',url:'https://sentiers.media/',desc:'Signals of change; tech/society/culture.'},
+        {title: 'kottke dot org',url:'https://kottke.org/',desc:'OG blog of culture & miscellany.'},
+        { title: 'The India Forum',url:'https://www.theindiaforum.in/',desc:'Independent journal on contemporary issues.'},
+        { title: 'The Heritage Lab',url:'https://www.theheritagelab.in/',desc:'Museums, art, heritage stories.'},
+        { title: 'Putanumonit',url:'https://putanumonit.com/',desc:'Numbers + rationalist thinking.'},
+        { title: 'The Public Domain Review',url:'https://publicdomainreview.org/',desc:'Curiosities from the commons.'},
+        {title:'Villani: Math is Poetry',url:'https://archive.org/details/cedric-villani.-mathematics-is-the-poetry-of-science/mode/2up',desc:'Playful talk on math & poetry.'},
+        {title:'Ways of Seeing',url:'https://www.ways-of-seeing.com/',desc:'Companion to John Berger’s series.'},
+      ],
+      'list-3': [
+        { title:'LessWrong', url:'https://www.lesswrong.com/', desc:'Better reasoning community.'},
+        {title: 'Astral Codex Ten',url:'https://www.astralcodexten.com/',desc:'Science, ethics, AI, psychiatry.'},
+        {title: 'The Last Psychiatrist',url:'https://thelastpsychiatrist.com/',desc:'Cultural critique via psychiatry.'},
+        {title: 'Nemology',url:'https://www.nemology.org/',desc:'Curious investigations.'},
+        {title: 'Interfluidity',url:'https://www.interfluidity.com/',desc:'Steve Randy Waldman on econ/policy.'},
+        {title: 'Stumbling and Mumbling',url:'https://stumblingandmumbling.typepad.com/',desc:'Macro, policy, commentary.'},
+        {title: 'The Grumpy Economist',url:'https://www.grumpy-economist.com/',desc:'Free-market flavored takes.'},
+        {title: 'XKDR Forum',url:'https://xkdr.substack.com/',desc:'Cross-disciplinary research + data.'},
+        {title:'Strange Loop Canon',url:'https://www.strangeloopcanon.com/',desc:'Innovation’s hidden loops.'},
+        {title:'GeoCities Gallery',url:'https://geocities.restorativland.org/',desc:'Surf the restored old web.'},
+        {title:'Benjamin: Work of Art…',url:'https://web.mit.edu/allanmc/www/benjamin.pdf',desc:'Aura, reproduction, politics.'},
+      ],
+      'list-4': [
+        { title:'The Leap Blog', url:'https://blog.theleapjournal.org/#gsc.tab=0', desc:'Law, econ, policy originals.' },
+        {title: 'Jay Hoffmann',url:'https://jayhoffmann.com/',desc:'Web history & ideas.'},
+        {title: 'Jim Nielsen',url:'https://www.jim-nielsen.com/',desc:'Humane web dev notes.'},
+        {title: 'Manuel Moreale',url:'https://manuelmoreale.com/',desc:'Life, design, the web.'},
+        {title: 'Bruno Simon',url:'https://bruno-simon.com/',desc:'Immersive 3D portfolio.'},
+        {title: 'Laurel Schwulst',url:'https://laurelschwulst.com/home/',desc:'Writing, design, projects.'},
+        {title: 'Nicky Case',url:'https://ncase.me/',desc:'Interactive, playful learning.'},
+        {title: 'Timo Arnall',url:'https://www.elasticspace.com/',desc:'Infra of technology.'},
+        {title:'Spinal Catastrophism (annotated)',url:'https://docs.google.com/document/d/10BgWgKKPqXGowoA16sAwnxKyvB2hgEUWpVcgnI1tw1g/edit?tab=t.0',desc:'Skeptical guide.'},
+        {title:'Raqs Media Collective',url:'https://works.raqsmediacollective.net/',desc:'Archive of works & writings.'},
+      ],
+      'list-5': [
+        { title:'Jacky Alciné', url:'https://www.jacky.wtf/', desc:'Weeknotes, links, projects.' },
+        {title: 'Gwern',url:'https://gwern.net/',desc:'Deep research, longform.'},
+        {title: 'Quanta Magazine',url:'https://www.quantamagazine.org/',desc:'Math, physics, CS, life sciences.'},
+        {title: 'e-flux',url:'https://www.e-flux.com/',desc:'Essays & exhibitions.'},
+        {title: 'XXIIVV',url:'https://wiki.xxiivv.com/site/about.html',desc:'Living memex wiki.'},
+        {title: 'Mostly Economics',url:'https://mostlyeconomics.wordpress.com/',desc:'India-focused econ research.'},
+        {title: 'Nous Network',url:'https://www.nousnetwork.org/',desc:'Rights, development, culture.'},
+        {title: 'Article 14',url:'https://article-14.com/',desc:'Law, justice, constitution.'},
+        {title:'Cyclonopedia (scan)',url:'https://ciudadtecnicolor.wordpress.com/wp-content/uploads/2011/01/cyclonopedia.pdf',desc:'Theory-fiction, oil & myth.'},
+        {title:'Library of Babel',url:'https://libraryofbabel.info/',desc:'Combinatorial library.'},
+        {title:'The Machine Stops',url:'https://www.ele.uri.edu/faculty/vetter/Other-stuff/The-Machine-Stops.pdf',desc:'Screen-bound civilization tale.'},
+      ],
+      'list-6': [
+        { title:'Countercurrents', url:'https://countercurrents.org/', desc:'Environment, development, democracy.' },
+        {title: 'Maktoob Media',url:'https://maktoobmedia.com/#',desc:'Rights-centered independent news.'},
+        {title: 'PARI',url:'https://ruralindiaonline.org/',desc:'India’s rural lives & issues.'},
+        {title: 'Aeon',url:'https://aeon.co/',desc:'Magazine of ideas.'},
+        {title: 'Arts & Letters Daily',url:'https://www.aldaily.com/',desc:'Curated ideas portal.'},
+        {title: 'Slime Mold Time Mold',url:'https://slimemoldtimemold.com/',desc:'Mad science, crowd experiments.'},
+        {title: 'Wait But Why',url:'https://waitbutwhy.com/',desc:'Life & tech longform.'},
+        {title: 'Bartosz Ciechanowski',url:'https://ciechanow.ski/',desc:'Interactive illustrated explainers.'},
+        {title:'Anna’s Archive',url:'https://annas-archive.org/',desc:'Meta-index for books & papers.'},
+        {title:'Good Strategy/Bad Strategy (talk)',url:'https://www.youtube.com/watch?v=4uWKEG0s9Kc',desc:'Rumelt overview.'},
+      ],
+      'list-7': [
+        {title:"Dilip D'Souza: Death Ends Fun", url:'https://deathendsfun.stck.me/', desc:'Sharp, humane essays.' },
+        {title: 'Jabberwock',url:'https://jaiarjun.blogspot.com/',desc:'Films, books, culture.'},
+        {title: 'Rajesh Jain',url:'https://rajeshjain.com/',desc:'Marketing & entrepreneurship.'},
+        {title: 'The Honest Broker',url:'https://www.honest-broker.com/',desc:'Music, books, culture.'},
+        {title: '3 Quarks Daily',url:'https://3quarksdaily.com/',desc:'Original + curated essays.'},
+        {title: 'Hot Chips',url:'https://www.thehotchips.com/',desc:'Culture × business/data.'},
+        {title: 'Unapologetically Human',url:'https://singhaaditya.substack.com/',desc:'Psychology/culture riffs.'},
+        {title: 'How Things Work',url:'https://www.hamiltonnolan.com/',desc:'Labor, politics, power.'},
+        {title:'Monoskop',url:'https://monoskop.org/Monoskop',desc:'Arts & media studies wiki.'},
+        {title:'Tractatus Logico-Philosophicus',url:'https://people.umass.edu/klement/tlp/tlp.html#bodytext',desc:'On language & limits.'},
+      ],
+      'list-8': [
+        {title:"Useful Fictions", url:'https://usefulfictions.substack.com/', desc:'Mental models & agency.' },
+        {title: 'The CMO Journal',url:'https://thecmojournal.substack.com/',desc:'Better marketing practice.'},
+        {title: 'Heart Wired',url:'https://heartwired.substack.com/',desc:'Contemplation + comedy.'},
+        {title: 'After EOD',url:'https://aftereod.substack.com/',desc:'India-centric music subcultures.'},
+        {title: 'womaning',url:'https://womaning.substack.com/',desc:'On gender roles.'},
+        {title: 'Dusted Off',url:'https://madhulikaliddle.com/',desc:'Old cinema, history, nostalgia.'},
+        {title: 'The Bant Singh Project',url:'https://wordsoundpower.bandcamp.com/album/the-bant-singh-project',desc:'Revolutionary folk × dub.'},
+        {title: 'Out of Print',url:'https://www.outofprintmagazine.co.in/',desc:'Short-fiction journal.'},
+        {title:'Andy Matuschak',url:'https://andymatuschak.org/',desc:'Notes & experiments.'},
+        {title:'GEB (lectures playlist)',url:'https://www.youtube.com/playlist?list=PLf8rnbsH7oxtuZs56-ErvFRZ9DREjbgx6',desc:'On Hofstadter’s classic.'},
+      ]
+    };
+
+    const THOUGHTS = [
+
+      "smells of rain + petrol = wes anderson + Guru Dutt",
+      "abundance scarcity from the wrong angle",
+      "Kafka's cat won't fetch",
+      "Every defeated idealist is pessimist.converted pessimism in to passion. Idealism feels like Utopia.",
+      "no plot, only commentary",
+      "badmtn wrist loose WRIST LOOSE",
+      "“I can’t go on, I’ll go on.”",
+    ];
+
+    function renderList(ulId, items) {
+      const ul = document.getElementById(ulId);
+      if (!ul || !Array.isArray(items)) return;
+      ul.innerHTML = items.map(({title, url, desc}) => `
+        <li>
+          <a href="${url}" target="_blank" rel="noopener noreferrer"
+             class="font-medium underline decoration-gray-300 hover:decoration-gray-900 text-sm">
+            ${title}
+          </a>
+          ${desc ? `<p class="text-xs text-gray-600">${desc}</p>` : ''}
+        </li>
+      `).join('');
+    }
+
+    function setupThoughtTicker() {
+      const ticker = document.getElementById('thought-ticker');
+      if (!ticker) return;
+      const thoughtsContent = THOUGHTS.map(thought =>
+        `<p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">${thought}</p>`
+      ).join('');
+      ticker.innerHTML = thoughtsContent + thoughtsContent; // seamless loop
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      Object.entries(BOOKMARKS).forEach(([ulId, items]) => renderList(ulId, items));
+      setupThoughtTicker();
+    });
+  </script>
+
 </body>
 </html>
+

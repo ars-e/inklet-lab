@@ -1,198 +1,290 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>etcetera/(&c.)</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/etcetera.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>etcetera/(&c.)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/etcetera.css">
+  <script>
+    // Theme pre-paint
+    (function(){
+      const ls = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const shouldDark = ls ? ls === 'dark' : prefersDark;
+      if (shouldDark) document.documentElement.classList.add('dark');
+    })();
+    window.tailwind = window.tailwind || {};
+    window.tailwind.config = { darkMode:'class' };
+  </script>
 </head>
 <body class="antialiased">
-
-    <!-- Main container for our content. Keeps things centered and readable on large screens. -->
-    <div class="max-w-7xl mx-auto px-6 md:px-12">
-        <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-x-12">
-            
-            <!-- Step 5: Vertical Site Navigation -->
-            <aside class="hidden md:block md:col-span-1 lg:col-span-1 py-24">
-                <nav class="sticky top-24">
-                    <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-400">On this page</h3>
-                    <ul class="mt-4 space-y-3">
-                        <li><a href="#loves" class="text-base font-medium text-gray-500 hover:text-gray-900 transition-colors">Loves</a></li>
-                        <li><a href="#hates-quirks" class="text-base font-medium text-gray-500 hover:text-gray-900 transition-colors">Hates & Quirks</a></li>
-                        <li><a href="#recs" class="text-base font-medium text-gray-500 hover:text-gray-900 transition-colors">Recs</a></li>
-                        <li><a href="#gallery" class="text-base font-medium text-gray-500 hover:text-gray-900 transition-colors">Gallery</a></li>
-                    </ul>
-                </nav>
-            </aside>
-
-            <!-- Main Content Column -->
-            <div class="md:col-span-3 lg:col-span-4 py-16 md:py-24">
-                <!-- Top Bar: Brand and Navigation -->
-                <div class="flex justify-between items-center mb-20 md:mb-24">
-                    <a href="#" class="text-base font-medium text-gray-500 hover:text-gray-900 transition-colors duration-200">Inklet Lab</a>
-                    <nav class="flex items-center space-x-6 md:space-x-8">
-                         <a href="/" class="text-base font-medium text-gray-500 hover:text-gray-900 transition-colors duration-200">Front Page</a>
-                         <a href="/the-dispatch/" class="text-base font-medium text-gray-500 hover:text-gray-900 transition-colors duration-200">The Dispatch</a>
-                         <a href="/peti/" class="text-base font-medium text-gray-500 hover:text-gray-900 transition-colors duration-200">Peti</a>
-                         <a href="/the-balcony/" class="text-base font-medium text-gray-500 hover:text-gray-900 transition-colors duration-200">The Balcony</a>
-                         <a href="/dump-and-discover/" class="text-base font-medium text-gray-500 hover:text-gray-900 transition-colors duration-200">Dump & Discover</a>
-                         <a href="/etcetera/" class="text-base font-medium text-gray-500 hover:text-gray-900 transition-colors duration-200">etcetra</a>
-                         <a href="/the-point/" class="text-base font-medium text-gray-500 hover:text-gray-900 transition-colors duration-200">The Point</a>
-                    </nav>
-                </div>
-
-                <!-- Step 1: The Main Title. Asymmetrical, bold, and makes a statement. -->
-                <header>
-                    <h1 class="text-7xl md:text-9xl font-extrabold tracking-tighter-plus text-gray-900">
-                        &c.
-                    </h1>
-                </header>
-
-                <!-- Page Description -->
-                <div class="mt-8 md:mt-12 text-xl md:text-2xl text-gray-600 max-w-3xl">
-                    <p>A running list of loves, hates, recommendations, and everything in between. A digital commonplace book for ideas worth saving.</p>
-                </div>
-
-                <main class="mt-16 md:mt-24">
-                    <!-- A list with mixed text and image content -->
-                    <section id="loves">
-                        <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">LOVES.</h2>
-                        <div class="mt-8 space-y-12 text-lg md:text-xl text-gray-700 max-w-3xl">
-                            
-                            <!-- Text Item -->
-                            <div>
-                                <p>The smell of old books.</p>
-                            </div>
-
-                            <!-- Image Item -->
-                            <div>
-                                <figure>
-                                    <img class="w-[14rem] h-[12rem] rounded-lg object-cover" src="https://placehold.co/800x500/f0f0f0/333333?text=A+Beautiful+Object" alt="A placeholder image representing a beautifully designed object.">
-                                    <figcaption class="mt-3 text-base text-gray-500">The specific texture of a well-worn book cover.</figcaption>
-                                </figure>
-                            </div>
-
-                            <!-- Text Item -->
-                            <div>
-                                <p>Perfectly aligned design elements.</p>
-                            </div>
-                            
-                            <!-- Text Item -->
-                            <div>
-                                <p>Finding a typo in a classic novel.</p>
-                            </div>
-
-                            <!-- Text Item -->
-                            <div>
-                               <p>Long, uninterrupted train rides.</p>
-                            </div>
-
-                        </div>
-                    </section>
-
-                    <!-- Step 4: A Reusable Two-Column Pattern in action -->
-                    <section id="hates-quirks" class="mt-16 md:mt-24">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-12 md:gap-x-16">
-                            
-                            <!-- Column 1: A list of "hates" -->
-                            <div>
-                                <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">HATES.</h2>
-                                <div class="mt-8 space-y-3 text-lg md:text-xl text-gray-700">
-                                   <p>Design by committee.</p>
-                                   <p>Websites that hijack the scroll bar.</p>
-                                   <p>The font "Comic Sans".</p>
-                                   <p>Low-quality JPEG artifacts.</p>
-                                   <p>Unskippable video ads.</p>
-                                </div>
-                            </div>
-
-                            <!-- Column 2: A list of "quirks" -->
-                            <div>
-                                 <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">QUIRKS.</h2>
-                                 <div class="mt-8 space-y-3 text-lg md:text-xl text-gray-700">
-                                    <p>Arranging books by color, not author.</p>
-                                    <p>Using keyboard shortcuts for everything.</p>
-                                    <p>Having exactly three tabs open at all times.</p>
-                                    <p>Saving files as "final_final_v2.psd".</p>
-                                    <p>Preferring the command line for simple tasks.</p>
-                                 </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Step 3: Recommendations Section with Lists and Links -->
-                    <section id="recs" class="mt-16 md:mt-24">
-                        <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">RECS.</h2>
-
-                        <!-- A responsive grid container for the columns -->
-                        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-y-12 md:gap-x-16">
-                            
-                            <!-- Column 1: Numbered list -->
-                            <div>
-                                <h3 class="text-xl md:text-2xl font-semibold tracking-tight text-gray-800">Five Films Under 90 Minutes</h3>
-                                <ol class="mt-4 space-y-3 text-lg md:text-xl text-gray-700 list-decimal list-inside">
-                                    <li><a href="#" class="underline decoration-gray-300 hover:decoration-gray-900 hover:text-gray-900 transition-colors">Primer (77 min)</a></li>
-                                    <li>Before Sunset (80 min)</li>
-                                    <li>Phone Booth (81 min)</li>
-                                    <li>Run Lola Run (81 min)</li>
-                                    <li>District 9 (82 min)</li>
-                                </ol>
-                            </div>
-
-                            <!-- Column 2: Links and video links -->
-                            <div>
-                                 <h3 class="text-xl md:text-2xl font-semibold tracking-tight text-gray-800">A Video Worth Watching</h3>
-                                 <div class="mt-4 text-lg md:text-xl text-gray-700">
-                                    <p>
-                                        <a href="#" class="underline decoration-gray-300 hover:decoration-gray-900 hover:text-gray-900 transition-colors">
-                                            Everything is a Remix
-                                            <span class="text-gray-400 font-sans text-sm align-super">↗</span>
-                                        </a>
-                                    </p>
-                                 </div>
-                            </div>
-
-                        </div>
-                    </section>
-
-                     <!-- New Section: Gallery for Images -->
-                    <section id="gallery" class="mt-16 md:mt-24">
-                        <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">GALLERY.</h2>
-                        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-y-12 md:gap-x-16">
-                            
-                            <!-- Image 1 -->
-                            <figure>
-                                <img class="w-[14rem] h-[12rem] rounded-lg object-cover" src="https://placehold.co/600x400/222222/FFFFFF?text=Image+One" alt="A descriptive placeholder for the first image.">
-                                <figcaption class="mt-3 text-base text-gray-500">A simple, clean caption for the image above.</figcaption>
-                            </figure>
-
-                            <!-- Image 2 -->
-                            <figure>
-                                <img class="w-[14rem] h-[12rem] rounded-lg object-cover" src="https://placehold.co/600x400/EAEAEA/333333?text=Image+Two" alt="A descriptive placeholder for the second image.">
-                                <figcaption class="mt-3 text-base text-gray-500">This one sits in the second column on larger screens.</figcaption>
-                            </figure>
-
-                        </div>
-                    </section>
-
-                </main>
+  <div class="max-w-7xl mx-auto px-6 md:px-12">
+    <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-x-12">
+      <aside class="hidden md:block md:col-span-1 lg:col-span-1 py-24">
+        <div class="sticky top-24">
+          <nav>
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400">On this page</h3>
+            <ul class="mt-4 space-y-3">
+              <li><a href="#bookmarks" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Bookmarks/Recs</a></li>
+              <li><a href="#loves-hates" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Love / Hate</a></li>
+              <li><a href="#rwl" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Read / Watch / Listen</a></li>
+              <li><a href="#archive-finds" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Archive.org Finds</a></li>
+            </ul>
+          </nav>
+          <div class="mt-12">
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400">Micro Notes</h3>
+            <div class="mt-4 h-64 overflow-hidden">
+              <div id="thought-ticker" class="space-y-4"></div>
             </div>
+          </div>
         </div>
+      </aside>
+      <div class="md:col-span-3 lg:col-span-4 py-16 md:py-24">
+        <div class="flex justify-between items-center mb-20 md:mb-24">
+          <button id="theme-toggle"
+            class="fixed top-6 right-6 z-50 inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10
+                   bg-white/70 dark:bg-white/10 backdrop-blur px-4 py-2 text-sm font-medium
+                   text-gray-700 dark:text-gray-200 hover:bg-white/90 dark:hover:bg-white/15 transition"
+            aria-label="Toggle theme">
+            <span aria-hidden="true" id="theme-icon">🌙</span>
+          </button>
+          <a href="#" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Inklet Lab</a>
+          <nav class="flex items-center space-x-6 md:space-x-8">
+            <a href="/" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Front Page</a>
+            <a href="/the-dispatch/" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">The Dispatch</a>
+            <a href="/peti/" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Peti</a>
+            <a href="/the-balcony/" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">The Balcony</a>
+            <a href="/dump-and-discover/" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">Dump & Discover</a>
+            <a href="/etcetera/" class="text-sm font-medium text-gray-900">etcetera</a>
+            <a href="/the-point/" class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">The Point</a>
+          </nav>
+        </div>
+        <header class="flex flex-col md:flex-row md:items-baseline md:space-x-4">
+          <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-gray-900">&c.</h1>
+          <span class="mt-3 md:mt-0 text-sm font-medium text-gray-400 dark:text-gray-500 italic tracking-wide">
+            Updated on <time datetime="2025-09-28T23:18+05:30">September 28, 2025, 11:18 PM IST</time>
+          </span>
+        </header>
+        <div class="mt-8 md:mt-12 text-base text-gray-600 max-w-3xl space-y-4">
+          <p>The miscellaneous drawer: bookmarks, obsessions, grudges, trails, and tiny experiments. Part commonplace book, part public scratchpad.</p>
+          <p>This is an ever-evolving page depending on what I am into at any point of time. TMI.</p>
+        </div>
+        <main class="mt-16 md:mt-24">
+          <section id="bookmarks" class="scroll-mt-20">
+            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">Bookmarks / Recommendations</h2>
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div class="space-y-6">
+                <details open>
+                  <summary class="cursor-pointer font-semibold text-sm text-gray-500 hover:text-gray-900">List A</summary>
+                  <ul id="list-1" class="mt-3 space-y-2"></ul>
+                </details>
+                <details open>
+                  <summary class="cursor-pointer font-semibold text-sm text-gray-500 hover:text-gray-900">List C</summary>
+                  <ul id="list-3" class="mt-3 space-y-2"></ul>
+                </details>
+                <details>
+                  <summary class="cursor-pointer font-semibold text-sm text-gray-500 hover:text-gray-900">List E</summary>
+                  <ul id="list-5" class="mt-3 space-y-2"></ul>
+                </details>
+                <details>
+                  <summary class="cursor-pointer font-semibold text-sm text-gray-500 hover:text-gray-900">List G</summary>
+                  <ul id="list-7" class="mt-3 space-y-2"></ul>
+                </details>
+              </div>
+              <div class="space-y-6">
+                <details open>
+                  <summary class="cursor-pointer font-semibold text-sm text-gray-500 hover:text-gray-900">List B</summary>
+                  <ul id="list-2" class="mt-3 space-y-2"></ul>
+                </details>
+                <details open>
+                  <summary class="cursor-pointer font-semibold text-sm text-gray-500 hover:text-gray-900">List D</summary>
+                  <ul id="list-4" class="mt-3 space-y-2"></ul>
+                </details>
+                <details>
+                  <summary class="cursor-pointer font-semibold text-sm text-gray-500 hover:text-gray-900">List E</summary>
+                  <ul id="list-6" class="mt-3 space-y-2"></ul>
+                </details>
+                <details>
+                  <summary class="cursor-pointer font-semibold text-sm text-gray-500 hover:text-gray-900">List F</summary>
+                  <ul id="list-8" class="mt-3 space-y-2"></ul>
+                </details>
+              </div>
+            </div>
+          </section>
+          <section id="loves-hates" class="mt-16 md:mt-24 scroll-mt-20">
+            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">Love / Hate</h2>
+            <p class="mt-4 text-sm text-gray-600 max-w-xl">A running list of up to seven things that I love/hate on my mind at any given update.</p>
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div>
+                <h3 class="text-xl font-semibold text-gray-800">Love</h3>
+                <ul class="mt-4 space-y-3 text-base text-gray-700 list-disc pl-6">
+                  <li>Warm streetlights on wet asphalt</li>
+                  <li>Hajmola Candy</li>
+                  <li>Warming up to light mode these days</li>
+                  <li>Fatafat digestive pills</li>
+                  <li>Mosambi juice from <a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://share.google/XZnnT8LtTO1hC0aOp" target="_blank" rel="noopener noreferrer">here</a></li>
+                  <li>Pilot Hi-Techpoint V5 pen</li>
+                  <li>A good game of badminton</li>
+                </ul>
+              </div>
+              <div>
+                <h3 class="text-xl font-semibold text-gray-800">Hate</h3>
+                <ul class="mt-4 space-y-3 text-base text-gray-700 list-disc pl-6">
+                  <li>HRs ghosting me</li>
+                  <li>Endless hiring processes</li>
+                  <li>Treating AI as an inferior crutch rather than a tool.</li>
+                  <li>Fogged up specs</li>
+                  <li>Aching joints</li>
+                  <li>Grey rains</li>
+                  <li>Not using the em dash…</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+          <section id="rwl" class="mt-16 md:mt-24 scroll-mt-20">
+            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">Read / Watch / Listen</h2>
+            <p class="mt-4 text-sm text-gray-600 max-w-xl">Not always what I’m on right now, but what I’d recommend you dive into.</p>
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-10">
+              <div>
+                <h3 class="text-lg font-semibold text-gray-800">Read</h3>
+                <ul class="mt-4 space-y-2 text-gray-700 text-sm" id="read-list">
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.goodreads.com/book/show/94486.The_Invention_of_Morel" target="_blank" rel="noopener noreferrer">The Invention of Morel</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.goodreads.com/book/show/45974.The_Book_of_Disquiet?ref=nav_sb_ss_1_16" target="_blank" rel="noopener noreferrer">The Book of Disquiet</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.goodreads.com/book/show/17716.Waiting_for_Godot" target="_blank" rel="noopener noreferrer">Waiting for Godot</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.goodreads.com/book/show/157993.The_Little_Prince" target="_blank" rel="noopener noreferrer">The Little Prince</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.goodreads.com/book/show/119073.The_Name_of_the_Rose" target="_blank" rel="noopener noreferrer">The Name of the Rose</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.goodreads.com/book/show/4934.The_Brothers_Karamazov?from_search=true&from_srp=true&qid=T2WTz1MQvC&rank=1" target="_blank" rel="noopener noreferrer">The Brothers Karamazov</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.goodreads.com/book/show/72657.Pedagogy_of_the_Oppressed" target="_blank" rel="noopener noreferrer">Pedagogy of the Oppressed</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.penguin.co.in/book/the-legends-of-khasak/" target="_blank" rel="noopener noreferrer">The Legends of Khasak</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.goodreads.com/book/show/2956.The_Adventures_of_Huckleberry_Finn" target="_blank" rel="noopener noreferrer">The Adventures of Huckleberry Finn</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.goodreads.com/book/show/374233.If_on_a_Winter_s_Night_a_Traveler" target="_blank" rel="noopener noreferrer">If on a Winter’s Night a Traveler</a></li>
+                </ul>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-gray-800">Watch</h3>
+                <ul class="mt-4 space-y-2 text-gray-700 text-sm">
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.imdb.com/title/tt0391165/" target="_blank" rel="noopener noreferrer">Fun2shh... Dudes in the 10th Century</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.youtube.com/watch?v=yUaNHA-WQWg" target="_blank" rel="noopener noreferrer">How to Identify a Seal</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.youtube.com/@HorsesOnYT" target="_blank" rel="noopener noreferrer">Horses (YT)</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.youtube.com/watch?v=CsGYh8AacgY" target="_blank" rel="noopener noreferrer">Charlie the Unicorn</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.youtube.com/watch?v=v5DqmTtCPiQ" target="_blank" rel="noopener noreferrer">Who’s Afraid of Modern Art</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.imdb.com/title/tt0050870/" target="_blank" rel="noopener noreferrer">Pyaasa</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.youtube.com/playlist?list=PL848F2368C90DDC3D" target="_blank" rel="noopener noreferrer">Human Behavioral Biology</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.imdb.com/title/tt1235166/" target="_blank" rel="noopener noreferrer">A Prophet</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.youtube.com/watch?v=bIij-KQ0jYU&t=1485s" target="_blank" rel="noopener noreferrer">War and Peace (Pt 1)</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.imdb.com/title/tt1788391/" target="_blank" rel="noopener noreferrer">Kill List</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.imdb.com/title/tt0111341/" target="_blank" rel="noopener noreferrer">Sátántangó</a></li>
+                </ul>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-gray-800">Listen</h3>
+                <ul class="mt-4 space-y-2 text-gray-700 text-sm">
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.youtube.com/c/CyrusSays" target="_blank" rel="noopener noreferrer">Cyrus Says</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.maedinindia.in/shows-1" target="_blank" rel="noopener noreferrer">Maed in India</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.youtube.com/@TheCultureCafebyAMV-re8hs/featured" target="_blank" rel="noopener noreferrer">AMV Podcast</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.thegyaanproject.com/" target="_blank" rel="noopener noreferrer">The Gyaan Project</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.youtube.com/playlist?list=PLf8rnbsH7oxtuZs56-ErvFRZ9DREjbgx6" target="_blank" rel="noopener noreferrer">Desi Crime</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://the-ken.com/podcasts/two-by-two/" target="_blank" rel="noopener noreferrer">Two by Two</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://qcodemedia.com/theleftrightgame" target="_blank" rel="noopener noreferrer">The Left Right Game</a></li>
+                  <li><a class="underline decoration-gray-300 hover:decoration-gray-900" href="https://www.youtube.com/@amitvarma/featured" target="_blank" rel="noopener noreferrer">Everything is Everything</a></li>
+                </ul>
+              </div>
+            </div>
+          </section>
+          <section id="archive-finds" class="mt-16 md:mt-24 scroll-mt-20">
+            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">Archive.org Finds</h2>
+            <p class="mt-4 text-sm text-gray-600 max-w-xl">Discoveries from the Internet Archive.</p>
+            <ul class="mt-6 space-y-4">
+              <li>
+                <a href="https://archive.org/details/dli.MoI.films.003469" target="_blank" rel="noopener noreferrer" class="font-medium underline decoration-gray-300 hover:decoration-gray-900 text-sm">Moving Perspectives ( L. V. )</a>
+                </li>
+              <li>
+                <a href="https://archive.org/details/dli.MoI.films.001153" target="_blank" rel="noopener noreferrer" class="font-medium underline decoration-gray-300 hover:decoration-gray-900 text-sm">Our Constitution</a>
+                </li>
+              <li>
+                <a href="https://archive.org/details/filmindia194006unse" target="_blank" rel="noopener noreferrer" class="font-medium underline decoration-gray-300 hover:decoration-gray-900 text-sm">FilmIndia (1940)</a>
+                </li>
+              <li>
+                <a href="https://archive.org/details/scan0002_20210725_1530" target="_blank" rel="noopener noreferrer" class="font-medium underline decoration-gray-300 hover:decoration-gray-900 text-sm">Awaara (1951) Songs Booklet</a>
+                </li>
+              <li>
+                <a href="https://archive.org/details/scan0001_202208" target="_blank" rel="noopener noreferrer" class="font-medium underline decoration-gray-300 hover:decoration-gray-900 text-sm">Azadi Ke Geet (Songs of Freedom)</a>
+                </li>
+              <li>
+                <a href="https://archive.org/details/in-search-of-guru-dutt-part-1" target="_blank" rel="noopener noreferrer" class="font-medium underline decoration-gray-300 hover:decoration-gray-900 text-sm">In Search Of Guru Dutt</a>
+                </li>
+            </ul>
+          </section>
+        </main>
+      </div>
     </div>
-
-    <!-- "Back to Top" Button -->
-    <a id="back-to-top-button" href="#" class="fixed bottom-8 right-8 bg-white/50 backdrop-blur-sm p-2 rounded-full shadow-md text-gray-600 hover:text-gray-900 hover:shadow-lg transition-all duration-300 opacity-0 pointer-events-none">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0.0.24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 19V5M5 12l7-7 7 7"/>
-        </svg>
-    </a>
-
-      <script src="/js/etcetera.js" defer></script>
-
+  </div>
+  <a id="back-to-top-button" href="#"
+     class="fixed bottom-8 right-8 bg-white/50 backdrop-blur-sm p-2 rounded-full shadow-md text-gray-600
+            hover:text-gray-900 hover:shadow-lg transition-all duration-300 opacity-0 pointer-events-none"
+     aria-label="Back to top">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 19V5M5 12l7-7 7 7"/>
+    </svg>
+  </a>
+  <footer id="contact" class="mt-24 border-t border-black/10 dark:border-white/10 bg-white dark:bg-zinc-900">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+        <div>
+          <h2 class="text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Say hello.</h2>
+          <p class="mt-3 text-sm text-gray-600 dark:text-gray-300">Collaborations, gigs, or just swapping links—always welcome.</p>
+        </div>
+        <div>
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400">Contact</h3>
+          <div class="mt-3 space-y-2">
+            <a href="mailto:hello@inklet.lab" class="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/10 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-white/90 dark:hover:bg-white/15 transition">
+              <span aria-hidden="true">✉️</span>
+              <span>hello@inklet.lab</span>
+            </a>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400">Elsewhere</h3>
+          <nav class="mt-3 flex flex-wrap gap-3" aria-label="Social links">
+            <a href="https://github.com/yourhandle" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/10 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-white/90 dark:hover:bg-white/15 transition">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 0C5.373 0 0 5.373 0 12c0 5.303 3.438 9.8 8.207 11.387.599.11.793-.26.793-.577v-2.112c-3.338.724-4.043-1.61-4.043-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.93 0-1.31.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.562 21.799 24 17.303 24 12 24 5.373 18.627 0 12 0z"/></svg>
+              <span>GitHub</span>
+            </a>
+            <a href="https://x.com/yourhandle" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/10 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-white/90 dark:hover:bg-white/15 transition">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.2 2H21l-6.4 7.3L22 22h-6.8l-4.7-6.1L4.9 22H2l6.9-7.9L2 2h6.9l4.3 5.6L18.2 2Zm-1.2 18h1.9L8.5 4H6.6l10.4 16Z"/></svg>
+              <span>Twitter</span>
+            </a>
+            <a href="https://www.linkedin.com/in/yourhandle" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/10 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-white/90 dark:hover:bg-white/15 transition">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5ZM.5 8.5h4V23h-4V8.5Zm7.5 0h3.8v1.98h.06c.53-1 1.82-2.06 3.75-2.06 4.01 0 4.75 2.64 4.75 6.08V23h-4v-5.95c0-1.42-.03-3.25-1.98-3.25-1.98 0-2.29 1.55-2.29 3.15V23h-4V8.5Z"/></svg>
+              <span>LinkedIn</span>
+            </a>
+            <a href="/feed.xml" class="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/10 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-white/90 dark:hover:bg-white/15 transition">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 18a2 2 0 1 1-3.999.001A2 2 0 0 1 6 18ZM2 3a19 19 0 0 1 19 19h-3A16 16 0 0 0 2 6V3Zm0 7a12 12 0 0 1 12 12h-3A9 9 0 0 0 2 13v-3Z"/></svg>
+              <span>RSS</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-black/10 dark:border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <p class="text-xs text-gray-500">© <span id="year"></span> Inklet Lab • Built with Eleventy, Tailwind, and a little stubbornness.</p>
+        <div class="text-xs text-gray-500">
+          <a href="/now/" class="underline decoration-gray-300 hover:decoration-gray-900">Now</a>
+          <span class="mx-2">·</span>
+          <a href="/colophon/" class="underline decoration-gray-300 hover:decoration-gray-900">Colophon</a>
+          <span class="mx-2">·</span>
+          <a href="/privacy/" class="underline decoration-gray-300 hover:decoration-gray-900">Privacy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="/js/etcetera.js"></script>
 </body>
 </html>
-

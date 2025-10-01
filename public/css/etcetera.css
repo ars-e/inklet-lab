@@ -1,17 +1,41 @@
- /* This is our core design system in a tiny bit of CSS */
-        body {
-            font-family: 'Inter', sans-serif;
-            /* A subtle, faint grid to give structure, inspired by the "Less, but better" image. */
-            background-color: #FDFDFD;
-            background-image:
-                linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
-            background-size: 2rem 2rem;
-            color: #1a1a1a;
-            scroll-behavior: smooth; /* For smooth scrolling */
-        }
-
-        /* A little flourish for our main title */
-        .tracking-tighter-plus {
-            letter-spacing: -0.075em;
-        }
+/* style.css */
+:root{
+  --tile-radius:12px;
+  --shadow:0 10px 30px rgba(0,0,0,.08);
+  --shadow-dark:0 14px 38px rgba(0,0,0,.45);
+}
+body{
+  font-family:'Noto Sans',sans-serif;
+  background:#FDFDFD;
+  background-image:
+    linear-gradient(rgba(0,0,0,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,0,0,0.04) 1px,transparent 1px);
+  background-size:2rem 2rem;
+  color:#1a1a1a;
+  scroll-behavior:smooth;
+}
+.tracking-tighter-plus{letter-spacing:-0.075em}
+/* Dark theme tweaks */
+.dark body{
+  color:#e5e7eb;background:#0b0c10;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.06) 1px,transparent 1px);
+  background-size:2rem 2rem;
+}
+.dark a{color:#cbd5e1} .dark a:hover{color:#f8fafc}
+.dark aside nav a{color:#94a3b8!important}
+.dark aside nav a:hover{color:#e2e8f0!important}
+.dark aside nav a.font-semibold{color:#f1f5f9!important}
+.dark .text-gray-900{color:#e5e7eb!important}
+.dark .text-gray-800{color:#e2e8f0!important}
+.dark .text-gray-700,.dark .text-gray-600{color:#cbd5e1!important}
+.dark .text-gray-500{color:#94a3b8!important}
+.dark .text-gray-400{color:#64748b!important}
+@keyframes roll { from{transform:translateY(0)} to{transform:translateY(-50%)} }
+#thought-ticker{ animation:roll 40s linear infinite }
+#thought-ticker:hover{ animation-play-state:paused }
+/* Virtualize heavy sections */
+main section{ content-visibility:auto; contain-intrinsic-size:800px }
+/* Thought ticker pause for motion sensitive */
+@media (prefers-reduced-motion: reduce){ #thought-ticker{ animation:none } }
