@@ -1,175 +1,183 @@
-document.addEventListener('DOMContentLoaded', function() {
-  // --- Initialize Features ---
+document.addEventListener('DOMContentLoaded', () => {
+  // --- KaTeX auto-render (if available)
   if (typeof renderMathInElement === 'function') {
-    renderMathInElement(document.body, { delimiters: [ {left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false} ] });
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '$',  right: '$',  display: false }
+      ]
+    });
   }
-  setupUI();
+
   setupInteractions();
-  
-  function setupUI() {
-    // Set Footer Year
-    const yearSpan = document.getElementById('y');
-    if(yearSpan) {
-        yearSpan.textContent = new Date().getFullYear();
-    }
+  setFooterYear(); // harmless fallback
+
+  function setFooterYear() {
+    const y = document.getElementById('y');
+    if (y) y.textContent = new Date().getFullYear();
   }
-
-
 
   function setupInteractions() {
-    // Back to top button
-    const toTop = document.getElementById('toTop');
-    if (toTop) {
-        window.addEventListener('scroll', () => toTop.classList.toggle('show', window.scrollY > 600));
-        toTop.addEventListener('click', () => window.scrollTo({top: 0, behavior: 'smooth'}));
-    }
-
-    // Reading Progress Bar
-    const progressBar = document.getElementById('progressBar');
-    if (progressBar) {
-        window.addEventListener('scroll', () => {
-          const totalHeight = document.body.scrollHeight - window.innerHeight;
-          progressBar.style.width = `${(window.scrollY / totalHeight) * 100}%`;
-        });
-    }
-
-    // TOC & Sidenotes setup
-    setupTOCAndSidenotes();
-
-    // Copy Code Buttons
-    document.querySelectorAll('.prose pre').forEach(pre => {
-        const button = document.createElement('button');
-        button.className = 'copy-code-button'; 
-        button.textContent = 'Copy';
-        pre.appendChild(button);
-        button.addEventListener('click', () => {
-            const code = pre.querySelector('code').innerText;
-            navigator.clipboard.writeText(code).then(() => {
-                button.textContent = 'Copied!';
-                setTimeout(() => button.textContent = 'Copy', 2000);
-            });
-        });
-    });
-
-    // Image Lightbox
-    const lightboxOverlay = document.getElementById('lightboxOverlay');
-    const lightboxImage = document.getElementById('lightboxImage');
-    const lightboxClose = document.getElementById('lightboxClose');
-    if (lightboxOverlay && lightboxImage && lightboxClose) {
-        document.querySelectorAll('.prose img, .cover-image img').forEach(img => {
-            img.addEventListener('click', () => {
-                lightboxImage.src = img.src;
-                lightboxOverlay.classList.add('show');
-            });
-        });
-        const closeLightbox = () => lightboxOverlay.classList.remove('show');
-        lightboxOverlay.addEventListener('click', e => {
-            if (e.target === lightboxOverlay) closeLightbox();
-        });
-        lightboxClose.addEventListener('click', closeLightbox);
-    }
-  
-    // Social Sharing
+    setupToTop();
+    setupProgressBar();
+    setupTOCAndFootnotes();
+    setupCopyCodeButtons();
+    setupLightbox();
     setupSocialShare();
   }
-  
-  function setupTOCAndSidenotes() {
-      const tocContainer = document.getElementById('toc-links');
-      const headings = Array.from(document.querySelectorAll('.prose h2'));
-      const sidenotesContainer = document.getElementById('sidenotesContainer');
-      const footnoteRefs = document.querySelectorAll('.footnote-ref');
 
-      // TOC Logic
-      if (tocContainer && headings.length) {
-          headings.forEach(h => {
-              if (!h.id) h.id = h.textContent.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
-              const a = document.createElement('a');
-              a.textContent = h.textContent; a.href = `#${h.id}`;
-              const li = document.createElement('li');
-              li.className = 'toc-link'; li.appendChild(a);
-              tocContainer.appendChild(li);
-          });
-          
-          const observer = new IntersectionObserver(entries => {
-              entries.forEach(entry => {
-                  const link = tocContainer.querySelector(`a[href="#${entry.target.id}"]`);
-                  if (link && entry.isIntersecting) {
-                      tocContainer.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
-                      link.parentElement.classList.add('active');
-                  }
-              });
-          }, { rootMargin: '-30% 0px -60% 0px', threshold: 0.7 });
-          headings.forEach(h => observer.observe(h));
-      }
+  // --- Back to top
+  function setupToTop() {
+    const toTop = document.getElementById('toTop');
+    if (!toTop) return;
 
-      // Sidenotes Logic
-      if (footnoteRefs.length > 0 && sidenotesContainer) {
-          footnoteRefs.forEach(refLink => {
-              const noteId = refLink.getAttribute('href').substring(1);
-              const noteContent = document.getElementById(noteId);
-              if (noteContent) {
-                  const sidenote = document.createElement('div');
-                  sidenote.id = `sidenote-${noteId.split(':')[1]}`;
-                  sidenote.className = 'sidenote';
-                  sidenote.innerHTML = noteContent.innerHTML;
-                  sidenote.querySelector('.footnote-backref')?.remove();
-                  sidenotesContainer.appendChild(sidenote);
-                  
-                  refLink.addEventListener('click', (e) => {
-                      e.preventDefault();
-                      const isActive = refLink.classList.contains('active');
-                      // Deactivate all others
-                      document.querySelectorAll('.footnote-ref').forEach(r => r.classList.remove('active'));
-                      document.querySelectorAll('.sidenote').forEach(s => s.classList.remove('active'));
-                      // Activate the clicked one if it wasn't already active
-                      if (!isActive) {
-                          refLink.classList.add('active');
-                          sidenote.classList.add('active');
-                      }
-                  });
-              }
-          });
-      }
+    const onScroll = () => toTop.classList.toggle('show', window.scrollY > 600);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    toTop.addEventListener('click', () =>
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    );
   }
-  
-  function setupSocialShare() {
-    const socialShare = document.getElementById('socialShare');
-    if (socialShare) {
-      socialShare.addEventListener('click', function(e) {
-        const link = e.target.closest('a'); 
-        if (!link) return;
-        
-        e.preventDefault();
-        
-        const service = link.dataset.service;
-        const url = window.location.href;
-        const title = document.title;
-        let shareUrl = '';
 
-        if (service === 'twitter') {
-          shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
-        } else if (service === 'facebook') {
-          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-        } else if (service === 'linkedin') {
-          shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
-        } else if (service === 'copy') {
-          navigator.clipboard.writeText(url).then(() => {
-            if(!link.dataset.originalTitle) {
-              link.dataset.originalTitle = link.title;
-            }
-            link.title = 'Copied!';
-            setTimeout(() => { link.title = link.dataset.originalTitle; }, 2000);
-          });
-          return;
-        }
-        
-        if(shareUrl) {
-            window.open(shareUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
-        }
+  // --- Reading progress
+  function setupProgressBar() {
+    const bar = document.getElementById('progressBar');
+    if (!bar) return;
+
+    const onScroll = () => {
+      const total = document.body.scrollHeight - window.innerHeight;
+      bar.style.width = `${(window.scrollY / total) * 100}%`;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  // --- ToC + Footnotes
+  function setupTOCAndFootnotes() {
+    const toc = document.getElementById('toc-links');
+    const headings = Array.from(document.querySelectorAll('.prose h2'));
+    const footnoteRefs = document.querySelectorAll('.footnote-ref');
+
+    // Build ToC
+    if (toc && headings.length) {
+      headings.forEach(h => {
+        if (!h.id) h.id = h.textContent.toLowerCase()
+          .replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+        const a = document.createElement('a');
+        a.textContent = h.textContent;
+        a.href = `#${h.id}`;
+        const li = document.createElement('li');
+        li.className = 'toc-link';
+        li.appendChild(a);
+        toc.appendChild(li);
+      });
+
+      // Active section highlight
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          const link = toc.querySelector(`a[href="#${entry.target.id}"]`);
+          if (link && entry.isIntersecting) {
+            toc.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
+            link.parentElement.classList.add('active');
+          }
+        });
+      }, { rootMargin: '-30% 0px -60% 0px', threshold: 0.7 });
+      headings.forEach(h => observer.observe(h));
+
+      // Smooth-scroll without adding history entries
+      // so the browser Back button returns to the previous page.
+      toc.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', (e) => {
+          // preserve modified/middle clicks
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+
+          const href = a.getAttribute('href');
+          if (!href || !href.startsWith('#')) return;
+
+          const target = document.querySelector(href);
+          if (!target) return;
+
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+          // Update URL hash WITHOUT pushing a new history entry
+          const url = new URL(window.location.href);
+          url.hash = href.slice(1);
+          history.replaceState(null, '', url);
+        });
+      });
+    }
+
+    // Footnote highlight (let default jump occur)
+    if (footnoteRefs.length) {
+      footnoteRefs.forEach(ref => {
+        ref.addEventListener('click', () => {
+          const isActive = ref.classList.contains('active');
+          document.querySelectorAll('.footnote-ref').forEach(r => r.classList.remove('active'));
+          if (!isActive) ref.classList.add('active');
+        });
       });
     }
   }
+
+  // --- Copy code buttons
+  function setupCopyCodeButtons() {
+    document.querySelectorAll('.prose pre').forEach(pre => {
+      const btn = document.createElement('button');
+      btn.className = 'copy-code-button';
+      btn.textContent = 'Copy';
+      pre.appendChild(btn);
+
+      btn.addEventListener('click', () => {
+        const code = pre.querySelector('code')?.innerText ?? '';
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = 'Copied!';
+          setTimeout(() => (btn.textContent = 'Copy'), 2000);
+        });
+      });
+    });
+  }
+
+  // --- Image lightbox
+  function setupLightbox() {
+    const overlay = document.getElementById('lightboxOverlay');
+    const imgEl = document.getElementById('lightboxImage');
+    const closeBtn = document.getElementById('lightboxClose');
+    if (!overlay || !imgEl || !closeBtn) return;
+
+    document.querySelectorAll('.prose img, .cover-image img').forEach(img => {
+      img.addEventListener('click', () => {
+        imgEl.src = img.src;
+        overlay.classList.add('show');
+      });
+    });
+
+    const close = () => overlay.classList.remove('show');
+    overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+    closeBtn.addEventListener('click', close);
+  }
+
+  // --- Social share (anchors use their own href; handle copy button)
+  function setupSocialShare() {
+    const wrap = document.getElementById('socialShare');
+    if (!wrap) return;
+
+    wrap.addEventListener('click', (e) => {
+      const button = e.target.closest('button');
+      if (button?.dataset?.service === 'copy') {
+        e.preventDefault();
+        const url = `${location.origin}${location.pathname}${location.search}${location.hash}`;
+        navigator.clipboard.writeText(url).then(() => {
+          button.title = 'Copied!';
+          button.setAttribute('aria-label', 'Copied!');
+          setTimeout(() => {
+            button.title = 'Copy link';
+            button.setAttribute('aria-label', 'Copy link');
+          }, 2000);
+        });
+      }
+      // Note: <a> links keep default target=_blank behavior
+    });
+  }
 });
-
-
-

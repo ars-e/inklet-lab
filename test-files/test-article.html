@@ -1,0 +1,1278 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Article Template Preview — The Dispatch</title>
+  <meta name="description" content="This is the dek, or sub-heading, which provides a brief summary of the article's content.">
+  <meta name="generator" content="Eleventy">
+
+  <!-- Preconnects for font performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Type -->
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,700&family=Libre+Franklin:wght@400;600;800&family=Fira+Code:wght@400;600&family=Shrikhand&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+  <!-- KaTeX + Prism themes -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- 
+  ============================================
+  EMBEDDED CSS (from article.css)
+  ============================================
+  -->
+  <style>
+    /* --- [1] CORE STYLES --- */
+    :root {
+      --ink: #101011;
+      --ink-2: #3a3a3a;
+      --paper: #ffffff; /* Changed from beige */
+      --panel: #ffffff; /* Changed from white */
+      --rule: #0f0f10;
+      --accent: #0b4f6c;
+      --pop: #e7382b;
+      --pulp: #ffb703;
+      --civic: #2a66ff;
+      --noir: #111111;
+      --sci: #19c7d1;
+      --radius: 0px; /* Removed rounded corners */
+      --gap: 1.25rem;
+      --container: 1200px;
+    }
+
+    /* Removed noisy background body::after */
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: 'Libre Franklin', system-ui, -apple-system, sans-serif;
+      line-height: 1.55;
+      font-size: 16px;
+      position: relative;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .container {
+      width: min(100%, var(--container));
+      margin-inline: auto;
+      padding-inline: clamp(1rem, 4vw, 2rem);
+      position: relative;
+      z-index: 1;
+    }
+
+    .frame {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 2px solid var(--ink); /* Changed from pop color */
+      background: var(--paper); /* Removed blur/transparency */
+      backdrop-filter: none;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding-block: .6rem;
+    }
+
+    .brand {
+      font-family: 'Playfair Display', 'Source Serif 4', serif;
+      font-weight: 700;
+      letter-spacing: .5px;
+      font-size: 1.35rem;
+    }
+
+    .brand em {
+      font-family: 'Shrikhand', cursive;
+      font-style: normal;
+      font-weight: 400;
+      letter-spacing: .5px;
+    }
+
+    .nav ul {
+      list-style: none;
+      margin: 0 0 0 auto;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
+    .nav a {
+      padding: .45rem .7rem;
+      /* Removed border, radius, background */
+      font-weight: 600;
+      font-size: .9rem;
+      color: var(--ink-2);
+      transition: color .15s ease;
+    }
+
+    .nav a:hover {
+      /* Removed transform, shadow, background */
+      color: var(--ink);
+      text-decoration: underline;
+    }
+
+    .nav a[aria-current="page"] {
+      /* Removed border, shadow */
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    /* --- [2] ARTICLE STYLES --- */
+    .article-reader {
+      padding-block: clamp(1.5rem, 5vw, 3rem);
+    }
+
+    .article-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 1024px) {
+      .article-layout {
+         grid-template-columns: 240px 1fr;
+         gap: 3rem;
+      }
+    }
+
+    @media (min-width: 1300px) {
+      .article-layout {
+         /* Keep 2-col layout from 1024px */
+         grid-template-columns: 240px 1fr;
+         gap: 3rem;
+         /* And center it */
+         max-width: 1300px;
+         margin: 0 auto;
+      }
+    }
+
+    /* Article Header */
+    .article-header {
+      max-width: 75ch; /* Reset from 100ch */
+      margin-bottom: 2.5rem; /* Removed auto margins */
+      text-align: left;
+    }
+
+    .article-header .meta-info {
+      display: flex;
+      justify-content: flex-start; /* Centered style removed, kept left */
+      align-items: center;
+      gap: .75rem;
+      font-family: 'Fira Code', monospace;
+      font-size: .85rem;
+      color: var(--ink-2);
+      margin-bottom: 1rem;
+    }
+
+    .article-header .label {
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: .25rem .6rem;
+      border-radius: 999px; /* Kept radius for labels */
+      background: color-mix(in srgb, var(--civic) 12%, #fff 88%);
+      border: 1px solid color-mix(in srgb, var(--civic) 35%, #0000);
+      color: var(--civic);
+    }
+
+    .article-header .label.noir {
+      color: var(--noir);
+      background: color-mix(in srgb, var(--noir) 12%, #fff 88%);
+      border-color: color-mix(in srgb, var(--noir) 35%, #0000);
+    }
+    
+    .article-header .label.sci {
+      color: var(--sci);
+      background: color-mix(in srgb, var(--sci) 12%, #fff 88%);
+      border-color: color-mix(in srgb, var(--sci) 35%, #0000);
+    }
+
+    .article-title {
+      font-family: 'Playfair Display', serif; /* Changed font */
+      font-size: clamp(3rem, 8vw, 5rem); /* Made much larger */
+      line-height: 1.1;
+      font-weight: 700;
+      margin: 1rem 0; /* Adjusted margin */
+    }
+
+    .article-dek {
+      font-size: clamp(1.1rem, 3vw, 1.25rem);
+      color: var(--ink-2);
+      max-width: 65ch; /* Widened */
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* Cover Image */
+    .cover-image {
+      margin: 0 0 2rem 0;
+      width: 100%;
+    }
+
+    .cover-image img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-radius: var(--radius); /* Sharp corners */
+      border: 1px solid #0000001a;
+      box-shadow: 0 8px 18px #00000010;
+      cursor: zoom-in;
+    }
+
+    /* Main Prose Body */
+    .prose {
+      /* Removed background, panel padding, border, radius, shadow, ::before */
+      padding: 2rem 0;
+      position: relative;
+    }
+    
+    /* Multi-column layout for prose - REMOVED */
+    /* @media (min-width: 768px) {
+      .prose {
+        column-count: 2;
+        column-gap: 2.5rem;
+      }
+    } */
+    
+    /* Ensure block elements span columns - REMOVED */
+    /* .prose h2,
+    .prose h3,
+    .prose blockquote,
+    .prose figure,
+    .prose pre,
+    .prose .katex-display {
+      column-span: all;
+    } */
+    
+    /* Drop Cap for first paragraph */
+    .prose > p:first-of-type::first-letter {
+      font-family: 'Playfair Display', serif;
+      font-size: 4.5rem;
+      float: left;
+      line-height: 0.8;
+      padding-right: 0.5rem;
+      margin-top: 0.25rem;
+      font-weight: 700;
+    }
+
+    .prose > :first-child {
+      margin-top: 0;
+    }
+
+    .prose > :last-child {
+      margin-bottom: 0;
+    }
+
+    .prose p,
+    .prose li {
+      font-family: 'Source Serif 4', serif;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+    }
+
+    .prose h2 {
+      font-family: 'Playfair Display', serif; /* Match title font */
+      font-size: 1.8rem;
+      margin: 3rem 0 1.5rem; /* Adjusted margin */
+      border-bottom: 2px solid var(--ink); /* Stronger border */
+      padding-bottom: .5rem;
+      text-align: center; /* Centered heading */
+    }
+
+    .prose h3 {
+      font-family: 'Source Serif 4', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 2.5rem 0 1rem;
+      line-height: 1.2;
+    }
+
+    .prose h4 {
+      font-family: 'Libre Franklin', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 2rem 0 0.75rem;
+    }
+
+    .prose h5 {
+      font-family: 'Libre Franklin', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      font-style: italic;
+      margin: 1.5rem 0 0.5rem;
+      color: var(--ink-2);
+    }
+
+    .prose a {
+      text-decoration: underline;
+      text-decoration-color: var(--pop);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 2px;
+      transition: background .2s ease;
+    }
+
+    .prose a:hover {
+      background: color-mix(in srgb, var(--pulp) 25%, transparent);
+    }
+
+    .prose blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 5px solid var(--civic);
+      background: color-mix(in srgb, var(--paper) 40%, transparent);
+      font-style: italic;
+      font-size: 1.15rem;
+      box-shadow: 4px 4px 0 #0000000a;
+    }
+
+    .prose figure.wide {
+      max-width: 90ch;
+      margin: 2.5rem auto;
+      width: calc(100% + 8rem);
+      transform: translateX(-4rem);
+    }
+
+    .prose figcaption {
+      text-align: center;
+      font-size: .9rem;
+      color: var(--ink-2);
+      margin-top: .5rem;
+      font-family: 'Libre Franklin', sans-serif;
+    }
+
+    .prose img {
+      border-radius: var(--radius); /* Sharp corners */
+      border: 1px solid #0000001a;
+      box-shadow: 0 8px 18px #00000010;
+      cursor: zoom-in;
+    }
+
+    .prose pre[class*="language-"] {
+      margin: 1.5rem 0;
+      border-radius: var(--radius); /* Sharp corners */
+      border: 1px solid #00000022;
+      font-size: .95rem;
+    }
+
+    .prose .katex-display {
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: .5rem 0;
+    }
+
+    /* --- [3] TOC --- */
+    .toc-container {
+      position: sticky;
+      top: 80px; /* Adjusted for new header */
+      align-self: start;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      display: none;
+    }
+
+    @media (min-width: 1024px) {
+      .toc-container {
+        display: block; /* Re-enable ToC */
+      }
+    }
+
+    .toc-heading {
+      font-family: 'Fira Code', monospace;
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin: 0 0 1rem;
+    }
+
+    .toc-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-left: 1px solid #0000001a; /* Thinner */
+    }
+
+    .toc-link a {
+      display: block;
+      padding: .4rem 1rem;
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--ink-2);
+      transition: all .2s ease;
+      border-left: 1px solid transparent; /* Thinner */
+      margin-left: -1px; /* Adjust for thinner border */
+    }
+
+    .toc-link a:hover {
+      background: #00000008;
+      color: var(--ink);
+    }
+
+    .toc-link.active a {
+      color: var(--pop); /* Use pop color */
+      background: transparent; /* Remove background */
+      border-left-color: var(--pop); /* Use pop color */
+    }
+
+    /* --- [4] Reading Progress Bar --- */
+    .progress-container {
+      width: 100%;
+      height: 2px; /* Thinner */
+      background: transparent;
+      position: absolute;
+      bottom: -2px; /* Adjust for new border */
+      left: 0;
+    }
+
+    .progress-bar {
+      height: 2px; /* Thinner */
+      background: var(--pop); /* Use pop color */
+      width: 0%;
+    }
+
+    /* --- [5] Copy Code Button --- */
+    .prose pre[class*="language-"] {
+      position: relative;
+    }
+
+    .copy-code-button {
+      position: absolute;
+      top: .8rem;
+      right: .8rem;
+      padding: .3rem .6rem;
+      font-family: 'Fira Code', monospace;
+      font-size: .75rem;
+      font-weight: 600;
+      color: #fff;
+      background: #ffffff22;
+      border: 1px solid #ffffff33;
+      border-radius: 4px; /* Small radius for button */
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity .2s ease;
+    }
+
+    .prose pre[class*="language-"]:hover .copy-code-button {
+      opacity: 1;
+    }
+
+    /* --- [6] Image Lightbox --- */
+    .lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(16, 16, 17, 0.9);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .3s ease, visibility .3s ease;
+    }
+
+    .lightbox-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .lightbox-content {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+    }
+
+    .lightbox-content img {
+      border-radius: var(--radius); /* Sharp corners */
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      width: 32px;
+      height: 32px;
+      background: #fff;
+      color: var(--ink);
+      border: none;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      line-height: 32px;
+      cursor: pointer;
+    }
+
+    /* --- [7] Social Share --- */
+    /* Back link style */
+    .back-link {
+      display: block; /* Changed from inline-block */
+      font-family: 'Fira Code', monospace;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--ink-2);
+      text-decoration: none;
+      padding: .4rem .8rem;
+      border: 1px solid #0000001a;
+      border-radius: 4px;
+      transition: background .2s ease, color .2s ease, border-color .2s ease;
+      margin-bottom: 1.5rem; /* Changed from margin: 0 0 1.5rem 0; */
+    }
+    .back-link:hover {
+      background: #0000000a;
+      color: var(--ink);
+      border-color: #00000033;
+    }
+
+    .social-share {
+      margin-top: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      font-family: 'Libre Franklin', sans-serif;
+      font-weight: 600;
+      color: var(--ink-2);
+      border-top: 1px solid #0000001a;
+      padding-top: 1.5rem;
+    }
+
+    .social-share a,
+    .social-share button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 36px;
+      height: 36px;
+      background: #0000000a;
+      border-radius: 50%;
+      transition: background .2s ease, transform .2s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .social-share a:hover,
+    .social-share button:hover {
+      background: #00000014;
+      transform: translateY(-2px);
+    }
+
+    .social-share svg {
+      width: 18px;
+      height: 18px;
+      fill: var(--ink-2);
+    }
+
+    /* --- [8] Related Articles --- */
+    .related-articles-section {
+      padding-block: clamp(2rem, 6vw, 4rem);
+      margin-top: 2rem;
+      border-top: 1px dashed #00000026;
+      /* Removed background */
+    }
+
+    .related-articles-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      text-align: center;
+      margin: 0 auto 2rem;
+      max-width: 600px;
+      border-bottom: 2px solid #00000018;
+      padding-bottom: .5rem;
+    }
+
+    .related-articles-section .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .related-articles-section .card {
+      background: var(--panel);
+      border: 1px solid #00000022;
+      border-radius: var(--radius); /* Sharp corners */
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      /* Removed shadow */
+      transition: background .22s ease;
+    }
+
+    .related-articles-section .card:hover {
+      transform: none; /* Removed transform */
+      box-shadow: none; /* Removed shadow */
+      background: #00000005; /* Simple hover */
+    }
+
+    .related-articles-section .card .thumb {
+      aspect-ratio: 16/9;
+      border-bottom: 1px solid #00000018;
+      background-color: #f2eadb;
+      background-position: center;
+      background-size: cover;
+    }
+
+    .related-articles-section .card .body {
+      padding: 1rem 1rem 1.1rem;
+    }
+
+    .related-articles-section .card .label {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .75rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+D     .related-articles-section .card h3 {
+      font: 700 1.1rem/1.2 'Source Serif 4', serif;
+      margin: .45rem 0 .25rem;
+    }
+
+    .related-articles-section .card .meta {
+      color: var(--ink-2);
+      font-size: .9rem;
+    }
+
+    .related-articles-section .card .label.opinion {
+      color: #8f3d00;
+    }
+
+    .related-articles-section .card .label.noir {
+      color: var(--noir);
+    }
+
+    .related-articles-section .card .label.sci {
+      color: var(--sci);
+    }
+
+    /* --- [9] Sidenotes/Footnotes --- */
+    .prose .footnote-ref {
+      display: inline-block;
+      margin-left: .1em;
+      padding: 0 .2em;
+      font-size: .8em;
+      line-height: 1;
+      vertical-align: super;
+      text-decoration: none;
+      color: var(--civic);
+      border: 1px solid var(--civic);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .footnote-ref.active,
+    .footnote-ref:hover {
+      background: color-mix(in srgb, var(--civic) 15%, transparent);
+    }
+
+    .prose .footnotes {
+      /* Now we show the footnotes at the bottom */
+      display: block; 
+      /* column-span: all; */ /* REMOVED */
+      font-size: 0.9rem;
+      color: var(--ink-2);
+      border-top: 1px solid #0000001a;
+      margin-top: 2rem;
+      padding-top: 1rem;
+    }
+    .prose .footnotes ol {
+      padding-left: 1.5rem;
+    }
+    .prose .footnotes li {
+      font-family: 'Libre Franklin', sans-serif;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Hide the original list */
+    .sidenotes-container {
+      display: none; /* Hide Sidenotes */
+    }
+
+    @media (min-width: 1300px) {
+      .sidenotes-container {
+        display: none; /* Hide Sidenotes */
+      }
+
+      .sidenote {
+        /* Styles are irrelevant, but kept for posterity */
+        font-size: .9rem;
+        line-height: 1.5;
+        color: var(--ink-2);
+        padding: .75rem;
+        background: color-mix(in srgb, var(--paper) 50%, transparent);
+        border: 1px solid #0000001a;
+        border-radius: 4px; /* Small radius */
+        position: absolute;
+        width: 100%;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity .3s, transform .3s;
+        transform: translateY(10px);
+      }
+
+D       .sidenote.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+    }
+
+    /* --- [10] RE-USED & RESPONSIVE --- */
+    footer {
+      padding: 2.2rem 1rem 4rem;
+      color: var(--ink-2);
+      border-top: 1px dashed #00000026;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+
+    .build-meta {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+    }
+
+    #toTop {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 60;
+      width: 42px;
+      height: 42px;
+      border-radius: 4px; /* Small radius */
+      border: 1px solid #0002;
+      background: #fff;
+      box-shadow: 0 10px 22px rgba(0, 0, 0, .15);
+      font-weight: 900;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    #toTop.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      .prose figure.wide {
+        width: 100%;
+        transform: translateX(0);
+      }
+
+      .prose {
+        padding: clamp(1rem, 4vw, 2rem);
+        column-count: 1; /* Single column on mobile */
+      }
+      
+      .prose > p:first-of-type::first-letter {
+        font-size: 4rem; /* Slightly smaller drop-cap on mobile */
+      }
+
+      .nav ul {
+        display: none;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- <a class="skip-link" href="#main">Skip to content</a> --> <!-- REMOVED -->
+
+  <header class="frame">
+    <nav class="container nav" aria-label="Primary">
+      <div class="brand" aria-label="Inklet Lab">Inklet <em>Lab</em></div>
+      <ul class="nav-list">
+        <li><a href="#">Front Page</a></li>
+        <li><a href="#" aria-current="page">The Dispatch</a></li>
+        <li><a href="#">Peti</a></li>
+        <li><a href="#">The Balcony</a></li>
+        <li><a href="#">Etcetera</a></li>
+      </ul>
+    </nav>
+    <div class="progress-container" aria-hidden="true">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </header>
+
+  <main id="main" class="article-reader" tabindex="-1">
+    <div class="container">
+      <div class="article-layout">
+        <!-- Table of contents -->
+        <aside class="toc-container">
+          <!-- Back to Dispatch Link -->
+          <a href="#" class="back-link">← Go back to The Dispatch</a>
+          
+          <h2 class="toc-heading">On this page</h2>
+          <ul id="toc-links" class="toc-links"></ul>
+        </aside>
+
+        <!-- Article -->
+        <article class="article">
+          <!-- Back to Dispatch Link MOVED -->
+          
+          <header class="article-header">
+            <!-- MOVED META-INFO ABOVE COVER IMAGE -->
+            <div class="meta-info">
+              <span class="label noir">Noir</span>
+              <span class="meta-dot">Oct 25, 2025 · 5 min read</span>
+            </div>
+            
+            <figure class="cover-image">
+              <img src="https://placehold.co/1600x900/eeeeee/101011?text=Cover+Image" alt="Placeholder cover image" loading="lazy" decoding="async">
+            </figure>
+
+            <h1 class="article-title">A Placeholder Article Title</h1>
+            <p class="article-dek">This is the dek, or sub-heading, which provides a brief summary of the article's content.</p>
+
+            <!-- Social share -->
+            <div class="social-share" id="socialShare" aria-label="Share this article">
+              <span class="share-label">Share:</span>
+              <a href="https://twitter.com/intent/tweet?url=https://example.com/article-url&text=A%20Placeholder%20Article%20Title" target="_blank" rel="noopener" aria-label="Share on X (Twitter)" title="Share on X (Twitter)">
+                <svg viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zM17.083 19.77h1.833L7.084 4.126H5.117z"></path>
+                </svg>
+              </a>
+              <a href="https://www.facebook.com/sharer/sharer.php?u=https://example.com/article-url" target="_blank" rel="noopener" aria-label="Share on Facebook" title="Share on Facebook">
+                <svg viewBox="0 0 24 24">
+                  <path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4z"></path>
+                </svg>
+              </a>
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://example.com/article-url&title=A%20Placeholder%20Article%20Title" target="_blank" rel="noopener" aria-label="Share on LinkedIn" title="Share on LinkedIn">
+                <svg viewBox="0 0 24 24">
+                  <path d="M6.5 21.5h-5v-13h5v13zM4 6.5C2.5 6.5 1.5 5.5 1.5 4s1-2.5 2.5-2.5c1.5 0 2.5 1 2.5 2.5s-1 2.5-2.5 2.5zm11.5 6c-1 0-2 1-2 2v7h-5v-13h5V10s1.6-1.5 4-1.5c3 0 5 2.2 5 6.3v6.7h-5v-7c0-1-1-2-2-2z"></path>
+                </svg>
+              </a>
+              <button class="share-copy" data-service="copy" type="button" aria-label="Copy link" title="Copy link">
+                <svg viewBox="0 0 24 24">
+                  <path d="M8 12.1c0-.4.3-.8.8-.8s.8.3.8.8c0 .4-.3.8-.8.8s-.8-.4-.8-.8zm4.5 0c0-.4.3-.8.8-.8s.8.3.8.8c0 .4-.3.8-.8.8s-.8-.4-.8-.8zm3.7 0c0-.4.3-.8.8-.8s.8.3.8.8c0 .4-.3.8-.8.8s-.8-.4-.8-.8zM21 4H3C2 4 1 5 1 6v13c0 1.1.9 2 2 2h18c1 0 2-1 2-2V6c0-1-1-2-2-2zM8 20H4V7h4v13zm6 0h-4V7h4v13zm6 0h-4V7h4v13z"></path>
+                </svg>
+              </button>
+            </div>
+          </header>
+
+          <!-- 
+          ============================================
+          SAMPLE ARTICLE CONTENT
+          ============================================
+          -->
+          <div class="prose">
+            <p>This is a paragraph of placeholder text. It uses the 'Source Serif 4' font, which is defined in the CSS. It's designed to be readable and elegant. Links, <a href="#">like this one</a>, are clearly underlined with a distinctive color.</p>
+            
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam scelerisque leo nec massa vehicula,
+              sit amet luctus tellus placerat. Cras velte mi, in tincidunt felis. Nulla facilisi. Vestibulum ante ipsum
+              primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec at mauris sit amet nibh.
+              <a class="footnote-ref" href="#fn:1" id="fnref:1">1</a>
+            </p>
+
+            <h2 id="a-section-heading">A Section Heading</h2>
+            <p>This `h2` heading will appear in the "On this page" table of contents. The JavaScript targets `h2` elements within the `.prose` container to build the TOC dynamically. Scroll the page to see the active link update in the TOC.</p>
+            
+            <ul>
+              <li>Here is a list item.</li>
+              <li>Another list item for demonstration.</li>
+              <li>And a third one, just in case.</li>
+            </ul>
+
+            <blockquote>
+              "This is a blockquote. It's styled with a border and a slightly different background to make it stand out from the main text. It's great for pulling out key quotes."
+            </blockquote>
+
+            <h3>This is an H3 Sub-heading</h3>
+            <p>This paragraph follows an H3. It uses the 'Source Serif 4' font, just like the heading above it, creating a consistent text style.</p>
+
+            <h4>This is an H4 Sub-sub-heading</h4>
+            <p>This paragraph follows an H4. The H4 uses the 'Libre Franklin' font for contrast, making it feel more like a structural separator.</p>
+
+            <h5>This is an H5 Sub-sub-sub-heading</h5>
+            <p>This paragraph follows an H5, which is styled to be more subtle, for minor callouts or tertiary-level headings.</p>
+
+            <h2 id="code-and-math">Code and Math</h2>
+            <p>The template includes styles for code blocks and KaTeX math rendering. Here is a JavaScript code block with Prism highlighting:</p>
+
+            <pre><code class="language-js">function helloWorld() {
+  console.log("Hello, world!");
+}</code></pre>
+
+            <p>And here is an example of inline math: $E=mc^2$. Below is a display math block, rendered by KaTeX:</p>
+
+            $$\int_a^b f(x) \, dx = F(b) - F(a)$$
+
+            <p>Here is another paragraph to add some spacing.<a class="footnote-ref" href="#fn:2" id="fnref:2">2</a> Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Donec id elit non mi porta gravida at eget metus. </p>
+
+            <!-- This is the hidden footnote content that the JS will use -->
+            <div class="footnotes">
+              <hr>
+              <ol>
+                <li id="fn:1">
+                  <p>This is the first footnote. The JavaScript will grab this content and display it as a sidenote on wider screens.&nbsp;<a href="#fnref:1" class="footnote-backref">↩︎</a></p>
+                </li>
+                <li id="fn:2">
+                  <p>This is the second footnote, demonstrating how multiple notes work.&nbsp;<a href="#fnref:2" class="footnote-backref">↩︎</a></p>
+                </li>
+              </ol>
+            </div>
+
+          </div>
+        </article>
+
+        <!-- Sidenotes -->
+        <aside class="sidenotes-container" id="sidenotesContainer" aria-label="Sidenotes"></aside>
+      </div>
+    </div>
+  </main>
+
+  <!-- Further reading -->
+  <section class="related-articles-section" aria-labelledby="related-heading">
+    <div class="container">
+      <h2 id="related-heading">Further reading</h2>
+      <div class="grid">
+        <!-- Static placeholder for related post 1 -->
+        <a class="card" href="#" aria-label="Another Interesting Article">
+          <div class="thumb" style="background-image:url('https://placehold.co/400x225/eeeeee/101011?text=Related')"></div>
+          <div class="body">
+            <span class="label sci">
+              <span class="dot" aria-hidden="true"></span> Sci
+            </span>
+            <h3 class="card-title">Another Interesting Article</h3>
+            <div class="meta">
+              4 min read · A short description of the related content.
+            </div>
+          </div>
+        </a>
+        <!-- Static placeholder for related post 2 -->
+        <a class="card" href="#" aria-label="A Third Piece to Consider">
+          <div class="thumb" style="background-image:url('https://placehold.co/400x225/eeeeee/101011?text=Related+2')"></div>
+          <div class="body">
+            <span class="label noir">
+              <span class="dot" aria-hidden="true"></span> Noir
+            </span>
+            <h3 class="card-title">A Third Piece to Consider</h3>
+            <div class="meta">
+              7 min read · More details about another fascinating topic.
+            </div>
+          </div>
+        </a>
+        <!-- Static placeholder for related post 3 -->
+        <a class="card" href="#" aria-label="Exploring New Ideas">
+          <div class="thumb" style="background-image:url('https://placehold.co/400x225/eeeeee/101011?text=Related+3')"></div>
+          <div class="body">
+            <span class="label">
+              <span class="dot" aria-hidden="true"></span> Etc
+            </span>
+            <h3 class="card-title">Exploring New Ideas</h3>
+            <div class="meta">
+              6 min read · This one is different from the others.
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>© <span id="y"></span> Inklet Lab · The Dispatch</div>
+      <div class="build-meta">v0.8 • modular</div>
+    </div>
+  </footer>
+
+  <button id="toTop" class="to-top" type="button" aria-label="Back to top">↑</button>
+
+  <!-- Lightbox -->
+  <div class="lightbox-overlay" id="lightboxOverlay" hidden>
+    <div class="lightbox-content" role="dialog" aria-modal="true" aria-label="Image preview">
+      <img src="" alt="" id="lightboxImage" loading="eager">
+      <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close">&times;</button>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <!-- 
+  ============================================
+  EMBEDDED JS (from article.js)
+  ============================================
+  -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // --- Initialize Features ---
+      if (typeof renderMathInElement === 'function') {
+        renderMathInElement(document.body, {
+          delimiters: [{
+            left: '$$',
+            right: '$$',
+            display: true
+          }, {
+            left: '$',
+            right: '$',
+            display: false
+          }]
+        });
+      }
+
+      // setupUI(); // This function only set the year, which is done by the inline script below.
+      setupInteractions();
+
+      /* This function was in article.js, but the template also has an inline script
+        for the year. I've kept the inline script from the template.
+      */
+      // function setupUI() {
+      //   // Set Footer Year
+      //   const yearSpan = document.getElementById('y');
+      //   if (yearSpan) {
+      //     yearSpan.textContent = new Date().getFullYear();
+      //   }
+      // }
+
+      function setupInteractions() {
+        // Back to top button
+        const toTop = document.getElementById('toTop');
+        if (toTop) {
+          window.addEventListener('scroll', () => toTop.classList.toggle('show', window.scrollY > 600));
+          toTop.addEventListener('click', () => window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          }));
+        }
+
+        // Reading Progress Bar
+        const progressBar = document.getElementById('progressBar');
+        if (progressBar) {
+          window.addEventListener('scroll', () => {
+            const totalHeight = document.body.scrollHeight - window.innerHeight;
+            progressBar.style.width = `${(window.scrollY / totalHeight) * 100}%`;
+          });
+        }
+
+        // TOC & Sidenotes setup
+        setupTOCAndSidenotes();
+
+        // Copy Code Buttons
+        document.querySelectorAll('.prose pre').forEach(pre => {
+          const button = document.createElement('button');
+          button.className = 'copy-code-button';
+          button.textContent = 'Copy';
+          pre.appendChild(button);
+          button.addEventListener('click', () => {
+            const code = pre.querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+              button.textContent = 'Copied!';
+              setTimeout(() => button.textContent = 'Copy', 2000);
+            });
+          });
+        });
+
+        // Image Lightbox
+        const lightboxOverlay = document.getElementById('lightboxOverlay');
+        const lightboxImage = document.getElementById('lightboxImage');
+        const lightboxClose = document.getElementById('lightboxClose');
+        if (lightboxOverlay && lightboxImage && lightboxClose) {
+          document.querySelectorAll('.prose img, .cover-image img').forEach(img => {
+            img.addEventListener('click', () => {
+              lightboxImage.src = img.src;
+              lightboxOverlay.classList.add('show');
+            });
+          });
+          const closeLightbox = () => lightboxOverlay.classList.remove('show');
+          lightboxOverlay.addEventListener('click', e => {
+            if (e.target === lightboxOverlay) closeLightbox();
+          });
+          lightboxClose.addEventListener('click', closeLightbox);
+        }
+
+        // Social Sharing
+        setupSocialShare();
+      }
+
+      function setupTOCAndSidenotes() {
+        const tocContainer = document.getElementById('toc-links');
+        const headings = Array.from(document.querySelectorAll('.prose h2'));
+        const sidenotesContainer = document.getElementById('sidenotesContainer');
+        const footnoteRefs = document.querySelectorAll('.footnote-ref');
+
+        // TOC Logic
+        if (tocContainer && headings.length) {
+          headings.forEach(h => {
+            if (!h.id) h.id = h.textContent.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+            const a = document.createElement('a');
+            a.textContent = h.textContent;
+            a.href = `#${h.id}`;
+            const li = document.createElement('li');
+            li.className = 'toc-link';
+            li.appendChild(a);
+            tocContainer.appendChild(li);
+          });
+
+          const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+              const link = tocContainer.querySelector(`a[href="#${entry.target.id}"]`);
+              if (link && entry.isIntersecting) {
+                tocContainer.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
+                link.parentElement.classList.add('active');
+              }
+            });
+          }, {
+            rootMargin: '-30% 0px -60% 0px',
+            threshold: 0.7
+          });
+          headings.forEach(h => observer.observe(h));
+        }
+
+        // Sidenotes Logic
+        if (footnoteRefs.length > 0 && sidenotesContainer) {
+          // Since the sidenotes container is hidden, this logic
+          // will still run but not display anything, which is fine.
+          // The footnote-refs will just be regular links.
+          footnoteRefs.forEach(refLink => {
+            const noteId = refLink.getAttribute('href').substring(1);
+            const noteContent = document.getElementById(noteId);
+            if (noteContent) {
+              const sidenote = document.createElement('div');
+              sidenote.id = `sidenote-${noteId.split(':')[1]}`;
+              sidenote.className = 'sidenote';
+              sidenote.innerHTML = noteContent.innerHTML;
+              sidenote.querySelector('.footnote-backref')?.remove();
+              sidenotesContainer.appendChild(sidenote);
+
+              refLink.addEventListener('click', (e) => {
+                // We let the default link behavior happen
+                // e.preventDefault(); 
+                
+                // But we can still highlight the footnote
+                const isActive = refLink.classList.contains('active');
+                document.querySelectorAll('.footnote-ref').forEach(r => r.classList.remove('active'));
+                if (!isActive) {
+                  refLink.classList.add('active');
+                }
+                
+                // Sidenote logic removed
+                // const isActive = refLink.classList.contains('active');
+                // // Deactivate all others
+                // document.querySelectorAll('.footnote-ref').forEach(r => r.classList.remove('active'));
+                // document.querySelectorAll('.sidenote').forEach(s => s.classList.remove('active'));
+                // // Activate the clicked one if it wasn't already active
+                // if (!isActive) {
+                //   refLink.classList.add('active');
+                //   sidenote.classList.add('active');
+                // }
+              });
+            }
+          });
+        }
+      }
+
+      function setupSocialShare() {
+        // This logic was in article.js but the Nunjucks template had *different* logic.
+        // The Nunjucks inline-script logic is simpler and uses the `data-service` attribute
+        // on the button, which the JS version doesn't.
+        // I'll use the logic from the JS file as it's more robust and handles all buttons.
+        const socialShare = document.getElementById('socialShare');
+        if (socialShare) {
+          socialShare.addEventListener('click', function(e) {
+            // Find the closest link OR button
+            const interactiveElement = e.target.closest('a') || e.target.closest('button');
+            if (!interactiveElement) return;
+            
+            e.preventDefault();
+            
+            const service = interactiveElement.dataset.service;
+            const url = "https://example.com/article-url"; // Hardcoded from template
+            const title = document.title;
+            let shareUrl = '';
+
+            if (interactiveElement.tagName === 'A') {
+              // It's a social link (Twitter, Facebook, LinkedIn)
+              shareUrl = interactiveElement.href; // Use the pre-built href
+            } else if (service === 'copy') {
+              // It's the copy button
+              navigator.clipboard.writeText(url).then(() => {
+                if (!interactiveElement.dataset.originalTitle) {
+                  interactiveElement.dataset.originalTitle = interactiveElement.title;
+                }
+                interactiveElement.title = 'Copied!';
+                interactiveElement.setAttribute('aria-label', 'Copied!');
+                setTimeout(() => {
+                  interactiveElement.title = interactiveElement.dataset.originalTitle;
+                  interactiveElement.setAttribute('aria-label', interactiveElement.dataset.originalTitle);
+                }, 2000);
+              });
+              return;
+            }
+
+            if (shareUrl) {
+              window.open(shareUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
+            }
+          });
+        }
+      }
+    });
+  </script>
+
+  <!-- 
+  ============================================
+  INLINE SCRIPT (from template)
+  ============================================
+  -->
+  <script>
+    // Year
+    document.getElementById('y').textContent = new Date().getFullYear();
+    
+    // Share copy from template - This is now handled by setupSocialShare() in the main JS block above.
+    // document.querySelector('.share-copy')?.addEventListener('click', async () => {
+    //   try {
+    //     await navigator.clipboard.writeText('https://example.com/article-url');
+    //   } catch(e){ console.warn('Copy failed', e); }
+    // });
+  </script>
+</body>
+
+</html>
+
+
+
+
+

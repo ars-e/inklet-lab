@@ -8,6 +8,8 @@ read_time: "12 min read"
 cover_image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop"
 cover_image_alt: "A team working together at a desk with laptops and papers"
 tags: ["posts"]
+backLinkUrl: /the-dispatch/
+backLinkLabel: "Go back to The Dispatch"
 ---
 
 This is the opening paragraph. It sets the stage for the entire piece. Good prose is about clarity, rhythm, and flow. The goal is to make reading effortless, even when the topic is dense.

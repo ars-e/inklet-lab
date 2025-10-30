@@ -39,3 +39,4 @@ body{
 main section{ content-visibility:auto; contain-intrinsic-size:800px }
 /* Thought ticker pause for motion sensitive */
 @media (prefers-reduced-motion: reduce){ #thought-ticker{ animation:none } }
+

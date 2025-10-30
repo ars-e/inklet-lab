@@ -1,3 +1,6 @@
+---
+layout: false
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,8 +15,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="/css/the-point.css">
 
+  <!-- External CSS -->
+  <link rel="stylesheet" href="/css/the-point.css" />
 </head>
 
 <body class="antialiased custom-cursor-active">
@@ -111,50 +115,14 @@
           <p>Born and raised in <strong>Hyderabad</strong>, shaped significantly by my years in <strong>Delhi</strong>.</p>
 
           <div class="text-center mt-20 mb-12">
-            <h3 class="text-3xl brand-font tracking-wider">(The longer version)</h3>
-            <p class="mt-1 text-gray-600 italic">Est. 7 min read</p>
+            <button id="open-bio-modal" class="focus:outline-none focus:ring-2 focus:ring-red-500 rounded-md">
+              <h3 class="text-3xl brand-font tracking-wider">(The longer version)</h3>
+              <p class="mt-1 text-gray-600 italic">Est. 7 min read</p>
+            </button>
           </div>
 
-          <div id="full-bio-content" class="bio-collapsed" aria-live="polite">
-            <!-- <h3 class="text-2xl brand-font mb-4 tracking-wider">The 10-Second Snapshot</h3> -->
-            <p>My story was supposed to follow a familiar script: excel in school, pursue engineering, and settle into a linear, predictable career. For a while, I followed it without a second thought.</p>
+          <!-- The long bio content is now in the modal at the end of the body -->
 
-            <h3 class="text-2xl brand-font mt-16 mb-4 tracking-wider">Going off Script</h3>
-            <p>However, my first taste of life away from home, at a college that decided to experiment by teaching social sciences alongside engineering, began to offer an alternative script.</p>
-            <p>I was surrounded by people with ambitions, a concept so new to me I hadn't realized it was something a person could have, let alone be nurtured.. I had brilliant professors whose ways of thinking and teaching, subconsciously and profoundly, impacted how I learned and studied. Suddenly, I also had access to the wider world of ideas through the internet which, though only sometimes high-speed, was a significant upgrade from what I had back home. My world cracked open, granting me access to ideas, knowledge, and tools I never had before.  </p>
-            <p>While I had a natural grasp of code and a mind that bent toward mathematics, I felt a growing disconnect. I can't pinpoint a specific moment, but something shifted in me during those four years of college. The 'why' behind the 'what' became more compelling. I wanted to understand the human side of systems: why societies function as they do, how choices are made, and what connects individual decisions to collective outcomes.</p>
-            <p>Here, I made my first major detour from the script. I chose to prepare for the Indian Civil Services, seeing it, at that time, as the most direct way to work on the complex, human-centered problems I was becoming so aware of.</p>
-
-            <h3 class="text-2xl brand-font mt-16 mb-4 tracking-wider">Formative years</h3>
-            <p>Until this point, like most, the only major learning I had was that exceptional grades and a top job placement were the only paths to a desirable life. I was deemed ready for the world basis my age and intellect.<p>
-            <p>I had no practice in dealing with the consequences of my decisions in relation to major life choices and very little time or space to really get to know myself - no real clarity on what it is that will give me true meaning and fulfilment; something that is generally learned through trial and error, but I had been shielded from it.</p>
-            <p>So when I decided to prepare for the Indian Civil Services, it was, if I’m honest, an act of both naivety and arrogance. I had never really “failed” before, and perhaps because of that, I carried no conscious fear of failure. I didn’t know what the preparation entailed, had never met anyone who had gone through it, didn’t even know where to begin. Yet I leapt in anyway, moving to Delhi with little more than conviction. It was like plunging into the sea to catch fish without knowing the waters, the nets, or even what I was chasing.</p>
-            <p>To capture the experience fully would take pages. To keep it short: the first year was mind-numbing, spent learning the terrain, understanding the vast syllabus, and figuring out how to navigate a world that seemed to sprawl endlessly. The years that followed were intense. The pandemic arrived in the middle of it all, magnifying the uncertainty, the isolation, and the sheer emotional weight of the journey. But those years, demanding and often overwhelming, shaped me in ways no linear career path could have. </p>
-            <p>Like college, the new city brought new people, ideas, and knowledge, expanding my world in a completely different direction. It was a plunge into a different kind of depth, one that nurtured a restless, almost “polymath-ish” curiosity.</p>
-            <p>This was when I had to live with the consequences of my choices, confront crises of different magnitudes, and most importantly,fail. I failed many times, often alone. But in those failures, I learned resilience, self-knowledge, and the slow, painful craft of rebuilding piece by piece.</p>
-
-            <h3 class="text-2xl brand-font mt-16 mb-4 tracking-wider">The Economic(s) Choice </h3>
-            <p>Along the way, economics took hold. It felt natural, a language that spoke to both sides of my mind by providing a rigorous, mathematical framework to make sense of the messy realities of human behavior. It was the bridge I hadn't known I was looking for.</p>
-            <p>I decided to pursue a Master’s in Economics, carrying with me the discipline of an engineer and the breadth of a social science generalist.</p>
-            <p>Those two years not only equipped me with new tools to study the world and the self, but also gave me the space to return to coding in a serious way. I began to see how the technical and the human could inform each other, rather than exist apart.</p>
-            <p>Looking back, this did more than expand my intellectual toolkit; it gave me the confidence to step into the job market with perspective, and a profile that felt not just employable, but whole.</p>
-
-    
-            <h3 class="text-2xl brand-font mt-16 mb-4 tracking-wider">Stories &amp; Chaos</h3>
-            <p>Growing up without a TV at home, my daily escape was reading anything and everything I could get my hands on. That habit gave me a lifelong love of narrative. To make up for the missing screen, my parents took me to the movies almost every weekend, and those trips only deepened my fascination with stories. Books, films, comics, art; all of them showed me that meaning could be built from fragments, that narrative was a way to bring order to chaos.</p>
-            <p>For a long time, I thought I lacked creativity because I couldn’t draw or compose music. But slowly I realized creativity wasn’t about magical talent, it was about what stories had already taught me: collecting raw material and finding patterns in it. The more diverse the inputs, the more connections I could make. My creativity lives in asking simple, story-like questions: what if this idea belonged in that plot? what happens if I place this character in that setting? In other words, mixing ideas until a new narrative emerges.</p>
-            <p>Curiosity and idea-stacking, though, aren’t enough on their own. The hardest part is beginning; pulling a single thread from the chaos and following it until it takes shape. That act of starting is what stories, creativity, and chaos have in common: they all demand trust that the puzzle will eventually make sense. And in that process, I’ve learned that analysis and creativity aren’t opposites. They’re both ways of shaping disorder into meaning, both powered by curiosity and play. Even the most serious work, I’ve found, has space for a little imagination.</p>
-
-            <h3 class="text-2xl brand-font mt-16 mb-4 tracking-wider">Now &amp; Ahead</h3>
-            <p>Now, I find myself at another turning point. I no longer see service as tied to a single channel, like the civil services I once pursued, but as something that can take many forms. Building, solving, and contributing can happen across research, startups, or organisations that value problem-solving and the ability to connect dots.</p>
-            <p>What matters to me now is that the work is concrete, challenging, and meaningful. The venue for creating value may change, but the core mission remains the same: to apply thoughtful solutions to human needs.</p>
-            <p>That, I’ve come to realize, is the point of me so far. Not a straight line but a roundabout path, one that keeps accumulating skills, perspectives, and stories that shape the person writing this now, and the one still becoming.</p>
-
-          </div>
-
-          <button id="read-more-btn" class="brand-font text-lg tracking-wider mt-6" aria-controls="full-bio-content" aria-expanded="false">
-            Read More ↓
-          </button>
         </div>
       </section>
 
@@ -318,7 +286,55 @@ After years of being away (studying, and hustling since 2014), with a short pand
     <p>&copy; 2025 Abdur Rauf. Inspired by a fable.</p>
   </footer>
 
+  <!-- Bio Modal -->
+  <div id="bio-modal" class="bio-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="bio-modal-title" hidden>
+    <div class="bio-modal-content" role="document">
+      <button id="close-bio-modal" class="bio-modal-close" aria-label="Close biography">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      
+      <div id="full-bio-content" aria-live="polite">
+        <h2 id="bio-modal-title" class="sr-only">The Longer Version of the Biography</h2>
+        <!-- Content from the original div#full-bio-content -->
+        <p>My story was supposed to follow a familiar script: excel in school, pursue engineering, and settle into a linear, predictable career. For a while, I followed it without a second thought.</p>
+
+        <h3 class="text-2xl brand-font mt-16 mb-4 tracking-wider">Going off Script</h3>
+        <p>However, my first taste of life away from home, at a college that decided to experiment by teaching social sciences alongside engineering, began to offer an alternative script.</p>
+        <p>I was surrounded by people with ambitions, a concept so new to me I hadn't realized it was something a person could have, let alone be nurtured.. I had brilliant professors whose ways of thinking and teaching, subconsciously and profoundly, impacted how I learned and studied. Suddenly, I also had access to the wider world of ideas through the internet which, though only sometimes high-speed, was a significant upgrade from what I had back home. My world cracked open, granting me access to ideas, knowledge, and tools I never had before.  </p>
+        <p>While I had a natural grasp of code and a mind that bent toward mathematics, I felt a growing disconnect. I can't pinpoint a specific moment, but something shifted in me during those four years of college. The 'why' behind the 'what' became more compelling. I wanted to understand the human side of systems: why societies function as they do, how choices are made, and what connects individual decisions to collective outcomes.</p>
+        <p>Here, I made my first major detour from the script. I chose to prepare for the Indian Civil Services, seeing it, at that time, as the most direct way to work on the complex, human-centered problems I was becoming so aware of.</p>
+
+        <h3 class="text-2xl brand-font mt-16 mb-4 tracking-wider">Formative years</h3>
+        <p>Until this point, like most, the only major learning I had was that exceptional grades and a top job placement were the only paths to a desirable life. I was deemed ready for the world basis my age and intellect.<p>
+        <p>I had no practice in dealing with the consequences of my decisions in relation to major life choices and very little time or space to really get to know myself - no real clarity on what it is that will give me true meaning and fulfilment; something that is generally learned through trial and error, but I had been shielded from it.</p>
+        <p>So when I decided to prepare for the Indian Civil Services, it was, if I’m honest, an act of both naivety and arrogance. I had never really “failed” before, and perhaps because of that, I carried no conscious fear of failure. I didn’t know what the preparation entailed, had never met anyone who had gone through it, didn’t even know where to begin. Yet I leapt in anyway, moving to Delhi with little more than conviction. It was like plunging into the sea to catch fish withoutknowing the waters, the nets, or even what I was chasing.</p>
+        <p>To capture the experience fully would take pages. To keep it short: the first year was mind-numbing, spent learning the terrain, understanding the vast syllabus, and figuring out how to navigate a world that seemed to sprawl endlessly. The years that followed were intense. The pandemic arrived in the middle of it all, magnifying the uncertainty, the isolation, and the sheer emotional weight of the journey. But those years, demanding and often overwhelming, shaped me in ways no linear career path could have. </p>
+        <p>Like college, the new city brought new people, ideas, and knowledge, expanding my world in a completely different direction. It was a plunge into a different kind of depth, one that nurtured a restless, almost “polymath-ish” curiosity.</p>
+        <p>This was when I had to live with the consequences of my choices, confront crises of different magnitudes, and most importantly,fail. I failed many times, often alone. But in those failures, I learned resilience, self-knowledge, and the slow, painful craft of rebuilding piece by piece.</p>
+
+        <h3 class="text-2xl brand-font mt-16 mb-4 tracking-wider">The Economic(s) Choice </h3>
+        <p>Along the way, economics took hold. It felt natural, a language that spoke to both sides of my mind by providing a rigorous, mathematical framework to make sense of the messy realities of human behavior. It was the bridge I hadn't known I was looking for.</p>
+        <p>I decided to pursue a Master’s in Economics, carrying with me the discipline of an engineer and the breadth of a social science generalist.</p>
+        <p>Those two years not only equipped me with new tools to study the world and the self, but also gave me the space to return to coding in a serious way. I began to see how the technical and the human could inform each other, rather than exist apart.</p>
+        <p>Looking back, this did more than expand my intellectual toolkit; it gave me the confidence to step into the job market with perspective, and a profile that felt not just employable, but whole.</p>
+
+    
+        <h3 class="text-2xl brand-font mt-16 mb-4 tracking-wider">Stories &amp; Chaos</h3>
+        <p>Growing up without a TV at home, my daily escape was reading anything and everything I could get my hands on. That habit gave me a lifelong love of narrative. To make up for the missing screen, my parents took me to the movies almost every weekend, and those trips only deepened my fascination with stories. Books, films, comics, art; all of them showed me that meaning could be built from fragments, that narrative was a way to bring order to chaos.</p>
+        <p>For a long time, I thought I lacked creativity because I couldn’t draw or compose music. But slowly I realized creativity wasn’t about magical talent, it was about what stories had already taught me: collecting raw material and finding patterns in it. The more diverse the inputs, the more connections I could make. My creativity lives in asking simple, story-like questions: what if this idea belonged in that plot? what happens if I place this character in that setting? In other words, mixing ideas until a new narrative emerges.</p>
+        <p>Curiosity and idea-stacking, though, aren’t enough on their own. The hardest part is beginning; pulling a single thread from the chaos and following it until it takes shape. That act of starting is what stories, creativity, and chaos have in common: they all demand trust that the puzzle will eventually make sense. And in that process, I’ve learned that analysis and creativity aren’t opposites. They’re both ways of shaping disorder into meaning, both powered by curiosity and play. Even the most serious work, I’vefound, has space for a little imagination.</p>
+
+        <h3 class="text-2xl brand-font mt-16 mb-4 tracking-wider">Now &amp; Ahead</h3>
+        <p>Now, I find myself at another turning point. I no longer see service as tied to a single channel, like the civil services I once pursued, but as something that can take many forms. Building, solving, and contributing can happen across research, startups, or organisations that value problem-solving and the ability to connect dots.</p>
+        <p>What matters to me now is that the work is concrete, challenging, and meaningful. The venue for creating value may change, but the core mission remains the same: to apply thoughtful solutions to human needs.</p>
+        <p>That, I’ve come to realize, is the point of me so far. Not a straight line but a roundabout path, one that keeps accumulating skills, perspectives, and-stories that shape the person writing this now, and the one still becoming.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- External JavaScript -->
   <script src="/js/the-point.js" defer></script>
 </body>
 </html>
-

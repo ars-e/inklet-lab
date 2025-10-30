@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Point</title>
+
+  <!-- Tailwind (utility helpers) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <!-- Embedded CSS -->
+  <style>
+    :root{
+      --bg-color:#FDF6E3; /* Warm Parchment */
+      --text-color:#2c2c2c; /* Dark Charcoal */
+      --accent-color:#E53E3E; /* Energetic Red */
+      --primary-font:'Lora',serif;
+      --heading-font:'Anton',sans-serif;
+    }
+
+    ::selection{background-color:var(--accent-color);color:var(--bg-color)}
+
+    /* Hide system cursor on desktop only */
+    body.custom-cursor-active{cursor:none}
+    @media (max-width:1024px){
+      body.custom-cursor-active{cursor:auto}
+    }
+    .custom-cursor-active a,
+    .custom-cursor-active button,
+    .custom-cursor-active .progress-marker,
+    .custom-cursor-active .poi-card{cursor:none}
+
+    /* Custom cursor */
+    #custom-cursor{
+      display:none;position:fixed;width:20px;height:20px;background-color:var(--accent-color);
+      border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
+      transition:transform .15s ease-out,width .2s ease,height .2s ease
+    }
+    #custom-cursor.hovering{transform:translate(-50%,-50%) scale(1.5)}
+    @media (min-width:1024px){
+      body.custom-cursor-active #custom-cursor{display:block}
+    }
+
+    body{
+      font-family:var(--primary-font);
+      background-color:var(--bg-color);
+      color:var(--text-color);
+      overflow-x:hidden
+    }
+
+    h1,h2,h3,.brand-font{
+      font-family:var(--heading-font);
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      color:var(--text-color)
+    }
+
+    /* Top nav */
+    #site-nav{mix-blend-mode:difference}
+    #site-nav a{
+      font-family:var(--heading-font);
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      color:var(--bg-color);
+      transition:color .2s ease-in-out
+    }
+
+    /* Oblio dot */
+    #oblio{
+      position:fixed;top:50%;left:20px;width:40px;height:40px;background-color:var(--accent-color);
+      border-radius:50%;z-index:1000;transition:transform .1s linear;will-change:transform
+    }
+    @media (max-width:1024px){#oblio{display:none}}
+
+    /* --- Scroll Bar / Table of Contents --- */
+    #scroll-progress-bar{
+      position:fixed;top:0;left:38px;width:4px;height:100vh;z-index:1001;pointer-events:none
+    }
+    #scroll-progress-indicator{width:100%;height:0;background-color:var(--accent-color);transition:height .1s linear}
+    .progress-marker{
+      position:absolute;left:50%;width:14px;height:14px;background-color:var(--bg-color);
+      border:2px solid var(--accent-color);border-radius:50%;transform:translateX(-50%);
+      pointer-events:auto;transition:transform .2s ease
+    }
+    .progress-marker:hover{transform:translateX(-50%) scale(1.4)}
+    .progress-label{
+      position:absolute;left:35px;transform:translateY(-50%);color:var(--accent-color);
+      font-family:var(--heading-font);font-size:1rem;letter-spacing:.05em;white-space:nowrap;
+      opacity:1;visibility:visible;pointer-events:none
+    }
+    @media (max-width:1024px){#scroll-progress-bar{display:none}}
+
+    /* --- Chapters --- */
+    .chapter{margin-bottom:10rem;position:relative;}
+    .page-description{margin-bottom:10rem}
+
+    .chapter-title{
+      font-size:5rem;line-height:1;margin-bottom:3rem;color:var(--accent-color);text-align:center
+    }
+    @media (min-width:768px){.chapter-title{font-size:7rem}}
+
+    .chapter-content{max-width:clamp(58ch,65vw,72ch);margin:0 auto}
+    .chapter-content p{line-height:1.75;margin-bottom:1.5rem;font-size:1.15rem;letter-spacing:.01em}
+    .chapter-content a{
+      color:var(--accent-color);text-decoration:none;font-weight:700;
+      background-image:linear-gradient(to top,rgba(229,62,62,.2) 0%,rgba(229,62,62,.2) 100%);
+      transition:background-size .3s ease
+    }
+    .chapter-content a:hover{
+      background-image:linear-gradient(to top,rgba(229,62,62,.4) 0%,rgba(229,62,62,.4) 100%)
+    }
+    .highlight{background-color:rgba(229,62,62,.1);padding:.1rem .4rem;border-radius:4px}
+
+    /* Hero */
+    .main-header{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative}
+    .main-header h1{font-size:8rem;line-height:1;max-width:10ch;position:relative;z-index:1;display:flex;flex-wrap:wrap;justify-content:center}
+    @media (min-width:768px){.main-header h1{font-size:12rem}}
+    .main-header h1 span{display:inline-block;transition:transform .2s cubic-bezier(.175,.885,.32,1.275)}
+    .main-header h1:hover span{transform:translateY(-10px) rotate(5deg)}
+    .main-header h1 span:hover{transform:translateY(-25px) rotate(-10deg) scale(1.1);color:var(--accent-color)}
+
+    #scroll-down-indicator{
+      position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);opacity:1;animation:bounce-strong 1.5s infinite;text-align:center;z-index:10
+    }
+    #scroll-down-indicator .scroll-hint{
+      display:flex;flex-direction:column;align-items:center;font-family:var(--heading-font);
+      font-size:1.25rem;font-weight:700;color:var(--accent-color);letter-spacing:.05em
+    }
+    @keyframes bounce-strong{
+      0%,20%,50%,80%,100%{transform:translate(-50%,0)}
+      40%{transform:translate(-50%, -25px)}
+      60%{transform:translate(-50%, -12px)}
+    }
+    #scroll-down-indicator.is-hidden{opacity:0;pointer-events:none;transition:opacity .6s ease}
+
+    /* Blobby shapes */
+    .shape{position:absolute;background-color:var(--accent-color);opacity:.1;border-radius:30% 70% 70% 30% / 30% 30% 70% 70%;animation:morph 8s ease-in-out infinite;z-index:0;transition:transform .5s ease-out}
+    .shape1{width:400px;height:400px;top:10vh;left:10vw;animation-delay:1s}
+    .shape2{width:300px;height:300px;bottom:20vh;right:15vw}
+    @keyframes morph{
+      0%{border-radius:30% 70% 70% 30% / 30% 30% 70% 70%;transform:rotate(0) scale(1)}
+      50%{border-radius:60% 40% 30% 70% / 70% 60% 40% 30%;transform:rotate(180deg) scale(1.1)}
+      100%{border-radius:30% 70% 70% 30% / 30% 30% 70% 70%;transform:rotate(360deg) scale(1)}
+    }
+
+    /* Epilogue links */
+    .epilogue{text-align:center;padding:6rem 0;border-top:2px solid rgba(0,0,0,.1)}
+    .epilogue-links a{
+      font-family:var(--heading-font);font-size:2.5rem;margin:0 1rem;text-decoration:none;color:var(--text-color);
+      position:relative;transition:color .3s ease
+    }
+    .epilogue-links a:hover{color:var(--accent-color)}
+    .epilogue-links a::after{
+      content:'';position:absolute;width:100%;height:3px;background:var(--accent-color);bottom:-5px;left:0;
+      transform:scaleX(0);transform-origin:bottom right;transition:transform .3s ease-out
+    }
+    .epilogue-links a:hover::after{transform:scaleX(1);transform-origin:bottom left}
+
+    /* Mobile menu */
+    #mobile-nav-toggle{display:none;z-index:9999}
+    #mobile-menu{
+      position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg-color);z-index:9998;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;transform:translateX(100%);
+      transition:transform .4s cubic-bezier(.23,1,.32,1)
+    }
+    #mobile-menu.is-open{transform:translateX(0)}
+    #mobile-menu a{font-family:var(--heading-font);font-size:3rem;color:var(--text-color);margin:1rem 0}
+    @media (max-width:768px){
+      #site-nav .nav-links{display:none}
+      #mobile-nav-toggle{display:block}
+    }
+
+    /* Little strike animation lines */
+    .bio-line{display:inline-block;position:relative;opacity:0;animation:fadeIn .5s forwards}
+    .bio-line .strikrough{
+      position:absolute;top:50%;left:0;width:100%;height:3px;background-color:var(--accent-color);
+      transform:scaleX(0);transform-origin:left;animation:strike .5s .5s forwards
+    }
+    @keyframes fadeIn{to{opacity:1}}
+    @keyframes strike{to{transform:scaleX(1)}}
+
+    /* Footnotes */
+    .footnote{position:relative;display:inline-block}
+    .footnote sup{font-size:.8em;vertical-align:super;color:var(--accent-color);cursor:pointer;border-radius:2px}
+    .footnote sup:focus-visible{box-shadow:0 0 0 2px var(--accent-color);outline:none}
+    .footnote-content{
+      position:absolute;bottom:100%;left:50%;transform:translateX(-50%);width:250px;background:var(--text-color);
+      color:var(--bg-color);padding:1rem;border-radius:8px;font-size:.9rem;line-height:1.5;opacity:0;visibility:hidden;
+      transition:opacity .2s,visibility .2s;z-index:10
+    }
+    .footnote:hover .footnote-content,
+    .footnote:focus-within .footnote-content{opacity:1;visibility:visible}
+
+    /* --- Flippable Cards --- */
+    .poi-card-deck-container{width:100%;margin-top:6rem}
+    .poi-card-deck{
+      display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;perspective:1500px
+    }
+    @media (min-width:1024px){
+      .poi-card-deck{
+        flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;padding:1rem 1rem 2rem
+      }
+      .poi-card-deck::-webkit-scrollbar{height:8px}
+      .poi-card-deck::-webkit-scrollbar-track{background:rgba(0,0,0,.05);border-radius:4px}
+      .poi-card-deck::-webkit-scrollbar-thumb{background:rgba(44,44,44,.2);border-radius:4px}
+      .poi-card-deck::-webkit-scrollbar-thumb:hover{background:rgba(44,44,44,.4)}
+    }
+    .poi-card{width:240px;height:340px;background-color:transparent;flex-shrink:0}
+    .poi-card:focus-visible{outline:2px solid var(--accent-color);border-radius:1rem;outline-offset:2px}
+    .poi-card-inner{position:relative;width:100%;height:100%;transition:transform .7s cubic-bezier(.25,1,.5,1);transform-style:preserve-3d}
+    .poi-card.is-flipped .poi-card-inner{transform:rotateY(180deg)}
+    .poi-card-front,.poi-card-back{
+      position:absolute;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+      border:2px solid rgba(44,44,44,.5);border-radius:1rem;display:flex;flex-direction:column;justify-content:center;align-items:center;
+      padding:1.5rem;text-align:center
+    }
+    .poi-card-front{background-color:rgba(0,0,0,.02)}
+    .poi-card-back{background-color:var(--text-color);color:var(--bg-color);transform:rotateY(180deg)}
+    .poi-card-front h3{font-size:2.25rem;line-height:1.1;color:var(--accent-color)}
+    .poi-card-front p{
+      font-family:var(--primary-font);margin-top:.5rem;color:var(--text-color);opacity:.6;font-size:.8rem;
+      text-transform:uppercase;letter-spacing:.05em
+    }
+    .poi-card-back p{font-family:var(--primary-font);font-size:1.05rem;line-height:1.7}
+    .visit-page-link {
+      display: inline-block;
+      margin-top: 1.25rem;
+      padding: 0.4rem 1.2rem;
+      border: 1px solid rgba(253, 246, 227, 0.8);
+      border-radius: 9999px;
+      font-family: var(--primary-font);
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: var(--bg-color);
+      text-decoration: none;
+      transition: all 0.2s ease-in-out;
+    }
+    .visit-page-link:hover, .visit-page-link:focus-visible {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      outline: none;
+    }
+    @media (max-width:1024px){.poi-card-deck{gap:1.5rem}.poi-card{width:280px}}
+    @media (max-width:640px){.poi-card{width:100%;max-width:320px}}
+
+    /* Callouts */
+    .margin-note{
+      margin:1rem 0;padding:.75rem 1rem;border-left:4px solid var(--accent-color);
+      background:color-mix(in srgb, var(--accent-color) 8%, var(--bg-color));border-radius:.5rem;font-size:.98rem
+    }
+    @media (min-width:1024px){
+      .margin-note{float:right;width:36%;margin:.25rem 0 1rem 1.25rem}
+    }
+    .callout{
+      margin:1.75rem 0;padding:1rem 1.25rem;border-left:6px solid var(--accent-color);
+      background:color-mix(in srgb, var(--accent-color) 10%, var(--bg-color));border-radius:.5rem;font-size:1rem;line-height:1.7
+    }
+    .callout a{font-weight:700}
+    
+    /* -- NEW STYLES FOR BIO MODAL -- */
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    #open-bio-modal {
+      background: none;
+      border: none;
+      padding: 0.5rem; /* Add padding for focus ring */
+      cursor: none; /* Use custom cursor */
+    }
+    #open-bio-modal h3 {
+      color: var(--accent-color);
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-underline-offset: 4px;
+      transition: color 0.2s;
+    }
+    #open-bio-modal:hover h3,
+    #open-bio-modal:focus-visible h3 {
+      color: var(--text-color);
+    }
+    #open-bio-modal:focus-visible {
+        outline: 2px solid var(--accent-color);
+        outline-offset: 2px;
+        border-radius: 8px;
+    }
+
+    .bio-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(44, 44, 44, 0.6); /* Darker overlay */
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s cubic-bezier(.4,0,.2,1), visibility 0.3s cubic-bezier(.4,0,.2,1);
+    }
+    .bio-modal-overlay:not([hidden]) {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .bio-modal-content {
+      background-color: var(--bg-color);
+      border-radius: 1rem;
+      border: 2px solid rgba(44,44,44,.1);
+      padding: 2.5rem;
+      padding-top: 3.5rem;
+      max-width: 80ch; /* Limit width */
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      position: relative;
+      transform: scale(0.95) translateY(10px);
+      transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    }
+    .bio-modal-overlay:not([hidden]) .bio-modal-content {
+      transform: scale(1) translateY(0);
+    }
+
+    /* Styles for the content inside the modal */
+    .bio-modal-content #full-bio-content {
+      /* Reset chapter-content styles if needed, but it should inherit fine */
+      max-width: none; /* Override chapter-content max-width */
+    }
+    .bio-modal-content #full-bio-content p {
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem; /* Slightly smaller than main text for modal */
+    }
+     .bio-modal-content #full-bio-content h3 {
+        font-size: 1.75rem; /* Smaller headings for modal */
+     }
+
+    .bio-modal-close {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: none;
+      border: none;
+      color: var(--text-color);
+      opacity: 0.7;
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: opacity 0.2s, background-color 0.2s;
+    }
+    .bio-modal-close:hover {
+      opacity: 1;
+      background-color: rgba(0,0,0,0.05);
+    }
+    .bio-modal-close:focus-visible {
+      outline: 2px solid var(--accent-color);
+    }
+
+    /* Mobile adjustments for modal */
+    @media (max-width: 640px) {
+      .bio-modal-content {
+        padding: 2rem;
+        padding-top: 3rem;
+        max-height: 90vh; /* Allow more height on mobile */
+      }
+      .bio-modal-close {
+        top: 0.5rem;
+        right: 0.5rem;
+      }
+    }
+
+  </style>
+
+</head>
+
+<body class="antialiased custom-cursor-active">
+  <div id="custom-cursor" aria-hidden="true"></div>
+  <div id="oblio" aria-hidden="true"></div>
+
+  <!-- Vertical progress / TOC -->
+  <div id="scroll-progress-bar" aria-hidden="true">
+    <div id="scroll-progress-indicator"></div>
+    <!-- markers injected by JS -->
+  </div>
+
+  <div class="shape shape1" aria-hidden="true"></div>
+  <div class="shape shape2" aria-hidden="true"></div>
+
+  <!-- Site nav -->
+  <nav id="site-nav" class="fixed top-0 left-0 right-0 z-20" aria-label="Primary">
+    <div class="container mx-auto px-6 py-8 flex justify-between items-center text-xl">
+      <div class="nav-brand"><a href="/" class="focus:outline-none focus:ring-2 focus:ring-red-500">Inklet Lab</a></div>
+      <div class="nav-links hidden md:flex space-x-8">
+        <a href="/">Front Page</a>
+        <a href="/the-dispatch/">The Dispatch</a>
+        <a href="/peti/">Peti</a>
+        <a href="/the-balcony/">The Balcony</a>
+        <a href="/dump-and-discover/">Dump &amp; Discover</a>
+        <a href="/etcetera/">Etcetera</a>
+        <a href="/the-point/" aria-current="page">The Point</a>
+      </div>
+      <button id="mobile-nav-toggle" class="text-white">MENU</button>
+    </div>
+  </nav>
+
+  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobile menu">
+    <a href="#">Front Page</a>
+    <a href="#">The Dispatch</a>
+    <a href="#">Peti</a>
+    <a href="#">The Balcony</a>
+    <a href="#">Dump &amp; Discover</a>
+    <a href="#">Etcetera</a>
+    <a href="#" aria-current="page">The Point</a>
+  </div>
+
+  <main class="container mx-auto px-6 py-12 md:py-20 max-w-5xl relative z-10">
+    <header class="main-header mb-24 md:mb-32">
+      <h1 id="main-title">What's The Point?</h1>
+      <div id="scroll-down-indicator">
+        <div class="scroll-hint">
+          <span>Scroll</span>
+          <svg class="w-10 h-10 text-[var(--accent-color)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </div>
+      </div>
+    </header>
+
+    <article class="narrative-text">
+      <section class="page-description chapter text-center max-w-3xl mx-auto" id="chapter-0">
+        <p class="text-xl italic text-gray-700/80">
+          This is where I sketch the outline of things. Who I am, what I’m doing now, what this website is, and the idea of Inklet Lab.
+          It’s the context and the compass, the thread tying the other pages together, a working note that shifts as I do. That’s the point of
+          <em>The Point</em>: to keep the story alive while it’s still being written.
+        </p>
+      </section>
+
+      <section id="chapter-1" class="chapter" aria-labelledby="origin-title">
+        <h2 id="origin-title" class="chapter-title">The Point of Origin</h2>
+        <div class="chapter-content">
+          <p>I can’t tell my story without first telling you another story.</p>
+          <p>
+            We need to talk about
+            <a href="https://en.wikipedia.org/wiki/The_Point!" target="_blank" rel="noopener noreferrer">The Point!</a>,
+            an animated film based on
+            <a href="https://en.wikipedia.org/wiki/Harry_Nilsson" target="_blank" rel="noopener noreferrer">Harry Nilsson’s</a>
+            concept album. The story is simple: in a land where everyone must have a literal point on their head, and where everything must have a “point,” a round-headed boy named Oblio is banished for being “pointless.” Sent into the Pointless Forest with his dog, Arrow, he discovers that everything has a point even there...just not always the one that fits a template.
+          </p>
+          <aside class="callout" role="note" aria-label="Related reading">
+            If you would like to explore more about the film, check out this thoughtful piece:
+            <a href="https://wearethemutants.com/2018/05/14/whats-the-point-the-forgotten-genius-of-harry-nilsson/" target="_blank" rel="noopener noreferrer">
+              What’s ‘The Point!’?: The Forgotten Genius of Harry Nilsson
+            </a>
+          </aside>
+          <p>
+            <strong>Why this fable, and why here?</strong> Because it mirrors the way I have moved through life, not without purpose but without forcing a single fixed definition too early. Like Oblio, I have found meaning in my winding path: in following questions, in carrying ideas across different worlds, in acquiring new skills, and in shaping my point through time and practice. Without this simple parable as a key, the story of who I am, and what Inklet Lab is and is becoming, cannot be fully understood.
+          </p>
+        </div>
+      </section>
+
+      <section id="chapter-2" class="chapter" aria-labelledby="me-title">
+        <h2 id="me-title" class="chapter-title">The Point of Me</h2>
+        <div class="chapter-content">
+          <p class="text-center text-2xl brand-font -mt-8 mb-12 tracking-wide" style="color:var(--text-color);opacity:.7">(tl;dr)</p>
+
+          <p>I’ve been a <strong>computer science graduate</strong>, <strong>a civil services aspirant</strong>, and most recently an <strong>economics post-graduate</strong>.</p>
+          <p>I’m a <strong>curious student at heart</strong>, always ready to pick up new tools, ideas, and ways of thinking. I stretch, adapt, and do whatever it takes to work through the problems in front of me.</p>
+          <p>Born and raised in <strong>Hyderabad</strong>, shaped significantly by my years in <strong>Delhi</strong>.</p>
+
+          <div class="text-center mt-20 mb-12">
+            <button id="open-bio-modal" class="focus:outline-none focus:ring-2 focus:ring-red-500 rounded-md">
+              <h3 class="text-3xl brand-font tracking-wider">(The longer version)</h3>
+              <p class="mt-1 text-gray-600 italic">Est. 7 min read</p>
+            </button>
+          </div>
+
+          <!-- The long bio content is now in the modal at the end of the body -->
+
+        </div>
+      </section>
+
+      <section id="chapter-3" class="chapter" aria-labelledby="place-title">
+        <h2 id="place-title" class="chapter-title">The Point of this Place</h2>
+        <div class="chapter-content">
+          <p>So, what is <span class="brand-font italic">this place</span>? It’s two things: my personal corner of the web, and the seedling of a larger idea called Inklet Lab.</p>
+
+          <h3 class="text-2xl brand-font mt-12 mb-4 tracking-wider">My Corner of the Web</h3>
+          <p>At its core, this is my personal website. It gives a glimpse of my work, thinking, and experiments in connecting the dots across different fields and a standing invitation for conversation.</p>
+
+          <h3 class="text-2xl brand-font mt-12 mb-4 tracking-wider">The Seedling of Inklet Lab</h3>
+          <p>Inklet Lab is the most exciting, and least defined, part of this journey. The vision is to build an ecosystem where ideas meet, a place to find your <em>lab partner</em>. Think of it as a “Tinder for ideas”, a space where people can both plant and pick up sparks. 
+          <p> Ideas here don’t have to fit into one box. They can come from anywhere: art, science, design, philosophy, policy, education, technology, or even just a stray thought from daily life.</p>
+          <p>If you have an idea, you can post it and and look for a lab partner, someone who wants to pick it up, test it, and shape it with you. If you’re browsing, you can explore ideas left by others and become their lab partner, jumping in where your curiosity or skills connect.</p>
+          <p>But Inklet Lab is meant to be more than just a matchmaking board. The larger vision is to create an ecosystem, a kind of lab beyond the metaphor; where collaborations don’t just spark but are supported. A space with the tools, conversations, and shared energy needed to take ideas further than any one person could alone.</p>
+          <p>Unlike an incubator, there are no rigid tracks, no pressure to “scale.” This is not about turning every idea into a startup. It's about giving ideas of all kinds a place to breathe, play, and evolve with the right partners.</p>
+          <p>Right now, Inklet Lab is just a seedling, an experiment I’m nurturing through this site. But the vision is clear: a living lab where ideas find partners, and partners find the space to build.</p>
+
+<div class="text-center mt-20 mb-12">
+            <h3 class="text-3xl brand-font tracking-wider">(The why)</h3>
+          </div>          
+          <p class="mt-12">The need for this space came from two directions.</p>
+          <!-- <p class="text-xl italic my-8 text-center">
+            <span class="bio-line" style="animation-delay:0s;">"Software Developer who gets monetary policy?"<span class="strikethrough"></span></span><br>
+            <span class="bio-line" style="animation-delay:1s;">"Economist who can build an app?"<span class="strikethrough" style="animation-delay:1.5s;"></span></span>
+          </p> -->
+          <!-- <p>
+            A CV tells you <span class="highlight">what</span>. It doesn't tell you <span class="highlight">why</span>. I built this site to hold the whole story—the rough drafts, the wrong turns, and the half-formed ideas.
+          </p> -->
+          <p>First, after finishing my master’s and stepping into the job market, I wanted a place to showcase myself beyond a neat CV or LinkedIn line. Something that felt less like a résumé and more like an extension of who I am; a glimpse of my capabilities, curiosities, and the ways I approach problems.</p>
+         
+          <p>Second, the Inklet Lab idead itself. The idea of building an ecosystem for cross-pollination—needed a ground to grow. A space where rough drafts, false starts, and half-formed sparks could live alongside finished work.</p>
+          <p class="mt-12">
+
+            <div class="text-center mt-20 mb-12">
+            <h3 class="text-3xl brand-font tracking-wider">(The How)</h3>
+          </div>    
+
+            <p>In that spirit, this website is an artifact of its own philosophy: a small, handcrafted corner of the internet. It was built not with complex frameworks or heavy machinery, but with the fundamental tools of the web. The structure is plain <span class="highlight">HTML</span>, the styling is done with <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer">Tailwind CSS</a> and traditional CSS, and the interactive is powered by vanilla <span class="highlight">JavaScript</span>.
+          </p>
+          <aside class="margin-note" role="note">
+            This site owes a lot to the spirit of the <em>Indie Web</em>. If you’re curious, read about it <a href="https://indieweb.org/" target="_blank" rel="noopener noreferrer">here</a>.
+          </aside>
+          <p>
+Much of this website is vibe coded, but never carelessly. The design was carefully shaped, with each choice guided by instinct as much as intention. For readers curious about how I see vibe coding, I find myself aligning closely with the reflections shared here.</p>
+
+<p>Since this site is an extension of myself, most elements (even the smallest ones) carry some form of inspiration or meta-reference. A not so obvious example would be the advertising posters on "The dispatch” page nod to accounts Don Draper handled in Mad Men and a very obvious example would be the dramatic title on "The Balcony” page mirrors the iconic “Superstar” opening in Rajinikanth films. Almost every corner has its own quiet nod to a story, a world, or an aesthetic that shaped me.</p>
+          <p class="mt-12">This lab has a few different rooms; here’s a map to help you get around:</p>
+
+          <div class="poi-card-deck-container">
+            <div class="poi-card-deck" role="list">
+              <div class="poi-card" role="button" tabindex="0" aria-label="The Dispatch — flip card">
+                <div class="poi-card-inner">
+                  <div class="poi-card-front">
+                    <h3>The Dispatch</h3>
+                    <p>(Click or press Enter)</p>
+                  </div>
+                  <div class="poi-card-back">
+                    <p>Long-form essays, code tutorials, and explorations into the messy process of building things.</p>
+                    <a href="#dispatch" class="visit-page-link">Visit →</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="poi-card" role="button" tabindex="0" aria-label="Peti — flip card">
+                <div class="poi-card-inner">
+                  <div class="poi-card-front">
+                    <h3>Peti [पेटी]</h3>
+                    <p>(Click or press Enter)</p>
+                  </div>
+                  <div class="poi-card-back">
+                    <p>A treasure box of finished projects, interactive data visualizations, and case studies.</p>
+                    <a href="#peti" class="visit-page-link">Visit →</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="poi-card" role="button" tabindex="0" aria-label="The Balcony — flip card">
+                <div class="poi-card-inner">
+                  <div class="poi-card-front">
+                    <h3>The Balcony</h3>
+                    <p>(Click or press Enter)</p>
+                  </div>
+                  <div class="poi-card-back">
+                    <p>A space for reflection. Book reviews, film critiques, and thoughts on the work of others.</p>
+                    <a href="#balcony" class="visit-page-link">Visit →</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="poi-card" role="button" tabindex="0" aria-label="Etcetera — flip card">
+                <div class="poi-card-inner">
+                  <div class="poi-card-front">
+                    <h3>Etcetera</h3>
+                    <p>(Click or press Enter)</p>
+                  </div>
+                  <div class="poi-card-back">
+                    <p>A collection of stray thoughts, interesting links, and half-formed ideas that don't yet have a home.</p>
+                    <a href="#etcetera" class="visit-page-link">Visit →</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="poi-card" role="button" tabindex="0" aria-label="Dump & Discover — flip card">
+                <div class="poi-card-inner">
+                  <div class="poi-card-front">
+                    <h3>Dump &amp; Discover</h3>
+                    <p>(Click or press Enter)</p>
+                  </div>
+                  <div class="poi-card-back">
+                    <p>A digital scrapbook for raw ideas, code snippets, and unfiltered thoughts. A place to explore freely.</p>
+                    <a href="#dump-discover" class="visit-page-link">Visit →</a>
+                  </div>
+                </div>
+              </div>
+            </div><!-- /.poi-card-deck -->
+          </div><!-- /.poi-card-deck-container -->
+        </div>
+      </section>
+
+      <section id="chapter-4" class="chapter" aria-labelledby="now-title">
+        <h2 id="now-title" class="chapter-title">The Point...For Now</h2>
+        <div class="chapter-content">
+          <p class="text-sm italic text-gray-600/75 mt-12">Updated on September 19th 2025, from my home in Hyderabad, India.</p>
+          <p>
+After years of being away (studying, and hustling since 2014), with a short pandemic return in between, I’m back home. For the first time in a long time, I’m spending unhurried days with my parents.</p>
+<h3 class="text-2xl brand-font mt-12 mb-4 tracking-wider">mornings on the court</h3>
+<p>Most mornings start with two hours of badminton with my father and his friends. It’s become a ritual.</p>
+<h3 class="text-2xl brand-font mt-12 mb-4 tracking-wider">Learning and Exploration</h3>
+<p>I’ve been sharpening my coding skills (especially in Python), studying logic, math, and statistics, and strengthening my foundations in economics. At the same time, I’m exploring <a href="#">generative art with p5.js</a>.</p>
+<h3 class="text-2xl brand-font mt-12 mb-4 tracking-wider">building this site and the idea of Inklet Lab</h3>
+<p>This website itself is one of my main projects. Alongside the site, I’m sketching out Inklet Lab</p>
+<h3 class="text-2xl brand-font mt-12 mb-4 tracking-wider">working and applying</h3>
+<p>I’m part of a Founder’s Office fellowship while also going through the cycles of applying for jobs: resumes, interviews, and all the shebang.</p>
+<h3 class="text-2xl brand-font mt-12 mb-4 tracking-wider">reading</h3>
+<p>Currently reading Chain-Gang All-Stars by Nana Kwame Adjei-Brenyah and Minority Rule: Adventures in the Culture Wae by Ash Sarkar.</p>
+
+<hr>
+
+
+<p>This is my “map for now.” It will change, redraw itself, and maybe look unrecognizable a few months down the line. That’s part of the adventure.</p>
+          
+        </div>
+      </section>
+
+      <section id="epilogue" class="epilogue" aria-labelledby="invite-title">
+        <h2 id="invite-title" class="text-5xl md:text-6xl font-bold mb-6">An Invitation</h2>
+        <p class="mb-8 text-lg">If this resonates, I'd love to hear from you.</p>
+        <p class="mb-12 text-lg font-bold" style="color:var(--accent-color);">Tell me about your Pointless Forest.</p>
+        <div class="epilogue-links flex flex-col md:flex-row justify-center items-center space-y-8 md:space-y-0 md:space-x-12">
+          <a href="https://www.linkedin.com/in/example" target="_blank" rel="noopener noreferrer">LINKEDIN</a>
+          <a href="https://github.com/example" target="_blank" rel="noopener noreferrer">GITHUB</a>
+          <a href="mailto:hello@example.com">EMAIL</a>
+        </div>
+      </section>
+    </article>
+  </main>
+
+  <footer class="text-center py-8 text-sm text-gray-700/50">
+    <p>&copy; 2025 Abdur Rauf. Inspired by a fable.</p>
+  </footer>
+
+  <!-- Bio Modal -->
+  <div id="bio-modal" class="bio-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="bio-modal-title" hidden>
+    <div class="bio-modal-content" role="document">
+      <button id="close-bio-modal" class="bio-modal-close" aria-label="Close biography">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      
+      <div id="full-bio-content" aria-live="polite">
+        <h2 id="bio-modal-title" class="sr-only">The Longer Version of the Biography</h2>
+        <!-- Content from the original div#full-bio-content -->
+        <p>My story was supposed to follow a familiar script: excel in school, pursue engineering, and settle into a linear, predictable career. For a while, I followed it without a second thought.</p>
+
+        <h3 class="text-2xl brand-font mt-16 mb-4 tracking-wider">Going off Script</h3>
+        <p>However, my first taste of life away from home, at a college that decided to experiment by teaching social sciences alongside engineering, began to offer an alternative script.</p>
+        <p>I was surrounded by people with ambitions, a concept so new to me I hadn't realized it was something a person could have, let alone be nurtured.. I had brilliant professors whose ways of thinking and teaching, subconsciously and profoundly, impacted how I learned and studied. Suddenly, I also had access to the wider world of ideas through the internet which, though only sometimes high-speed, was a significant upgrade from what I had back home. My world cracked open, granting me access to ideas, knowledge, and tools I never had before.  </p>
+        <p>While I had a natural grasp of code and a mind that bent toward mathematics, I felt a growing disconnect. I can't pinpoint a specific moment, but something shifted in me during those four years of college. The 'why' behind the 'what' became more compelling. I wanted to understand the human side of systems: why societies function as they do, how choices are made, and what connects individual decisions to collective outcomes.</p>
+        <p>Here, I made my first major detour from the script. I chose to prepare for the Indian Civil Services, seeing it, at that time, as the most direct way to work on the complex, human-centered problems I was becoming so aware of.</p>
+
+        <h3 class="text-2xl brand-font mt-16 mb-4 tracking-wider">Formative years</h3>
+        <p>Until this point, like most, the only major learning I had was that exceptional grades and a top job placement were the only paths to a desirable life. I was deemed ready for the world basis my age and intellect.<p>
+        <p>I had no practice in dealing with the consequences of my decisions in relation to major life choices and very little time or space to really get to know myself - no real clarity on what it is that will give me true meaning and fulfilment; something that is generally learned through trial and error, but I had been shielded from it.</p>
+        <p>So when I decided to prepare for the Indian Civil Services, it was, if I’m honest, an act of both naivety and arrogance. I had never really “failed” before, and perhaps because of that, I carried no conscious fear of failure. I didn’t know what the preparation entailed, had never met anyone who had gone through it, didn’t even know where to begin. Yet I leapt in anyway, moving to Delhi with little more than conviction. It was like plunging into the sea to catch fish withoutknowing the waters, the nets, or even what I was chasing.</p>
+        <p>To capture the experience fully would take pages. To keep it short: the first year was mind-numbing, spent learning the terrain, understanding the vast syllabus, and figuring out how to navigate a world that seemed to sprawl endlessly. The years that followed were intense. The pandemic arrived in the middle of it all, magnifying the uncertainty, the isolation, and the sheer emotional weight of the journey. But those years, demanding and often overwhelming, shaped me in ways no linear career path could have. </p>
+        <p>Like college, the new city brought new people, ideas, and knowledge, expanding my world in a completely different direction. It was a plunge into a different kind of depth, one that nurtured a restless, almost “polymath-ish” curiosity.</p>
+        <p>This was when I had to live with the consequences of my choices, confront crises of different magnitudes, and most importantly,fail. I failed many times, often alone. But in those failures, I learned resilience, self-knowledge, and the slow, painful craft of rebuilding piece by piece.</p>
+
+        <h3 class="text-2xl brand-font mt-16 mb-4 tracking-wider">The Economic(s) Choice </h3>
+        <p>Along the way, economics took hold. It felt natural, a language that spoke to both sides of my mind by providing a rigorous, mathematical framework to make sense of the messy realities of human behavior. It was the bridge I hadn't known I was looking for.</p>
+        <p>I decided to pursue a Master’s in Economics, carrying with me the discipline of an engineer and the breadth of a social science generalist.</p>
+        <p>Those two years not only equipped me with new tools to study the world and the self, but also gave me the space to return to coding in a serious way. I began to see how the technical and the human could inform each other, rather than exist apart.</p>
+        <p>Looking back, this did more than expand my intellectual toolkit; it gave me the confidence to step into the job market with perspective, and a profile that felt not just employable, but whole.</p>
+
+    
+        <h3 class="text-2xl brand-font mt-16 mb-4 tracking-wider">Stories &amp; Chaos</h3>
+        <p>Growing up without a TV at home, my daily escape was reading anything and everything I could get my hands on. That habit gave me a lifelong love of narrative. To make up for the missing screen, my parents took me to the movies almost every weekend, and those trips only deepened my fascination with stories. Books, films, comics, art; all off them showed me that meaning could be built from fragments, that narrative was a way to bring order to chaos.</p>
+        <p>For a long time, I thought I lacked creativity because I couldn’t draw or compose music. But slowly I realized creativity wasn’t about magical talent, it was about what stories had already taught me: collecting raw material and finding patterns in it. The more diverse the inputs, the more connections I could make. My creativity lives in asking simple, story-like questions: what if this idea belonged in that plot? what happens if I place this character in that setting? In other words, mixing ideas until a new narrative emerges.</p>
+        <p>Curiosity and idea-stacking, though, aren’t enough on their own. The hardest part is beginning; pulling a single thread from the chaos and following it until it takes shape. That act of starting is what stories, creativity, and chaos have in common: they all demand trust that the puzzle will eventually make sense. And in that process, I’ve learned that analysis and creativity aren’t opposites. They’re both ways of shaping disorder into meaning, both powered by curiosity and play. Even the most serious work, I’vefound, has space for a little imagination.</p>
+
+        <h3 class="text-2xl brand-font mt-16 mb-4 tracking-wider">Now &amp; Ahead</h3>
+        <p>Now, I find myself at another turning point. I no longer see service as tied to a single channel, like the civil services I once pursued, but as something that can take many forms. Building, solving, and contributing can happen across research, startups, or organisations that value problem-solving and the ability to connect dots.</p>
+        <p>What matters to me now is that the work is concrete, challenging, and meaningful. The venue for creating value may change, but the core mission remains the same: to apply thoughtful solutions to human needs.</p>
+        <p>That, I’ve come to realize, is the point of me so far. Not a straight line but a roundabout path, one that keeps accumulating skills, perspectives, and stories that shape the person writing this now, and the one still becoming.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Embedded JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      /* 1) Interactive header */
+      const title = document.getElementById('main-title');
+      if (title){
+        const text = title.innerText;
+        title.innerHTML = '';
+        text.split('').forEach(ch=>{
+          const span=document.createElement('span');
+          span.textContent = ch === ' ' ? '\u00A0' : ch;
+          title.appendChild(span);
+        });
+      }
+
+      /* 2) Custom cursor */
+      const cursor = document.getElementById('custom-cursor');
+      if (cursor){
+        window.addEventListener('mousemove', e=>{
+          cursor.style.left = e.clientX + 'px';
+          cursor.style.top  = e.clientY + 'px';
+        });
+        document.querySelectorAll('a, button, .poi-card, .progress-marker').forEach(el=>{
+          el.addEventListener('mouseenter', ()=>cursor.classList.add('hovering'));
+          el.addEventListener('mouseleave', ()=>cursor.classList.remove('hovering'));
+        });
+      }
+
+      /* 3) Scroll follower / shapes */
+      const oblio  = document.getElementById('oblio');
+      const shapes = document.querySelectorAll('.shape');
+      const scrollIndicator = document.getElementById('scroll-down-indicator');
+
+      /* 4) Progress bar + mini TOC */
+      const progressBar = document.getElementById('scroll-progress-bar');
+      const chapterSections = document.querySelectorAll('.chapter');
+
+      function setupProgressBar(){
+        if (!progressBar) return;
+        progressBar.querySelectorAll('.progress-marker, .progress-label').forEach(el=>el.remove());
+
+        const totalHeight = document.body.scrollHeight - window.innerHeight;
+        if (totalHeight <= 0) return;
+
+        chapterSections.forEach(ch=>{
+          const titleEl = ch.querySelector('.chapter-title');
+          if (!titleEl) return;
+          const chapterTop = ch.offsetTop;
+          const percentPosition = (chapterTop / totalHeight) * 100;
+
+          const marker = document.createElement('div');
+          marker.className = 'progress-marker';
+          marker.style.top = percentPosition + '%';
+          marker.title = titleEl.textContent;
+          marker.addEventListener('click', ()=>{
+            window.scrollTo({ top: chapterTop, behavior:'smooth' });
+          });
+
+          const label = document.createElement('div');
+          label.className = 'progress-label';
+          label.style.top = percentPosition + '%';
+          label.textContent = titleEl.textContent;
+
+          progressBar.appendChild(marker);
+          progressBar.appendChild(label);
+        });
+      }
+      setupProgressBar();
+
+      let resizeTimer;
+      window.addEventListener('resize', ()=>{
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(setupProgressBar, 100);
+      });
+
+      /* 5) Scroll handler */
+      window.addEventListener('scroll', ()=>{
+        const scrollY = window.scrollY;
+        const totalHeight = document.body.scrollHeight - window.innerHeight;
+        const progress = totalHeight > 0 ? (scrollY / totalHeight) * 100 : 0;
+        const progressIndicator = document.getElementById('scroll-progress-indicator');
+
+        if (oblio){
+          const rotation = scrollY / 5;
+          const scale = 1 + Math.sin(scrollY / 100) * 0.1;
+          oblio.style.transform = `translateY(-50%) rotate(${rotation}deg) scale(${scale})`;
+        }
+
+        shapes.forEach((shape,i)=>{
+          const speed = i === 0 ? 0.2 : 0.1;
+          shape.style.transform = `translateY(-${scrollY * speed}px)`;
+        });
+
+        if (progressIndicator){
+          progressIndicator.style.height = progress + '%';
+        }
+
+        if (scrollIndicator){
+          scrollIndicator.classList.toggle('is-hidden', scrollY > 50);
+        }
+      }, { passive:true });
+
+      /* 7) Mobile menu */
+      const mobileToggle = document.getElementById('mobile-nav-toggle');
+      const mobileMenu   = document.getElementById('mobile-menu');
+      if (mobileToggle && mobileMenu){
+        mobileToggle.addEventListener('click', ()=>{
+          mobileMenu.classList.toggle('is-open');
+        });
+        mobileMenu.querySelectorAll('a').forEach(link=>{
+          link.addEventListener('click', ()=>mobileMenu.classList.remove('is-open'));
+        });
+      }
+
+      /* 8) POI cards: click + keyboard */
+      document.querySelectorAll('.poi-card').forEach(card => {
+        const flip = () => card.classList.toggle('is-flipped');
+
+        card.addEventListener('click', (e) => {
+          // If the click is on the link, let the browser handle navigation.
+          // The `closest` method checks the element itself and its ancestors.
+          if (e.target.closest('.visit-page-link')) {
+            return;
+          }
+          flip();
+        });
+
+        card.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            // If the focused element is the link itself, allow the default browser
+            // action (which is to 'click' the link and navigate).
+            if (document.activeElement.classList.contains('visit-page-link')) {
+              return;
+            }
+            // Otherwise, prevent default to stop space from scrolling and flip the card.
+            e.preventDefault();
+            flip();
+          }
+        });
+      });
+
+      /* 9) Footnotes focusable */
+      document.querySelectorAll('.footnote sup').forEach(fn=>{
+        fn.setAttribute('tabindex','0');
+      });
+
+      /* 10) Bio Modal Logic */
+      const openBtn = document.getElementById('open-bio-modal');
+      const closeBtn = document.getElementById('close-bio-modal');
+      const modal = document.getElementById('bio-modal');
+      const modalContent = modal ? modal.querySelector('.bio-modal-content') : null; // Get content for overlay click check
+
+      if (openBtn && closeBtn && modal && modalContent) {
+        const openModal = () => {
+          modal.removeAttribute('hidden');
+          document.body.classList.add('modal-open');
+          // Add close button to cursor hover list
+          if (cursor) {
+            closeBtn.addEventListener('mouseenter', ()=>cursor.classList.add('hovering'));
+            closeBtn.addEventListener('mouseleave', ()=>cursor.classList.remove('hovering'));
+          }
+        };
+
+        const closeModal = () => {
+          modal.setAttribute('hidden', 'true');
+          document.body.classList.remove('modal-open');
+          // Remove close button from cursor hover list
+          if (cursor) {
+            closeBtn.removeEventListener('mouseenter', ()=>cursor.classList.add('hovering'));
+            closeBtn.removeEventListener('mouseleave', ()=>cursor.classList.remove('hovering'));
+          }
+        };
+
+        openBtn.addEventListener('click', openModal);
+        closeBtn.addEventListener('click', closeModal);
+
+        // Click outside to close
+        modal.addEventListener('click', (e) => {
+          // Check if the click is on the overlay itself, not the content
+          if (e.target === modal) {
+            closeModal();
+          }
+        });
+
+        // Escape key to close
+        window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && !modal.hasAttribute('hidden')) {
+            closeModal();
+          }
+        });
+      }
+
+    });
+  </script>
+</body>
+</html>
+

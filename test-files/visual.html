@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Dada Collage Workbench — p5.js</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.3/lib/p5.min.js"></script>
+  <style>
+    html,body{margin:0;height:100%;background:#0b0b0b;color:#eee;font:13px/1.4 system-ui,Inter,Arial}
+    #hud{position:fixed;left:12px;bottom:12px;background:#111a;border:1px solid #222;padding:10px 12px;border-radius:12px;backdrop-filter:blur(6px)}
+    #hud kbd{background:#222;border:1px solid #333;border-bottom-color:#222;border-radius:6px;padding:1px 5px;margin:0 2px;font:12px ui-monospace,Menlo,Consolas}
+    #log{position:fixed;right:12px;bottom:12px;max-width:38vw;background:#180f;border:1px solid #322;padding:8px 10px;border-radius:10px;font:12px ui-monospace}
+    canvas{display:block}
+  </style>
+</head>
+<body>
+<div id="hud">
+  <div><b>Dada Collage Workbench</b> — <span id="status">Loading…</span></div>
+  <div>Drag to move • <kbd>Alt</kbd>+Drag rotate • <kbd>Shift</kbd>+Drag scale</div>
+  <div><kbd>N</kbd> random • <kbd>E</kbd> export 5400×7200 • <kbd>G</kbd> grid • <kbd>B</kbd> bg</div>
+</div>
+<pre id="log" hidden></pre>
+
+<script>
+/* ---------- set your asset folder here ---------- */
+const ASSET = ""; // "" if images sit next to this HTML
+
+/* ---------- exact filenames ---------- */
+const files = [
+  // batch-1
+  "cat_scarf.png","man_hat.png","metro_card.png","qutub_minar.png","statue.png","mango.png","banana.png",
+  // batch-2
+  "cat_eye.png","hajmola_candy.png","charminar.png","pallonji_soda.png","khnh_dvd.png"
+];
+
+const BLENDS = [BLEND, MULTIPLY, SCREEN, OVERLAY, HARD_LIGHT, DIFFERENCE];
+const W = 1350, H = 1800, EXPORT_W = 5400, EXPORT_H = 7200;
+
+let imgs = {};            // loaded p5.Images
+let sprites = [];
+let active=null, dragging=false, dragStart, startState;
+let showGrid=false, bgMode=1;
+let failed=[], loaded=0;
+
+class Sprite{
+  constructor(img,x,y,s=1,r=0){ this.img=img; this.x=x; this.y=y; this.s=s; this.r=r;
+    this.opacity=255; this.blendIdx=0; this.flipX=false; }
+  get w(){return this.img.width*this.s}
+  get h(){return this.img.height*this.s}
+  contains(px,py){ const dx=px-this.x,dy=py-this.y,ang=-this.r,rx=Math.cos(ang)*dx-Math.sin(ang)*dy,ry=Math.sin(ang)*dx+Math.cos(ang)*dy; return Math.abs(rx)<this.w/2&&Math.abs(ry)<this.h/2; }
+  draw(){ push(); translate(this.x,this.y); rotate(this.r); scale(this.flipX?-1:1,1); blendMode(BLENDS[this.blendIdx]); tint(255,this.opacity); imageMode(CENTER); image(this.img,0,0,this.w,this.h); pop(); }
+  outline(){ push(); translate(this.x,this.y); rotate(this.r); noFill(); stroke(255,180,40); rectMode(CENTER); rect(0,0,this.w,this.h,10); pop(); }
+}
+
+/* ---------- robust preload with error reporting ---------- */
+function preload(){
+  files.forEach(name=>{
+    loadImage(ASSET+name,
+      img=>{ imgs[name]=img; loaded++; updateStatus(); },
+      err=>{ failed.push(name); updateStatus(); console.warn("Failed:", ASSET+name, err); }
+    );
+  });
+}
+function updateStatus(){
+  const s = document.getElementById('status');
+  if (loaded+failed.length < files.length){
+    s.textContent = `Loading ${loaded}/${files.length}…`;
+  } else {
+    if (failed.length){
+      const log = document.getElementById('log');
+      log.hidden = false;
+      log.textContent = "Missing/failed files:\n" + failed.map(f=>"• "+ASSET+f).join("\n") +
+                        "\n\nTip: check path + case + extension.";
+    }
+    s.textContent = `Ready (${loaded} loaded${failed.length?`, ${failed.length} failed`:''})`;
+    if (loaded) randomLayout();
+  }
+}
+
+function setup(){ pixelDensity(1); createCanvas(W,H); background(12); }
+
+function draw(){
+  drawBackground();
+  sprites.forEach(s=>s.draw());
+  if (active) active.outline();
+  if (showGrid) drawGoldenGrid();
+}
+
+function drawBackground(){
+  if (bgMode===0){ background(18); return; }
+  if (bgMode===1){
+    noStroke(); background(16);
+    for (let i=0;i<30;i++){ fill(15+i*2); const m=i/30; rect(W*(0.5-m/2),H*(0.5-m/2),W*m,H*m); }
+    return;
+  }
+  if (bgMode===2){
+    background(16); loadPixels();
+    for (let i=0;i<pixels.length;i+=4){ const n=12+Math.random()*8; pixels[i]+=n; pixels[i+1]+=n; pixels[i+2]+=n; }
+    updatePixels();
+  }
+}
+function drawGoldenGrid(){ push(); stroke(255,50); const phi=(1+Math.sqrt(5))/2; line(W/phi,0,W/phi,H); line(W-W/phi,0,W-W/phi,H); line(0,H/phi,W,H/phi); line(0,H-H/phi,W,H-H/phi); pop(); }
+
+/* ---------- interactions ---------- */
+function mousePressed(){ active=null; for(let i=sprites.length-1;i>=0;i--){ if(sprites[i].contains(mouseX,mouseY)){ active=sprites[i]; break; } } if(active){ dragging=true; dragStart=createVector(mouseX,mouseY); startState={x:active.x,y:active.y,r:active.r,s:active.s}; } }
+function mouseDragged(){ if(!dragging||!active) return; const dx=mouseX-dragStart.x,dy=mouseY-dragStart.y;
+  if (keyIsDown(ALT)) active.r = startState.r + (dx+dy)*0.01;
+  else if (keyIsDown(SHIFT)) active.s = max(0.05, startState.s*(1+(dx+dy)/400));
+  else { active.x = startState.x + dx; active.y = startState.y + dy; }
+}
+function mouseReleased(){ dragging=false; }
+function keyPressed(){
+  if (key==='N') randomLayout();
+  if (key==='G') showGrid=!showGrid;
+  if (key==='B') bgMode=(bgMode+1)%3;
+  if (key==='E') exportHiRes();
+  if (!active && sprites.length) active=sprites[sprites.length-1];
+  if (!active) return;
+  if (key==='F') active.flipX=!active.flipX;
+  if (key==='[') active.opacity=max(10,active.opacity-20);
+  if (key===']') active.opacity=min(255,active.opacity+20);
+  if (key>='1'&&key<='6') active.blendIdx=int(key)-1;
+  if (keyCode===RIGHT_ARROW) { sprites = sprites.filter(s=>s!==active); sprites.push(active); }
+  if (keyCode===LEFT_ARROW)  { sprites = sprites.filter(s=>s!==active); sprites.unshift(active); }
+  if (keyCode===DELETE || keyCode===BACKSPACE){ sprites = sprites.filter(s=>s!==active); active=null; }
+}
+
+/* ---------- layout + export ---------- */
+function randomLayout(){
+  sprites = [];
+  const keys = Object.keys(imgs);
+  const count = Math.min(keys.length, Math.floor(random(6,10)));
+  for (let i=0;i<count;i++){
+    const k = random(keys), im = imgs[k];
+    const s = new Sprite(im, random(0.18*W,0.82*W), random(0.18*H,0.82*H));
+    const base = (im.width*im.height)/(1200*1200);
+    s.s = 0.25/Math.sqrt(base)*random(0.8,1.4);
+    s.r = random(-PI/6, PI/6);
+    s.opacity = random([160,200,255]);
+    s.blendIdx = int(random(BLENDS.length));
+    if (random()<0.3) s.flipX=true;
+    sprites.push(s);
+  }
+  active = sprites[sprites.length-1] || null;
+}
+
+function exportHiRes(){
+  const g = createGraphics(EXPORT_W, EXPORT_H); g.pixelDensity(1);
+  if (bgMode===0) g.background(18);
+  if (bgMode===1){ g.background(16); for(let i=0;i<70;i++){ g.fill(12+i*2); const m=i/70; g.rect(EXPORT_W*(0.5-m/2),EXPORT_H*(0.5-m/2),EXPORT_W*m,EXPORT_H*m); } }
+  if (bgMode===2){ g.background(16); g.loadPixels(); for (let i=0;i<g.pixels.length;i+=4){ const n=12+Math.random()*8; g.pixels[i]+=n; g.pixels[i+1]+=n; g.pixels[i+2]+=n; } g.updatePixels(); }
+  const sx = EXPORT_W/W, sy = EXPORT_H/H; g.imageMode(CENTER);
+  sprites.forEach(s=>{ g.push(); g.translate(s.x*sx, s.y*sy); g.rotate(s.r); g.scale(s.flipX?-1:1,1);
+    g.blendMode([g.BLEND,g.MULTIPLY,g.SCREEN,g.OVERLAY,g.HARD_LIGHT,g.DIFFERENCE][s.blendIdx]);
+    g.tint(255, s.opacity); g.image(s.img, 0, 0, s.img.width*s.s*sx, s.img.height*s.s*sy); g.pop(); });
+  g.save('dada_collage_5400x7200.png'); g.remove();
+}
+</script>
+</body>
+</html>
