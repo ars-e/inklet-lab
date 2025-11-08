@@ -118,13 +118,17 @@ The automaton is built with several "organs":
   </figure>
 </section>
 
-## Few Final Thoughts {.section-title}
+<br>
 
 <br>
+
+## Few Final Thoughts {.section-title}
+
 
 Ultimately, "The Doodler" is a question posed in code. It wonders if the "unconscious" hand of the automatist can be digitally simulated, not through artificial intelligence, but through an absence of traditional, goal-oriented logic. 
 
 <br>
+
 Each piece that emerges is not a final answer, but the artifact of a unique performance, a testament to the idea that, art(compelling or not) can be born from chaos, chance, and the beautiful, absurd rejection of reason.
 
 
