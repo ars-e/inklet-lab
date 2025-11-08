@@ -209,13 +209,16 @@ blockquote {
     padding-left: 1.5rem;
     border-left: 5px solid var(--tw-color-truck-red);
 }
-.gallery-section {
-    margin-top: 3rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+/* Gallery: responsive columns by container width */
+.content-main .gallery-section{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  align-items: start;
 }
-@media(max-width: 768px){ .gallery-section { grid-template-columns: 1fr; } }
+.content-main .stylized-frame{ width: 100%; margin: 0; }
+.content-main .gallery-section video.stylized-image{ display:block; width:100%; height:auto; }
+
 
 
 /* 6. SIDEBAR */
@@ -357,3 +360,132 @@ blockquote {
     color: var(--tw-color-ink);
     border-left-color: var(--tw-color-truck-red);
 }
+
+/* INLINE LINKS — inside paragraphs, gallery captions, body text */
+.content-section a,
+p a,
+.stylized-frame figcaption a,
+.meta-value a {
+    color: var(--tw-color-ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--tw-color-ink-light);
+    text-underline-offset: 3px;
+    transition: all 0.2s ease;
+}
+
+.content-section a:hover,
+p a:hover,
+.stylized-frame figcaption a:hover,
+.meta-value a:hover {
+    color: #d63a3a; /* truck-red (accent) */
+    text-decoration-color: #d63a3a;
+    background: rgba(214, 58, 58, 0.08);
+}
+
+/* BOLD LINKS — look like mini-buttons inside text or sidebars */
+.bold-link {
+    padding: 0.2rem 0.4rem;
+    background: #fff;
+    border: 2px solid var(--tw-color-ink);
+    font-weight: 900;
+    text-transform: uppercase;
+    color: var(--tw-color-ink);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 2px 2px 0 var(--tw-color-ink);
+}
+
+.bold-link:hover {
+    background: var(--tw-color-sun);
+}
+
+/* TOC LINKS — same palette as nav hovers */
+.toc-links li a:hover {
+    background: var(--tw-color-paper);
+    color: var(--tw-color-ink);
+    border-left-color: var(--pop-red);
+    box-shadow: inset 2px 0 0 var(--pop-red);
+}
+
+/* FOOTER LINKS — more refined */
+.site-footer a {
+    opacity: 0.75;
+    text-decoration: none;
+    transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.site-footer a:hover {
+    opacity: 1;
+    color: var(--sun);
+    text-decoration: underline;
+}
+
+/* --- New heading hierarchy --- */
+.content-main h2.section-title {
+  /* you already have .section-title; keeping for clarity */
+  scroll-margin-top: 90px;
+}
+
+/* Sub-section (H3) */
+.content-main h3.subsection-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  margin: 2rem 0 1rem;
+  padding-left: .75rem;
+  border-left: 6px solid var(--tw-color-ink);
+  line-height: 1.2;
+  scroll-margin-top: 90px;
+}
+
+/* Sub-sub-section (H4) */
+.content-main h4.subsubsection-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin: 1.25rem 0 .75rem;
+  padding-left: .6rem;
+  border-left: 4px dotted var(--tw-color-stamp-border);
+  color: var(--tw-color-ink);
+  scroll-margin-top: 90px;
+}
+
+/* Optional: subtle divider under H2 blocks to keep rhythm */
+.content-main h2.section-title + * { margin-top: .75rem; }
+
+/* TOC depth styling (if your JS adds .toc-level-[2|3|4] or data-depth) */
+.toc-links li[data-depth="2"] a,
+.toc-links li.toc-level-3 a { padding-left: 1.25rem; font-weight: 700; }
+.toc-links li[data-depth="3"] a,
+.toc-links li.toc-level-4 a { padding-left: 2rem;   font-weight: 600; opacity: .9; }
+
+/* Hover accent stays consistent with your nav hovers */
+.toc-links li[data-depth="2"] a:hover { box-shadow: inset 2px 0 0 var(--pop-cyan); border-left-color: var(--pop-cyan); }
+.toc-links li[data-depth="3"] a:hover { box-shadow: inset 2px 0 0 var(--pop-pink); border-left-color: var(--pop-pink); }
+
+/* Unordered lists: diamonds */
+.content-main ul{
+  list-style: disc;
+  margin: 1rem 0 0 1.5rem;
+  padding: 0;
+}
+.content-main ul li{ margin: .5rem 0; }
+.content-main ul li::marker{
+  content: '◆ ';
+  font-weight: 900;
+}
+
+/* Ordered lists: keep numbers */
+.content-main ol{
+  list-style: decimal;          /* ensure numbers */
+  margin: 1rem 0 0 1.5rem;
+  padding: 0;
+}
+.content-main ol li{ margin: .5rem 0; }
+
+
+/* no ::marker override for ol */
+

@@ -23,7 +23,7 @@ toolkit:
   - label: "Palette"
     value: "Sun, Truck Red, Ink"
 featured: false
-tags: ["projects"]
+tags: 
 ---
 ## The Brief
 
