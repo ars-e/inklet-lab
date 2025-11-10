@@ -88,8 +88,8 @@
                         <span class="meta-value">{{ disciplines | join(", ") }}</span>
                     </div>
                     <div class="meta-item">
-                        <span class="meta-label">Year</span>
-                        <span class="meta-value">{{ year }}</span>
+                        <span class="meta-label">Date</span>
+                        <span class="meta-value">{{ date | date("LLL dd, yyyy") }}</span>
                     </div>
                     <div class="meta-item">
                         <span class="meta-label">Status</span>

@@ -70,42 +70,22 @@
 
   <!-- Filters -->
   <div class="filters">
-    <div class="container bar">
-      <strong style="font-family:'Playfair Display', serif;">Browse:</strong>
-      <input type="search" placeholder="Search essays, stories, opinions…" aria-label="Search Dispatch" />
+  <div class="container bar">
+    <strong style="font-family:'Playfair Display', serif;">Browse:</strong>
+    <input type="search" placeholder="Search essays, blogs, stories, opinions…" aria-label="Search Dispatch" />
 
-      <!-- chips row -->
-      <div class="chips" id="chips">
-        <a class="chip active" data-type="all" href="#">All</a>
-        <a class="chip" data-type="technical" data-variant="tech" href="#">Technical</a>
-        <a class="chip" data-type="opinion"  data-variant="pulp" href="#">Opinion</a>
-        <a class="chip" data-type="editorial" href="#">Editorial</a>
-        <a class="chip" data-type="noir" href="#">Noir</a>
-        <a class="chip" data-type="sci" href="#">Retro Sci-Fi</a>
-        <!-- add as many new types as you want… -->
-      </div>
+    <div class="chips" id="chips"></div>
+    <strong id="resCount" style="font-family:'Fira Code',monospace;">(0)</strong>
 
-      <div class="chips-more-wrap" id="chipsWrap">
-        <button class="chips-more" id="chipsMore" aria-expanded="false" aria-haspopup="menu" aria-controls="chipsMenu">More ▾</button>
-        <div class="chips-menu" id="chipsMenu" role="menu"></div>
-      </div>
-
-      <span style="margin-left:auto"></span>
-      <label style="font-weight:700;">Sort:</label>
-      <select id="sortSel" aria-label="Sort">
-        <option value="recent">Recent</option>
-        <option value="alpha">A → Z</option>
-      </select>
-
-      <label style="font-weight:700;">Length:</label>
-      <select id="lenSel" aria-label="Reading length">
-        <option value="all">All</option>
-        <option value="short">≤ 6 min</option>
-        <option value="long">≥ 7 min</option>
-      </select>
-      <strong id="resCount" style="font-family:'Fira Code',monospace;">(6)</strong>
-    </div>
+    <span style="margin-left:auto"></span>
+    <label style="font-weight:700;">Sort:</label>
+    <select id="sortSel" aria-label="Sort">
+      <option value="recent">Recent</option>
+      <option value="alpha">A → Z</option>
+    </select>
   </div>
+</div>
+
 
   <main class="preview">
     <div class="container">
@@ -115,6 +95,28 @@
        
   
   <article class="card "
+           data-type="blog"
+           data-title="Blog #1: The Cat and the Click"
+           data-href="/articles/the-cat/"
+           role="link" tabindex="0">
+
+    
+      <div class="thumb">
+        <img src="/assets/article-covers/gq3ehlg8nfx71.jpg"
+             alt="Img source - reddit"
+             loading="lazy" />
+      </div>
+    
+
+    <div class="body ">
+      <span class="label blog"><span class="dot"></span> Blog</span>
+      <h3><a href="/articles/the-cat/">Blog #1: The Cat and the Click</a></h3>
+      <div class="meta">8-9 mins read · A short reflection on Schrödinger’s Cat. What it really...</div>
+    </div>
+  </article>
+
+  
+  <article class="card "
            data-type="experimental"
            data-title="The Wall"
            data-href="/articles/the-wall/"
@@ -122,7 +124,7 @@
 
     
       <div class="thumb">
-        <img src="/assets/article-covers/the-wall.jpg"
+        <img src="/assets/article-covers/Screenshot 2025-11-10 at 10.19.23 PM.png"
              alt="A blank wall"
              loading="lazy" />
       </div>
@@ -132,94 +134,6 @@
       <span class="label experimental"><span class="dot"></span> Experimental</span>
       <h3><a href="/articles/the-wall/">The Wall</a></h3>
       <div class="meta">5 min read · This is experimental text where the inanimate has thoughts....</div>
-    </div>
-  </article>
-
-  
-  <article class="card "
-           data-type="technical"
-           data-title="Eigenvalues, Power Laws, and Why Your Plot Lies"
-           data-href="/articles/why-plots-lie/"
-           role="link" tabindex="0">
-
-    
-      <div class="thumb">
-        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&amp;w=2070&amp;auto=format&amp;fit=crop"
-             alt="A team working together at a desk with laptops and papers"
-             loading="lazy" />
-      </div>
-    
-
-    <div class="body ">
-      <span class="label technical"><span class="dot"></span> Technical</span>
-      <h3><a href="/articles/why-plots-lie/">Eigenvalues, Power Laws, and Why Your Plot Lies</a></h3>
-      <div class="meta">12 min read · A deep dive into the mathematical assumptions behind common...</div>
-    </div>
-  </article>
-
-  
-  <article class="card "
-           data-type="noir"
-           data-title="Debugging in the Dark"
-           data-href="/articles/debug-in-dark/"
-           role="link" tabindex="0">
-
-    
-      <div class="thumb">
-        <img src="https://images.unsplash.com/photo-1526498460520-4c246339dcc4?q=80&amp;w=2070&amp;auto=format&amp;fit=crop"
-             alt="A dark room with code on a computer screen"
-             loading="lazy" />
-      </div>
-    
-
-    <div class="body ">
-      <span class="label noir"><span class="dot"></span> Noir</span>
-      <h3><a href="/articles/debug-in-dark/">Debugging in the Dark</a></h3>
-      <div class="meta">7 min read · A personal story about tracking down a critical bug in a...</div>
-    </div>
-  </article>
-
-  
-  <article class="card "
-           data-type="retro sci-fi"
-           data-title="Open for Fun"
-           data-href="/articles/my-first-post/"
-           role="link" tabindex="0">
-
-    
-      <div class="thumb">
-        <img src="https://images.unsplash.com/photo-1639799223012-39c4d24113f9?q=80&amp;w=1932&amp;auto=format&amp;fit=crop"
-             alt="A retro-futuristic illustration of a rocket ship"
-             loading="lazy" />
-      </div>
-    
-
-    <div class="body ">
-      <span class="label retro sci-fi"><span class="dot"></span> Retro Sci-Fi</span>
-      <h3><a href="/articles/my-first-post/">Open for Fun</a></h3>
-      <div class="meta">10 min read · A look back at the speculative visions of early AI...</div>
-    </div>
-  </article>
-
-  
-  <article class="card "
-           data-type="retro sci-fi"
-           data-title="When AI Dreamed of Rockets"
-           data-href="/articles/ai-dream/"
-           role="link" tabindex="0">
-
-    
-      <div class="thumb">
-        <img src="https://images.unsplash.com/photo-1639799223012-39c4d24113f9?q=80&amp;w=1932&amp;auto=format&amp;fit=crop"
-             alt="A retro-futuristic illustration of a rocket ship"
-             loading="lazy" />
-      </div>
-    
-
-    <div class="body ">
-      <span class="label retro sci-fi"><span class="dot"></span> Retro Sci-Fi</span>
-      <h3><a href="/articles/ai-dream/">When AI Dreamed of Rockets</a></h3>
-      <div class="meta">10 min read · A look back at the speculative visions of early AI...</div>
     </div>
   </article>
 
@@ -262,19 +176,21 @@
   <!-- Zine strip -->
   <section class="zine" aria-label="zine strip">
     <div class="container">
-      <div class="tag">typed-notes/2025-φ</div>
-      <div class="tag">dispatch/fieldwork</div>
-      <div class="tag">pulp-covers</div>
-      <div class="tag">editorial-cartoons</div>
-      <div class="tag">math-sketches</div>
+      <div class="tag">notes/2025</div>
+      <div class="tag">dispatch/</div>
+      <div class="tag">mad-men</div>
+      <div class="tag">editorial</div>
+      <div class="tag">math-plots</div>
       <div class="tag">book-margins</div>
+      <div class="tag">stamp-duty</div>
+      <div class="tag">printing/press</div>
     </div>
   </section>
 
   <footer class="container">
     <div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center; justify-content:space-between;">
-      <div>© <span id="y"></span> Inklet Lab · The Dispatch</div>
-      <div style="font-family:'Fira Code', monospace; font-size:.95rem;">v0.3 • editorial-pulp-grunge</div>
+      <div>© <span id="y"></span> · Inklet Lab · Abdur Rauf</div>
+      <div style="font-family:'Fira Code', monospace; font-size:.95rem;">v0.1</div>
     </div>
   </footer>
 

@@ -4,7 +4,7 @@ title: "The Wall"
 dek: "This is experimental text where the inanimate has thoughts. A plain wall becomes sentient only to observe a boy who is a complete void." 
 category: "Experimental" 
 read_time: "5 min read" 
-cover_image: "/assets/article-covers/the-wall.jpg" 
+cover_image: "/assets/article-covers/Screenshot 2025-11-10 at 10.19.23 PM.png" 
 cover_image_alt: "A blank wall" 
 date: 2025-10-31 
 tags: ["fiction", "posts"]

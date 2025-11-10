@@ -159,25 +159,88 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Social share (anchors use their own href; handle copy button)
-  function setupSocialShare() {
-    const wrap = document.getElementById('socialShare');
-    if (!wrap) return;
+  // --- Social share (anchors use their own href; handle copy button)
+function setupSocialShare() {
+  const wrap = document.getElementById('socialShare');
+  const toast = document.getElementById('shareToast');
+  if (!wrap) return;
 
-    wrap.addEventListener('click', (e) => {
-      const button = e.target.closest('button');
-      if (button?.dataset?.service === 'copy') {
-        e.preventDefault();
-        const url = `${location.origin}${location.pathname}${location.search}${location.hash}`;
-        navigator.clipboard.writeText(url).then(() => {
-          button.title = 'Copied!';
-          button.setAttribute('aria-label', 'Copied!');
-          setTimeout(() => {
-            button.title = 'Copy link';
-            button.setAttribute('aria-label', 'Copy link');
-          }, 2000);
-        });
+  wrap.addEventListener('click', async (e) => {
+    const button = e.target.closest('button');
+    if (button?.dataset?.service === 'copy') {
+      e.preventDefault();
+      const url = button.getAttribute('data-clipboard-text')
+                 || `${location.origin}${location.pathname}${location.search}${location.hash}`;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(url);
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = url; ta.setAttribute('readonly','');
+          ta.style.position = 'fixed'; ta.style.top = '-9999px';
+          document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+          document.body.removeChild(ta);
+        }
+        // toast
+        if (toast) {
+          toast.hidden = false;
+          toast.classList.add('show');
+          clearTimeout(setupSocialShare._t);
+          setupSocialShare._t = setTimeout(() => {
+            toast.classList.remove('show');
+            toast.hidden = true;
+          }, 1400);
+        }
+      } catch (_) {
+        button.title = 'Copy failed';
       }
-      // Note: <a> links keep default target=_blank behavior
-    });
-  }
+    }
+  });
+}
+
 });
+
+  (function(){
+    const btn = document.getElementById('copyLinkBtn');
+    const toast = document.getElementById('shareToast');
+    if (!btn) return;
+
+    async function copyText(txt) {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(txt);
+        } else {
+          // Fallback textarea
+          const ta = document.createElement('textarea');
+          ta.value = txt;
+          ta.setAttribute('readonly','');
+          ta.style.position = 'fixed';
+          ta.style.top = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        }
+        showToast();
+      } catch(e) {
+        btn.setAttribute('title','Copy failed');
+      }
+    }
+
+    function showToast() {
+      if (!toast) return;
+      toast.hidden = false;
+      toast.classList.add('show');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => {
+        toast.classList.remove('show');
+        toast.hidden = true;
+      }, 1400);
+    }
+
+    btn.addEventListener('click', () => {
+      const url = btn.getAttribute('data-clipboard-text') || window.location.href;
+      copyText(url);
+    });
+  })();
+

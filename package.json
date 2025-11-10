@@ -15,6 +15,7 @@
   "type": "commonjs",
   "devDependencies": {
     "@11ty/eleventy": "^3.1.2",
+    "@11ty/eleventy-plugin-rss": "^2.0.4",
     "markdown-it-anchor": "^9.2.0",
     "markdown-it-attrs": "^4.3.1"
   },
@@ -133,6 +134,7 @@
     "urlpattern-polyfill": "^10.1.0",
     "ws": "^8.18.3"
   },
-  "engines": { "node": ">=18.0.0" }
-
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }

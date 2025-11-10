@@ -277,3 +277,31 @@ footer { padding: 2.2rem 1rem 4rem; color: var(--ink-2); border-top: 1px dashed 
   scroll-margin-top: 90px; /* adjust to your header height */
 }
 
+
+.share-toast {
+  margin-left: .25rem; font-size: .85rem; font-weight: 700;
+  background: #000; color: #fff; padding: .25rem .5rem; border-radius: 4px;
+  opacity: 0; transform: translateY(4px); transition: opacity .18s ease, transform .18s ease;
+}
+.share-toast.show { opacity: 1; transform: translateY(0); }
+
+/* make share icons inherit color and be visible everywhere */
+.social-share { --share-fg: var(--ink-2); }
+.social-share a, .social-share button { color: var(--share-fg); }
+
+/* optional: show a small “Copy” hint on hover (desktop) */
+.copy-link:hover::after {
+  content: "Copy";
+  position: relative;
+  margin-left: .4rem;
+  font: 700 .8rem/1 'Libre Franklin', sans-serif;
+}
+
+/* toast */
+.share-toast {
+  margin-left: .25rem; font-size: .85rem; font-weight: 700;
+  background: #000; color: #fff; padding: .25rem .5rem; border-radius: 4px;
+  opacity: 0; transform: translateY(4px);
+  transition: opacity .18s ease, transform .18s ease;
+}
+.share-toast.show { opacity: 1; transform: translateY(0); }

@@ -5,7 +5,7 @@ card_id: "PETI001"
 dek: "An audio reactive generative art experiment. Also a nod to Dada’s play with chance."
 studio: "Inklet Lab"
 disciplines: ["Generative Art", "Data driven Art Direction", "Audio Visualization", "Modern Art"]
-year: 2025
+date: 2025-11-07
 status: "Published"
 image: "/assets/project_covers/image.png"
 image_alt: "Visualization of Khalbali"

@@ -1,37 +1,32 @@
 // .eleventy.js
-
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
 const markdownItAttrs = require("markdown-it-attrs");
 const { DateTime } = require("luxon");
 
+// ⚡ (optional) RSS plugin gives helpers incl. absoluteUrl
+const pluginRss = require("@11ty/eleventy-plugin-rss");
+
 module.exports = function (eleventyConfig) {
-  // ---------- Passthrough (map src/* to top-level output paths) ----------
+  // ---------- Passthrough ----------
   eleventyConfig.addPassthroughCopy({ "src/css": "css" });
   eleventyConfig.addPassthroughCopy({ "src/js": "js" });
   eleventyConfig.addPassthroughCopy({ "src/assets": "assets" });
 
-  // (Optional) watch extras in dev
   eleventyConfig.addWatchTarget("src/css");
   eleventyConfig.addWatchTarget("src/js");
 
-  // ---------- Markdown Configuration ----------
-  const md = markdownIt({
-    html: true,
-    linkify: true,
-    typographer: true,
-  })
+  // ⚡ enable RSS plugin (safe even if you don’t use feeds)
+  eleventyConfig.addPlugin(pluginRss);
+
+  // ---------- Markdown ----------
+  const md = markdownIt({ html: true, linkify: true, typographer: true })
     .use(markdownItAnchor, {
       level: [2, 3],
       slugify: (s) =>
-        s
-          .toLowerCase()
-          .trim()
-          .replace(/[^\w\s-]/g, "")
-          .replace(/\s+/g, "-"),
+        s.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-"),
     })
     .use(markdownItAttrs);
-
   eleventyConfig.setLibrary("md", md);
 
   // ---------- Filters ----------
@@ -50,20 +45,27 @@ module.exports = function (eleventyConfig) {
       const year = new Intl.DateTimeFormat("en-US", { year: "numeric" }).format(d);
       return `${day} ${month}, ${year}`;
     }
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }).format(d);
+    return new Intl.DateTimeFormat("en-US", { year: "numeric", month: "long", day: "numeric" }).format(d);
   });
 
-  // JSON stringify for embedding in attributes
+  // ISO date for JSON feeds
+  eleventyConfig.addFilter("toISO", (d) => {
+    const x = d instanceof Date ? d : (d ? new Date(d) : null);
+    return x && !isNaN(x) ? x.toISOString() : null;
+  });
+
+  // ⚡ NEW: absoluteUrl (so your Nunjucks | absoluteUrl works)
+  eleventyConfig.addFilter("absoluteUrl", (path, base) => new URL(path, base).toString());
+
+  // ⚡ NEW: dateISOString (your template uses this)
+  eleventyConfig.addFilter("dateISOString", (d) => {
+    const x = d instanceof Date ? d : (d ? new Date(d) : null);
+    return x && !isNaN(x) ? x.toISOString() : null;
+  });
+
+  // JSON stringify
   eleventyConfig.addFilter("json", (value) => {
-    try {
-      return JSON.stringify(value ?? []);
-    } catch {
-      return "[]";
-    }
+    try { return JSON.stringify(value ?? []); } catch { return "[]"; }
   });
 
   // Related posts helper
@@ -76,44 +78,33 @@ module.exports = function (eleventyConfig) {
     api.getFilteredByTag("posts").reverse()
   );
 
-  // Helper: safe date for sorting
   const safeDate = (item) => {
-    // prefer explicit .date, then year, else epoch
     if (item.date instanceof Date && !isNaN(item.date)) return item.date;
     if (item.data && item.data.year) return new Date(`${item.data.year}-01-01`);
     return new Date(0);
   };
 
-  // Main "projects" collection (Markdown tagged projects + optional JSON PDFs)
   eleventyConfig.addCollection("projects", (collectionApi) => {
     const mdItems = collectionApi
       .getFilteredByTag("projects")
       .filter((p) => (p.data.status || "").toLowerCase() !== "draft");
 
     let pdfData = [];
-    try {
-      pdfData = require("./src/_data/pdf_projects.json");
-    } catch (_) {
-      // no JSON file present → fine
-    }
+    try { pdfData = require("./src/_data/pdf_projects.json"); } catch (_) {}
 
     const pdfItems = (pdfData || []).map((pdf) => ({
-      url: pdf.url,          // direct link to /assets/pdfs/...
-      data: pdf,             // fields: title, tags, image, client, year, status, isPdf, etc.
+      url: pdf.url,
+      data: pdf,
       date: new Date(pdf.date || `${pdf.year || 0}-01-01`),
     }));
 
     return [...mdItems, ...pdfItems].sort((a, b) => safeDate(b) - safeDate(a));
   });
 
-  // Featured subset (works for both Markdown & JSON PDF entries)
   eleventyConfig.addCollection("featuredProjects", (collectionApi) => {
     const mdItems = collectionApi.getFilteredByTag("projects");
-
     let pdfData = [];
-    try {
-      pdfData = require("./src/_data/pdf_projects.json");
-    } catch (_) {}
+    try { pdfData = require("./src/_data/pdf_projects.json"); } catch (_) {}
 
     const pdfItems = (pdfData || []).map((pdf) => ({
       url: pdf.url,
@@ -122,56 +113,38 @@ module.exports = function (eleventyConfig) {
     }));
 
     return [...mdItems, ...pdfItems]
-      .filter(
-        (p) =>
-          (p.data.status || "").toLowerCase() === "published" && !!p.data.featured
-      )
+      .filter((p) => (p.data.status || "").toLowerCase() === "published" && !!p.data.featured)
       .sort((a, b) => safeDate(b) - safeDate(a));
   });
 
-  // ---------- Pretty URLs (directory-style permalinks) ----------
+  // ---------- Pretty URLs ----------
   eleventyConfig.addGlobalData("eleventyComputed", {
     permalink: (data) => {
       const stem = data.page.filePathStem;
 
-      // passthrough assets
-      if (
-        stem.startsWith("/css/") ||
-        stem.startsWith("/js/") ||
-        stem.startsWith("/assets/")
-      ) {
-        return false;
-      }
+      if (stem.startsWith("/css/") || stem.startsWith("/js/") || stem.startsWith("/assets/")) return false;
 
-      // /articles/* → directory style
       if (stem.startsWith("/articles/")) {
         const slug = stem.replace(/^\/articles\//, "");
         if (typeof data.permalink === "string") return data.permalink;
         return `/articles/${slug}/index.html`;
       }
 
-      // allow explicit overrides
       if (typeof data.permalink === "string") return data.permalink;
 
-      // special case front page
       if (stem === "/index" || stem === "/front-page") {
-        return `${stem}/index.html`; // set permalink: "/" in the file to make it the root
+        return `${stem}/index.html`;
       }
 
       return `${stem}/index.html`;
     },
   });
 
-  // ---------- Eleventy dirs/engines ----------
+  // ---------- Dirs/engines ----------
   return {
-    dir: {
-      input: "src",
-      output: "public",
-      includes: "_includes",
-      layouts: "_includes/layouts",
-    },
+    dir: { input: "src", output: "public", includes: "_includes", layouts: "_includes/layouts" },
     htmlTemplateEngine: "njk",
     markdownTemplateEngine: "njk",
-    templateFormats: ["njk", "md", "html"],
+    templateFormats: ["njk", "md", "html", "11ty.js"],
   };
 };

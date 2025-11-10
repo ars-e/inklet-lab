@@ -73,42 +73,22 @@ layout: false
 
   <!-- Filters -->
   <div class="filters">
-    <div class="container bar">
-      <strong style="font-family:'Playfair Display', serif;">Browse:</strong>
-      <input type="search" placeholder="Search essays, stories, opinions…" aria-label="Search Dispatch" />
+  <div class="container bar">
+    <strong style="font-family:'Playfair Display', serif;">Browse:</strong>
+    <input type="search" placeholder="Search essays, blogs, stories, opinions…" aria-label="Search Dispatch" />
 
-      <!-- chips row -->
-      <div class="chips" id="chips">
-        <a class="chip active" data-type="all" href="#">All</a>
-        <a class="chip" data-type="technical" data-variant="tech" href="#">Technical</a>
-        <a class="chip" data-type="opinion"  data-variant="pulp" href="#">Opinion</a>
-        <a class="chip" data-type="editorial" href="#">Editorial</a>
-        <a class="chip" data-type="noir" href="#">Noir</a>
-        <a class="chip" data-type="sci" href="#">Retro Sci-Fi</a>
-        <!-- add as many new types as you want… -->
-      </div>
+    <div class="chips" id="chips"></div>
+    <strong id="resCount" style="font-family:'Fira Code',monospace;">(0)</strong>
 
-      <div class="chips-more-wrap" id="chipsWrap">
-        <button class="chips-more" id="chipsMore" aria-expanded="false" aria-haspopup="menu" aria-controls="chipsMenu">More ▾</button>
-        <div class="chips-menu" id="chipsMenu" role="menu"></div>
-      </div>
-
-      <span style="margin-left:auto"></span>
-      <label style="font-weight:700;">Sort:</label>
-      <select id="sortSel" aria-label="Sort">
-        <option value="recent">Recent</option>
-        <option value="alpha">A → Z</option>
-      </select>
-
-      <label style="font-weight:700;">Length:</label>
-      <select id="lenSel" aria-label="Reading length">
-        <option value="all">All</option>
-        <option value="short">≤ 6 min</option>
-        <option value="long">≥ 7 min</option>
-      </select>
-      <strong id="resCount" style="font-family:'Fira Code',monospace;">(6)</strong>
-    </div>
+    <span style="margin-left:auto"></span>
+    <label style="font-weight:700;">Sort:</label>
+    <select id="sortSel" aria-label="Sort">
+      <option value="recent">Recent</option>
+      <option value="alpha">A → Z</option>
+    </select>
   </div>
+</div>
+
 
   <main class="preview">
     <div class="container">
@@ -177,19 +157,21 @@ layout: false
   <!-- Zine strip -->
   <section class="zine" aria-label="zine strip">
     <div class="container">
-      <div class="tag">typed-notes/2025-φ</div>
-      <div class="tag">dispatch/fieldwork</div>
-      <div class="tag">pulp-covers</div>
-      <div class="tag">editorial-cartoons</div>
-      <div class="tag">math-sketches</div>
+      <div class="tag">notes/2025</div>
+      <div class="tag">dispatch/</div>
+      <div class="tag">mad-men</div>
+      <div class="tag">editorial</div>
+      <div class="tag">math-plots</div>
       <div class="tag">book-margins</div>
+      <div class="tag">stamp-duty</div>
+      <div class="tag">printing/press</div>
     </div>
   </section>
 
   <footer class="container">
     <div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center; justify-content:space-between;">
-      <div>© <span id="y"></span> Inklet Lab · The Dispatch</div>
-      <div style="font-family:'Fira Code', monospace; font-size:.95rem;">v0.3 • editorial-pulp-grunge</div>
+      <div>© <span id="y"></span> · Inklet Lab · Abdur Rauf</div>
+      <div style="font-family:'Fira Code', monospace; font-size:.95rem;">v0.1</div>
     </div>
   </footer>
 
