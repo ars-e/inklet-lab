@@ -189,3 +189,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 });
+
+// Let mailto try first; if nothing happens, open Gmail compose.
+document.querySelectorAll('a.email-link').forEach(a => {
+  a.addEventListener('click', () => {
+    const fallback = a.dataset.fallback;
+    // If a handler exists, the browser will switch apps and this tab will pause/blur.
+    // If not, we stay visible; then we open Gmail in a new tab.
+    setTimeout(() => {
+      if (document.visibilityState === 'visible' && fallback) {
+        window.open(fallback, '_blank', 'noopener');
+      }
+    }, 400);
+  }, { passive: true });
+});
+
