@@ -1,16 +1,17 @@
+// /js/article.js
 document.addEventListener('DOMContentLoaded', () => {
   // --- KaTeX auto-render (if available)
   if (typeof renderMathInElement === 'function') {
     renderMathInElement(document.body, {
       delimiters: [
         { left: '$$', right: '$$', display: true },
-        { left: '$',  right: '$',  display: false }
-      ]
+        { left: '$',  right: '$',  display: false },
+      ],
     });
   }
 
   setupInteractions();
-  setFooterYear(); // harmless fallback
+  setFooterYear();
 
   function setFooterYear() {
     const y = document.getElementById('y');
@@ -86,22 +87,16 @@ document.addEventListener('DOMContentLoaded', () => {
       headings.forEach(h => observer.observe(h));
 
       // Smooth-scroll without adding history entries
-      // so the browser Back button returns to the previous page.
       toc.querySelectorAll('a').forEach(a => {
         a.addEventListener('click', (e) => {
-          // preserve modified/middle clicks
           if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-
           const href = a.getAttribute('href');
           if (!href || !href.startsWith('#')) return;
-
           const target = document.querySelector(href);
           if (!target) return;
-
           e.preventDefault();
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-          // Update URL hash WITHOUT pushing a new history entry
           const url = new URL(window.location.href);
           url.hash = href.slice(1);
           history.replaceState(null, '', url);
@@ -109,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Footnote highlight (let default jump occur)
+    // Footnote highlight
     if (footnoteRefs.length) {
       footnoteRefs.forEach(ref => {
         ref.addEventListener('click', () => {
@@ -129,12 +124,21 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.textContent = 'Copy';
       pre.appendChild(btn);
 
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', async () => {
         const code = pre.querySelector('code')?.innerText ?? '';
-        navigator.clipboard.writeText(code).then(() => {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(code);
+          } else {
+            const ta = document.createElement('textarea');
+            ta.value = code; ta.setAttribute('readonly','');
+            ta.style.position = 'fixed'; ta.style.top = '-9999px';
+            document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+            document.body.removeChild(ta);
+          }
           btn.textContent = 'Copied!';
           setTimeout(() => (btn.textContent = 'Copy'), 2000);
-        });
+        } catch (_) {}
       });
     });
   }
@@ -158,89 +162,92 @@ document.addEventListener('DOMContentLoaded', () => {
     closeBtn.addEventListener('click', close);
   }
 
-  // --- Social share (anchors use their own href; handle copy button)
-  // --- Social share (anchors use their own href; handle copy button)
-function setupSocialShare() {
-  const wrap = document.getElementById('socialShare');
-  const toast = document.getElementById('shareToast');
-  if (!wrap) return;
-
-  wrap.addEventListener('click', async (e) => {
-    const button = e.target.closest('button');
-    if (button?.dataset?.service === 'copy') {
-      e.preventDefault();
-      const url = button.getAttribute('data-clipboard-text')
-                 || `${location.origin}${location.pathname}${location.search}${location.hash}`;
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(url);
-        } else {
-          const ta = document.createElement('textarea');
-          ta.value = url; ta.setAttribute('readonly','');
-          ta.style.position = 'fixed'; ta.style.top = '-9999px';
-          document.body.appendChild(ta); ta.select(); document.execCommand('copy');
-          document.body.removeChild(ta);
-        }
-        // toast
-        if (toast) {
-          toast.hidden = false;
-          toast.classList.add('show');
-          clearTimeout(setupSocialShare._t);
-          setupSocialShare._t = setTimeout(() => {
-            toast.classList.remove('show');
-            toast.hidden = true;
-          }, 1400);
-        }
-      } catch (_) {
-        button.title = 'Copy failed';
-      }
-    }
-  });
-}
-
-});
-
-  (function(){
-    const btn = document.getElementById('copyLinkBtn');
+  // --- Social share (normalize URLs, LinkedIn warm, copy-link toast)
+  function setupSocialShare() {
+    const wrap = document.getElementById('socialShare');
     const toast = document.getElementById('shareToast');
-    if (!btn) return;
+    if (!wrap) return;
 
-    async function copyText(txt) {
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(txt);
-        } else {
-          // Fallback textarea
-          const ta = document.createElement('textarea');
-          ta.value = txt;
-          ta.setAttribute('readonly','');
-          ta.style.position = 'fixed';
-          ta.style.top = '-9999px';
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand('copy');
-          document.body.removeChild(ta);
-        }
-        showToast();
-      } catch(e) {
-        btn.setAttribute('title','Copy failed');
+    const absolutize = (u) => {
+      try { return new URL(u, window.location.origin).toString(); }
+      catch { return window.location.href; }
+    };
+
+    // Normalize url= params to absolute for X/LinkedIn anchors
+    wrap.querySelectorAll('a[href*="twitter.com/intent/tweet"], a[href*="linkedin.com/"]')
+      .forEach(a => {
+        try {
+          const u = new URL(a.href);
+          if (u.searchParams.has('url')) {
+            const raw = u.searchParams.get('url') || location.href;
+            u.searchParams.set('url', absolutize(raw));
+            a.href = u.toString();
+          }
+        } catch (_) {}
+      });
+
+    // Also normalize copy button’s data attribute once
+    const copyBtn = document.getElementById('copyLinkBtn');
+    if (copyBtn) {
+      const raw = copyBtn.getAttribute('data-clipboard-text') || location.href;
+      if (!/^https?:\/\//i.test(raw)) {
+        copyBtn.setAttribute('data-clipboard-text', absolutize(raw));
       }
     }
 
-    function showToast() {
-      if (!toast) return;
-      toast.hidden = false;
-      toast.classList.add('show');
-      clearTimeout(showToast._t);
-      showToast._t = setTimeout(() => {
-        toast.classList.remove('show');
-        toast.hidden = true;
-      }, 1400);
-    }
+    wrap.addEventListener('click', async (e) => {
+      const a = e.target.closest('a');
+      const btn = e.target.closest('button');
 
-    btn.addEventListener('click', () => {
-      const url = btn.getAttribute('data-clipboard-text') || window.location.href;
-      copyText(url);
+      // Copy link
+      if (btn?.dataset?.service === 'copy') {
+        e.preventDefault();
+        const url = btn.getAttribute('data-clipboard-text')
+          || `${location.origin}${location.pathname}${location.search}${location.hash}`;
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(url);
+          } else {
+            const ta = document.createElement('textarea');
+            ta.value = url; ta.setAttribute('readonly','');
+            ta.style.position = 'fixed'; ta.style.top = '-9999px';
+            document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+            document.body.removeChild(ta);
+          }
+          if (toast) {
+            toast.hidden = false;
+            toast.classList.add('show');
+            clearTimeout(setupSocialShare._t);
+            setupSocialShare._t = setTimeout(() => {
+              toast.classList.remove('show');
+              toast.hidden = true;
+            }, 1400);
+          }
+        } catch (_) {
+          btn.title = 'Copy failed';
+        }
+        return;
+      }
+
+      // LinkedIn: warm cache via Post Inspector, then open composer
+      if (a && a.dataset.service === 'linkedin') {
+        e.preventDefault();
+        try {
+          const shareUrl = new URL(a.href);
+          const target = shareUrl.searchParams.get('url') || location.href;
+
+          // Warm cache (non-blocking)
+          const inspector = `https://www.linkedin.com/post-inspector/inspect/${encodeURIComponent(target)}`;
+          fetch(inspector, { mode: 'no-cors', keepalive: true }).catch(() => {});
+
+          // Open composer shortly after to allow scrape start
+          setTimeout(() => {
+            window.open(shareUrl.toString(), '_blank', 'noopener,noreferrer');
+          }, 350);
+        } catch (_) {
+          window.open(a.href, '_blank', 'noopener,noreferrer');
+        }
+      }
     });
-  })();
-
+  }
+});

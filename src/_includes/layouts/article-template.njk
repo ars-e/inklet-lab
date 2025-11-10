@@ -107,41 +107,37 @@
             <h1 class="article-title">{{ title }}</h1>
             {% if dek %}<p class="article-dek">{{ dek }}</p>{% endif %}
 
-            <div class="social-share" id="socialShare" aria-label="Share this article">
+            {# compute once #}
+{% set pageUrlAbs = (page.url | url) | absoluteUrl(site.url) %}
+
+<div class="social-share" id="socialShare" aria-label="Share this article">
   <span class="share-label">Share:</span>
 
   <!-- X / Twitter -->
-  <a href="https://twitter.com/intent/tweet?url={{ pageUrlAbs }}&text={{ title | urlencode }}"
-     target="_blank" rel="noopener" aria-label="Share on X (Twitter)" title="Share on X (Twitter)">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zM17.083 19.77h1.833L7.084 4.126H5.117z"/>
-    </svg>
+  <a href="https://twitter.com/intent/tweet?text={{ title | urlencode }}&url={{ pageUrlAbs | urlencode }}"
+     target="_blank" rel="noopener noreferrer"
+     aria-label="Share on X (Twitter)" title="Share on X (Twitter)">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zM17.083 19.77h1.833L7.084 4.126H5.117z"/></svg>
   </a>
 
-  <!-- LinkedIn -->
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ pageUrlAbs }}&title={{ title | urlencode }}"
-     target="_blank" rel="noopener" aria-label="Share on LinkedIn" title="Share on LinkedIn">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path fill="currentColor" d="M6.5 21.5h-5v-13h5v13zM4 6.5C2.5 6.5 1.5 5.5 1.5 4s1-2.5 2.5-2.5c1.5 0 2.5 1 2.5 2.5s-1 2.5-2.5 2.5zm11.5 6c-1 0-2 1-2 2v7h-5v-13h5V10s1.6-1.5 4-1.5c3 0 5 2.2 5 6.3v6.7h-5v-7c0-1-1-2-2-2z"/>
-    </svg>
-  </a>
+  <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ pageUrlAbs | urlencode }}"
+   data-service="linkedin"
+   target="_blank" rel="noopener noreferrer"
+   aria-label="Share on LinkedIn" title="Share on LinkedIn">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path fill="currentColor" d="M6.5 21.5h-5v-13h5v13zM4 6.5C2.5 6.5 1.5 5.5 1.5 4s1-2.5 2.5-2.5c1.5 0 2.5 1 2.5 2.5s-1 2.5-2.5 2.5zm11.5 6c-1 0-2 1-2 2v7h-5v-13h5V10s1.6-1.5 4-1.5c3 0 5 2.2 5 6.3v6.7h-5v-7c0-1-1-2-2-2z"/>
+  </svg>
+</a>
+
 
   <!-- Copy link -->
-  <button type="button"
-          id="copyLinkBtn"
-          class="copy-link"
-          data-service="copy"
-          data-clipboard-text="{{ pageUrlAbs }}"
-          aria-label="Copy link"
-          title="Copy link">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <!-- chain icon -->
-      <path fill="currentColor" d="M10.59 13.41a1 1 0 0 1 0-1.41l3-3a3 3 0 1 1 4.24 4.24l-1.76 1.76a1 1 0 1 1-1.41-1.41l1.76-1.76a1 1 0 1 0-1.41-1.41l-3 3a1 1 0 0 1-1.41 0Zm-7.42 7.42a3 3 0 0 1 0-4.24l1.76-1.76a1 1 0 1 1 1.41 1.41L4.58 18a1 1 0 1 0 1.41 1.41l3-3a1 1 0 0 1 1.41 1.41l-3 3a3 3 0 0 1-4.24 0Z"/>
-    </svg>
+  <button type="button" id="copyLinkBtn" class="copy-link" data-service="copy"
+          data-clipboard-text="{{ pageUrlAbs }}" aria-label="Copy link" title="Copy link">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10.59 13.41a1 1 0 0 1 0-1.41l3-3a3 3 0 1 1 4.24 4.24l-1.76 1.76a1 1 0 1 1-1.41-1.41l1.76-1.76a1 1 0 1 0-1.41-1.41l-3 3a1 1 0 0 1-1.41 0Zm-7.42 7.42a3 3 0 0 1 0-4.24l1.76-1.76a1 1 0 1 1 1.41 1.41L4.58 18a1 1 0 1 0 1.41 1.41l-3-3a1 1 0 0 1 1.41 1.41l-3 3a3 3 0 0 1-4.24 0Z"/></svg>
   </button>
-
   <span id="shareToast" class="share-toast" role="status" aria-live="polite" hidden>Link copied</span>
 </div>
+
 
 
           </header>
