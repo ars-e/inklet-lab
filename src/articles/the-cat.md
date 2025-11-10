@@ -1,7 +1,7 @@
 ---
 layout: "article-template.njk"
 title: "Blog #1: The Cat and the Click"
-dek: "A short reflection on Schrödinger’s Cat. What it really means, what it doesn’t, and how revisiting it helped me see life things a little differently."
+dek: "A short reflection on Schrödinger’s Cat. What it really means, what it doesn’t, and how revisiting it helped me see things a little differently."
 category: "Blog"
 date: "2025-11-09"
 read_time: "8-9 mins read"

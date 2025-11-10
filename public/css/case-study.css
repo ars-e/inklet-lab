@@ -489,3 +489,51 @@ p a:hover,
 
 /* no ::marker override for ol */
 
+/* === Share Bar (left-aligned, sits between hero and content) === */
+.share-bar{
+  /* same width & center as hero container */
+  max-width: 1200px;
+  margin: .6rem auto 0;              /* tight gap below figcaption */
+  padding: .5rem .65rem;
+  display: flex;
+  gap: .55rem;
+  align-items: center;
+  justify-content: flex-start;       /* LEFT! */
+  background: var(--tw-color-stamp-bg);
+  border: 2px dashed var(--tw-color-stamp-border);
+  box-shadow: 4px 4px 0 var(--tw-color-stamp-border);
+}
+
+/* compact, square-ish icon buttons */
+.share-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px; height: 38px;         /* tight squares */
+  background: #fff;
+  border: 2px solid var(--tw-color-ink);
+  box-shadow: 2px 2px 0 var(--tw-color-ink);
+  color: var(--tw-color-ink);
+  transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+.share-btn .icon{ width: 18px; height: 18px; fill: currentColor; }
+
+.share-btn:hover{ background: var(--tw-color-paper); transform: translateY(-1px); }
+.share-btn:active{ transform: translateY(0); box-shadow: 1px 1px 0 var(--tw-color-ink); }
+
+/* subtle brand tints on hover */
+.share-x:hover  { color: #111; }
+.share-li:hover { color: #0a66c2; }
+
+/* copy feedback */
+.share-btn.copied{ background:#dcfce7; border-color:#166534; color:#166534; }
+
+/* accessibility */
+.sr-only{ position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
+
+/* responsive nudge: reduce margin on small screens */
+@media (max-width: 640px){
+  .share-bar{ margin-top: .4rem; padding: .4rem .5rem; }
+  .share-btn{ width: 34px; height: 34px; }
+  .share-btn .icon{ width: 16px; height: 16px; }
+}
