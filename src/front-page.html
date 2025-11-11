@@ -8,8 +8,31 @@ layout: false
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Abdur Rauf</title>
-  <meta name="description" content="Abdur Rauf | Inklet Lab" />
+  <title>{{ pageTitle or "Abdur Rauf — Inklet Lab" }}</title>
+<meta name="description" content="{{ pageDesc or 'tinkerer · perpetual student · observer' }}"/>
+
+<link rel="canonical" href="{{ (page.url | url) | absoluteUrl(site.url) }}">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#111416" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Inklet Lab" />
+<meta property="og:title" content="{{ pageTitle or 'Abdur Rauf — Inklet Lab' }}" />
+<meta property="og:description" content="{{ pageDesc or 'tinkerer · perpetual student · observer' }}" />
+<meta property="og:url" content="{{ (page.url | url) | absoluteUrl(site.url) }}" />
+<meta property="og:image" content="{{ (ogImage or '/assets/og/inkletlab-og-home.png') | url | absoluteUrl(site.url) }}" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{{ pageTitle or 'Abdur Rauf — Inklet Lab' }}" />
+<meta name="twitter:description" content="{{ pageDesc or 'tinkerer · perpetual student · observer' }}" />
+<meta name="twitter:image" content="{{ (ogImage or '/assets/og/inkletlab-og-home.png') | url | absoluteUrl(site.url) }}" />
+
+
+
   
 
   <!-- Fonts -->
