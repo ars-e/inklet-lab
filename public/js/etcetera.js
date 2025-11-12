@@ -191,4 +191,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // Render bookmarks and thoughts
   Object.entries(BOOKMARKS).forEach(([ulId, items]) => renderList(ulId, items));
   setupThoughtTicker();
+
+    // --- Auto-update "Updated on" date ---
+  const timeEl = document.querySelector("time");
+  if (timeEl) {
+    const now = new Date(document.lastModified);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const formatted = now.toLocaleDateString('en-US', options);
+    timeEl.textContent = formatted;
+    timeEl.setAttribute("datetime", now.toISOString());
+  }
 });
+
+
+  
